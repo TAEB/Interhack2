@@ -1,0 +1,62 @@
+===== MODULES =====
+Interhack:
+    main module
+    talks directly with NAO
+    talks directly with user
+    should be perfectly functional with no plugins
+
+Interhack::Plugin:
+    superclass of all plugins
+    has no base class
+    is a mixin
+        which means it adds new methods (or more specifically, method modifiers)
+        to Interhack
+    provides:
+        extended_command
+        splitline
+        show_menu
+        etc.
+
+Interhack::Plugin::Foo
+    modifies Interhack methods
+        before connect
+            ttyrec playing plugin would do magic here
+                by refusing to call Interhack::connect
+                    (modifier: around 'connect')
+        after connect
+            autologin (gets nick/pass from config)
+        before send
+            where force_yn (e.g. wish escape confirmation) would go
+            also key remapping
+        before print
+            where recoloring would go
+            and extended commands
+        after print
+            where stuff drawn on top of the display would go
+                such as annotations
+        don't think we need hooks anywhere else
+
+Interhack::Config
+    handles reading/saving of config options and @ARGV
+    loads plugins
+
+===== MISC =====
+MUST. HAVE. TESTS.
+need to think about how we can implement tests for this
+    probably a mock VT object
+will probably go on CPAN
+dependency analysis (obviously a topo sort)
+    I'm thinking a flat file with dependencies (of the form "plugin: dep1 dep2")
+        new_botl: parse_botl
+        time_on_botl: new_botl
+        mpd_on_botl: new_botl
+    can't be in the plugins themselves because you'd need to load them to figure
+    out what order you need to load them in.. :)
+need a way to work on local copy of NetHack
+    can you figure this out please doy? :)
+    see Expect
+    if nothing else we can patch NH to allow nontty stdin
+two methods of hot-reboot (ie staying connected to NAO)
+    Module::Refresh (which is fine for little changes.. probably)
+    exec
+
