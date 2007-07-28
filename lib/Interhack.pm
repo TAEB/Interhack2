@@ -244,5 +244,48 @@ sub load_state # {{{
 } # }}}
 # }}}
 
-1;
+# documentation
 
+=head1 NAME
+
+Interhack - improved NetHack interface
+
+=head1 VERSION
+
+Version 1.99_01
+
+=head1 SYNOPSIS
+
+This package is merely for the benefit of the interhack binary. You shouldn't
+be using this module. Unless you know what you're doing. . .
+
+=cut
+
+=head1 AUTHORS
+
+Shawn M Moore, C<< <sartak at gmail.com> >>
+Jordan Lewis, C<< <jordanthelewis at gmail.com> >>
+Jesse Luehrs, C<< <jluehrs2 at uiuc.edu> >>
+
+=head1 BUGS
+
+On the offchance a bug is discovered (yeah right), please report it via RT,
+either C<bug-carp-repl at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Carp-REPL>.  I will be
+notified, and then you'll automatically be notified of progress on your bug as
+I make changes.
+
+=head1 ACKNOWLEDGEMENTS
+
+Thanks to Stevan Little for Moose!
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2007, the Interhack DevTeam.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the BSD license.
+
+=cut
+
+1; # End of Interhack
