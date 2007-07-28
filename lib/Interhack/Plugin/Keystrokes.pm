@@ -8,7 +8,7 @@ our $VERSION = '1.99_01';
 has keystrokes => (
     isa => 'Int',
     is => 'rw',
-    required => 1,
+    lazy => 1,
     default => 0,
 );
 # }}}
