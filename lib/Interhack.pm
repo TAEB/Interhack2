@@ -260,7 +260,7 @@ sub new_state # {{{
 sub load_config # {{{
 {
     my $self = shift;
-    Interhack::Config::load_all_config();
+    Interhack::Config::load_all_config($self);
 } # }}}
 # }}}
 

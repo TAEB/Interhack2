@@ -4,6 +4,7 @@ use Moose;
 use Test::Builder;
 use Term::VT102;
 use Interhack;
+use Interhack::Config;
 
 extends 'Test::More', 'Interhack';
 
@@ -184,11 +185,14 @@ sub top_unlike # {{{
 sub load_plugin_or_skip # {{{
 {
     my ($self, $plugin, $howmany) = @_;
-    eval { with "Interhack::Plugin::$plugin" };
-
-    if ($@)
+    my $loaded = eval
     {
-        Test::More::skip("no $plugin available", $howmany);
+        Interhack::Config::load_plugins($self, $plugin);
+    };
+
+    if ($@ || !$loaded)
+    {
+        Test::More::skip("no $plugin available" . ($@ ? ": $@" : ""), $howmany);
         last SKIP;
     }
 
