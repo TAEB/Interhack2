@@ -4,13 +4,20 @@ use Moose;
 
 our $VERSION = '1.99_01';
 
-my %loaded_plugins;
-
 sub load_all_config
 {
     my $interhack = shift;
     my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros/;
     load_plugins($interhack, @plugins);
+}
+
+sub load_plugin
+{
+    my ($interhack, $plugin) = @_;
+
+    my $class = "Interhack::Plugin::$plugin";
+    Class::MOP::load_class($class);
+    $class->meta->apply($interhack);
 }
 
 sub load_plugins
@@ -20,18 +27,8 @@ sub load_plugins
 
     for my $plugin (@_)
     {
-        my $class = "Interhack::Plugin::$plugin";
-
-        if (!$loaded_plugins{$plugin})
-        {
-            eval { require "Interhack/Plugin/$plugin.pm" }
-        }
-
-        eval { $class->meta->apply($interhack) };
-        next if $@;
-
-        $loaded_plugins{$plugin} = 1;
-        ++$loaded;
+        eval { load_plugin($interhack, $plugin) };
+        ++$loaded if !$@;
     }
 
     return $loaded;

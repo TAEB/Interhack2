@@ -237,17 +237,19 @@ sub steal_state_from # {{{
     my $self = shift;
     my $newself = shift;
 
-    # disclaimer: I AM A BAD HUMAN BEING
     # load is a class method. I need it to be an instance method
     # there's no sane way to replace $self so what we do is
     # we take all the attributes that were serialized and stuff their values
     # into $self. it's totally not pretty. but this is what meta-object
     # programming is about! :)
-    while (my ($k, $v) = each %$newself)
+
+    for my $k ($newself->meta->get_attribute_list)
     {
-        my $metaclass = blessed($newself->meta->get_attribute($k));
-        next if $metaclass =~ /DoNotSerialize/;
-        $self->{$k} = $v;
+        my $metaclass = $newself->meta->get_attribute($k);
+        next if blessed($metaclass) =~ /DoNotSerialize/;
+
+        my $selfmeta = $self->meta->get_attribute($k);
+        $selfmeta->set_value($metaclass->get_value($newself));
     }
 } # }}}
 sub new_state # {{{

@@ -191,12 +191,13 @@ sub load_plugin_or_skip # {{{
     my ($self, $plugin, $howmany) = @_;
     my $loaded = eval
     {
-        Interhack::Config::load_plugins($self, $plugin);
+        Interhack::Config::load_plugin($self, $plugin);
     };
+
 
     if ($@ || !$loaded)
     {
-        Test::More::skip("no $plugin available" . ($@ ? ": $@" : ""), $howmany);
+        Test::More::skip("plugin $plugin unavailable", $howmany);
         last SKIP;
     }
 
