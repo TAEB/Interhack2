@@ -4,6 +4,9 @@ use Moose;
 use IO::Socket::INET;
 use Term::ReadKey;
 use Term::VT102;
+use Interhack::Config;
+
+our $VERSION = '1.99_01';
 
 # attributes {{{
 has 'connected' => (
@@ -37,6 +40,12 @@ has 'topline' => (
 );
 # }}}
 # methods {{{
+sub BUILD # {{{
+{
+    my $self = shift;
+    Interhack::Config::load_all_config();
+
+} # }}}
 sub run # {{{
 {
     my $self = shift;
