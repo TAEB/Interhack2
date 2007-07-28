@@ -244,7 +244,7 @@ sub load_state # {{{
 } # }}}
 # }}}
 
-# documentation
+# documentation # {{{
 
 =head1 NAME
 
@@ -263,9 +263,15 @@ be using this module. Unless you know what you're doing. . .
 
 =head1 AUTHORS
 
-Shawn M Moore, C<< <sartak at gmail.com> >>
-Jordan Lewis, C<< <jordanthelewis at gmail.com> >>
-Jesse Luehrs, C<< <jluehrs2 at uiuc.edu> >>
+=over 4
+
+=item Shawn M Moore, C<< <sartak at gmail.com> >>
+
+=item Jordan Lewis, C<< <jordanthelewis at gmail.com> >>
+
+=item Jesse Luehrs, C<< <jluehrs2 at uiuc.edu> >>
+
+=back
 
 =head1 BUGS
 
@@ -288,4 +294,7 @@ under the terms of the BSD license.
 
 =cut
 
+# }}}
+
 1; # End of Interhack
+
