@@ -52,6 +52,20 @@ has monitor => (
     lazy => 1,
     default => sub { Term::VT102->new(rows => 24, cols => 80) },
 );
+
+has test_attribute => (
+    is => 'rw',
+    isa => 'Int',
+    lazy => 1,
+    default => sub { 0 },
+);
+
+has unsaved_attribute => (
+    is => 'rw',
+    isa => 'Int',
+    lazy => 1,
+    default => sub { 12321 },
+);
 # }}}
 # method overrides (for Interhack-side things) {{{
 override 'connect' => sub # {{{
