@@ -48,6 +48,15 @@ has 'topline' => (
     default => '',
     trigger => sub { study $_[0] },
 );
+
+has 'statefile' => (
+    metaclass => 'DoNotSerialize',
+    is => 'rw',
+    isa => 'Str',
+    required => 1,
+    default => 'interhack.yaml',
+);
+
 # }}}
 # methods {{{
 sub BUILD # {{{
@@ -210,12 +219,12 @@ sub reload # {{{
 sub save_state # {{{
 {
     my $self = shift;
-    $self->store(shift || 'interhack.yaml');
+    $self->store(shift || $self->statefile);
 } # }}}
 sub load_state # {{{
 {
     my $self = shift;
-    my $file = shift || 'interhack.yaml';
+    my $file = shift || $self->statefile;
 
     # first let's make sure we're not recursing due to BUILD
     do
@@ -227,8 +236,10 @@ sub load_state # {{{
         }
     };
 
-    my $newself = Interhack->load(shift || $file)
+    my $newself = blessed($self)->load(shift || $file)
         if -r $file;
+
+    return unless $newself;
 
     $self->steal_state_from($newself);
 } # }}}
@@ -248,15 +259,22 @@ sub steal_state_from # {{{
         my $metaclass = $newself->meta->get_attribute($k);
         next if blessed($metaclass) =~ /DoNotSerialize/;
 
-        my $selfmeta = $self->meta->get_attribute($k);
-        $selfmeta->set_value($metaclass->get_value($newself));
+        if (defined(my $selfmeta = $self->meta->get_attribute($k)))
+        {
+            my $value = $metaclass->get_value($newself);
+            $selfmeta->set_value($self, $value);
+        }
+        else
+        {
+            $self->meta->add_attribute($metaclass);
+        }
     }
 } # }}}
 sub new_state # {{{
 {
     my $self = shift;
-    unlink 'interhack.yaml';
-    my $newself = Interhack->new();
+    unlink shift || $self->statefile;
+    my $newself = blessed($self)->new();
 
     $self->steal_state_from($newself);
 } # }}}

@@ -16,30 +16,35 @@ sub import_extra
 # }}}
 # attributes {{{
 has keyboard_in => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has socket_in => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has screen_out => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has socket_out => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has test => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Test::Builder',
     lazy => 1,
@@ -47,6 +52,7 @@ has test => (
 );
 
 has monitor => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Term::VT102',
     lazy => 1,
@@ -61,10 +67,15 @@ has test_attribute => (
 );
 
 has unsaved_attribute => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Int',
     lazy => 1,
     default => sub { 12321 },
+);
+
+has '+statefile' => (
+    default => 'interhack-test.yaml',
 );
 # }}}
 # method overrides (for Interhack-side things) {{{
@@ -115,21 +126,8 @@ override 'tonao' => sub # {{{
 
     $self->socket_out($self->socket_out . $text);
 }; # }}}
-override 'save_state' => sub # {{{
-{
-}; # }}}
-override 'new_state' => sub # {{{
-{
-}; # }}}
 override 'load_config' => sub # {{{
 {
-}; # }}}
-around 'load_state' => sub # {{{
-{
-    my $orig = shift;
-    my ($self, $file) = @_;
-
-    $orig->($self, 'interhack-test.yaml');
 }; # }}}
 # }}}
 # methods (for test-side things) {{{
@@ -219,8 +217,8 @@ sub load_plugin_or_skip # {{{
 } # }}}
 # }}}
 
-BEGIN { warn "unlinkin"; unlink 'interhack-test.yaml' }
-END   { warn "unlinkin"; unlink 'interhack-test.yaml' }
+BEGIN { unlink 'interhack-test.yaml' }
+END   { unlink 'interhack-test.yaml' }
 
 1;
 
