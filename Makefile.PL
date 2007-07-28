@@ -14,6 +14,9 @@ requires 'Term::ReadKey';
 requires 'Term::VT102';
 requires 'Module::Refresh';
 
+build_requires 'Test::More';
+build_requires 'Test::Builder';
+
 install_script 'bin/interhack';
 
 auto_install;
