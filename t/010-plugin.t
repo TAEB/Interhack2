@@ -1,6 +1,6 @@
 #!perl
 
-{
+{ # dummy plugins {{{
     package Interhack::Plugin::Test;
     use Moose::Role;
 
@@ -14,7 +14,7 @@
 
     sub loaded2 { 1 }
     around 'recvd' => sub { my ($orig, $self) = @_; '2' . $orig->($self ) };
-}
+} # }}}
 
 use strict;
 use warnings;

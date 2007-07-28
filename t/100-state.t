@@ -7,6 +7,8 @@ use Interhack::Test tests => 2;
     my $interhack = Interhack::Test->new();
     $interhack->test_attribute($$);
     $interhack->unsaved_attribute(23432);
+
+    $interhack->cleanup;
 }
 
 {
