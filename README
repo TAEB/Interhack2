@@ -1,0 +1,12 @@
+Build and install with:
+    perl Makefile.PL
+    make
+    make test
+    sudo make install
+
+This will put 'interhack' into your PATH so you can run it from anywhere. It
+also installs the Interhack modules into a place Perl can easily find them.
+
+The build process will fetch CPAN dependencies for you, so no need to fiddle
+with that any more. Yay.
+
