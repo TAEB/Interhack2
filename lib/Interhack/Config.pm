@@ -11,7 +11,7 @@ sub load_all_config
     {
         package Interhack;
 
-        for my $plugin (qw/Realtime Keystrokes FloatingEye TriggerReload/)
+        for my $plugin (qw/Realtime Keystrokes FloatingEye TriggerReload NewGame/)
         {
             with "Interhack::Plugin::$plugin"
                 unless $loaded_plugins{$plugin}++;

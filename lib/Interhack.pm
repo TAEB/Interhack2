@@ -229,6 +229,13 @@ sub load_state # {{{
     my $newself = Interhack->load(shift || 'interhack.yaml')
         if -r 'interhack.yaml';
 
+    $self->steal_state_from($newself);
+} # }}}
+sub steal_state_from # {{{
+{
+    my $self = shift;
+    my $newself = shift;
+
     # disclaimer: I AM A BAD HUMAN BEING
     # load is a class method. I need it to be an instance method
     # there's no sane way to replace $self so what we do is
@@ -241,6 +248,14 @@ sub load_state # {{{
         next if $metaclass =~ /DoNotSerialize/;
         $self->{$k} = $v;
     }
+} # }}}
+sub new_state # {{{
+{
+    my $self = shift;
+    unlink 'interhack.yaml';
+    my $newself = Interhack->new();
+
+    $self->steal_state_from($newself);
 } # }}}
 # }}}
 

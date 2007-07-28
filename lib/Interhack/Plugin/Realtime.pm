@@ -8,8 +8,8 @@ our $VERSION = '1.99_01';
 has realtime => (
     isa => 'Int',
     is => 'rw',
-    lazy => 1,
-    default => sub { 0 },
+    required => 1,
+    default => 0,
 );
 
 has previous_time => (
