@@ -215,6 +215,7 @@ sub save_state # {{{
 sub load_state # {{{
 {
     my $self = shift;
+    my $file = shift || 'interhack.yaml';
 
     # first let's make sure we're not recursing due to BUILD
     do
@@ -222,12 +223,12 @@ sub load_state # {{{
         my $level = 1;
         while (my @caller = caller($level++))
         {
-            return if $caller[3] eq 'Interhack::load_state';
+            return if $caller[3] =~ /::load_state$/;
         }
     };
 
-    my $newself = Interhack->load(shift || 'interhack.yaml')
-        if -r 'interhack.yaml';
+    my $newself = Interhack->load(shift || $file)
+        if -r $file;
 
     $self->steal_state_from($newself);
 } # }}}

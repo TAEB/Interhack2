@@ -101,9 +101,6 @@ override 'tonao' => sub # {{{
 
     $self->socket_out($self->socket_out . $text);
 }; # }}}
-override 'load_state' => sub # {{{
-{
-}; # }}}
 override 'save_state' => sub # {{{
 {
 }; # }}}
@@ -112,6 +109,13 @@ override 'new_state' => sub # {{{
 }; # }}}
 override 'load_config' => sub # {{{
 {
+}; # }}}
+around 'load_state' => sub # {{{
+{
+    my $orig = shift;
+    my ($self, $file) = @_;
+
+    $orig->($self, 'interhack-test.yaml');
 }; # }}}
 # }}}
 # methods (for test-side things) {{{
@@ -199,6 +203,9 @@ sub load_plugin_or_skip # {{{
     return !$@;
 } # }}}
 # }}}
+
+BEGIN { warn "unlinkin"; unlink 'interhack-test.yaml' }
+END   { warn "unlinkin"; unlink 'interhack-test.yaml' }
 
 1;
 
