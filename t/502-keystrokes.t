@@ -1,17 +1,21 @@
 #!perl
 use strict;
 use warnings;
-use Interhack::Test tests => 3;
+use Interhack::Test tests => 2;
 
 my $interhack = Interhack::Test->new();
-$interhack->load_plugin_ok("Keystrokes");
 
-$interhack->typing("foo");
-$interhack->iterate for 1..10;
-is($interhack->keystrokes, 3);
+SKIP:
+{
+    $interhack->load_plugin_or_skip("Keystrokes", 2);
 
-$interhack->typing("yahoo");
-$interhack->iterate for 1..10;
-is($interhack->keystrokes, 8);
+    $interhack->typing("foo");
+    $interhack->iterate for 1..10;
+    is($interhack->keystrokes, 3);
+
+    $interhack->typing("yahoo");
+    $interhack->iterate for 1..10;
+    is($interhack->keystrokes, 8);
+}
 
 

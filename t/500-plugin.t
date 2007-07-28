@@ -9,18 +9,22 @@
 
 use strict;
 use warnings;
-use Interhack::Test tests => 3;
+use Interhack::Test tests => 2;
 
 # test that we can load plugins OK, and things are detected to be be bad if we
 # can't find a plugin
 
 my $interhack = Interhack::Test->new();
-$interhack->load_plugin_ok("Test");
-ok($interhack->loaded);
 
-TODO:
+SKIP:
 {
-    local $TODO = "this is supposed to fail!";
-    $interhack->load_plugin_ok("NonexistentPlugin");
+    $interhack->load_plugin_or_skip("Test", 1);
+    ok($interhack->loaded);
+}
+
+SKIP:
+{
+    $interhack->load_plugin_or_skip("NonexistentPlugin", 1);
+    ok($interhack->eat_flaming_death);
 }
 
