@@ -53,7 +53,7 @@ has 'topline' => (
 sub BUILD # {{{
 {
     my $self = shift;
-    Interhack::Config::load_all_config();
+    $self->load_config();
     $self->load_state();
 } # }}}
 sub run # {{{
@@ -256,6 +256,11 @@ sub new_state # {{{
     my $newself = Interhack->new();
 
     $self->steal_state_from($newself);
+} # }}}
+sub load_config # {{{
+{
+    my $self = shift;
+    Interhack::Config::load_all_config();
 } # }}}
 # }}}
 

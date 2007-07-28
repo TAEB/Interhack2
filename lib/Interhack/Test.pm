@@ -63,10 +63,10 @@ override 'read_keyboard' => sub # {{{
 {
     my $self = shift;
 
-    if ($self->keyboard_in =~ /^(.)/)
+    if ($self->keyboard_in =~ /^(.)(.*)/s)
     {
         my $c = $1;
-        $self->keyboard_in(substr($self->keyboard_in, 1));
+        $self->keyboard_in($2);
         return $c;
     }
 
@@ -99,6 +99,18 @@ override 'tonao' => sub # {{{
     my $text = shift;
 
     $self->socket_out($self->socket_out . $text);
+}; # }}}
+override 'load_state' => sub # {{{
+{
+}; # }}}
+override 'save_state' => sub # {{{
+{
+}; # }}}
+override 'new_state' => sub # {{{
+{
+}; # }}}
+override 'load_config' => sub # {{{
+{
 }; # }}}
 # }}}
 # methods (for test-side things) {{{
