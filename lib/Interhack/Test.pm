@@ -169,6 +169,13 @@ sub top_unlike # {{{
     my ($self, $regex, $description) = @_;
     $self->test->unlike($self->monitor->row_plaintext(1), $regex, $description);
 } # }}}
+sub load_plugin_ok # {{{
+{
+    my ($self, $plugin) = @_;
+    eval { with "Interhack::Plugin::$plugin" };
+
+    $self->test->ok(!$@, "successfully loaded $plugin");
+} # }}}
 # }}}
 
 1;
