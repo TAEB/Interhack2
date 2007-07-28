@@ -8,6 +8,7 @@ my $interhack = Interhack::Test->new();
 SKIP:
 {
     $interhack->load_plugin_or_skip("Macros", 2);
+    $interhack->add_macro("\ce", "E-  Elbereth\n");
 
     $interhack->typing("\ce");
     $interhack->iterate for 1..10;

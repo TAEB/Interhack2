@@ -9,7 +9,7 @@ has macros => (
     isa => 'HashRef',
     is => 'rw',
     lazy => 1,
-    default => sub { { "\ce" => "E-  Elbereth\n" } },
+    default => sub { {} },
 );
 # }}}
 # method modifiers {{{
@@ -27,7 +27,13 @@ around 'read_keyboard' => sub
     return $c;
 };
 # }}}
-
+# methods {{{
+sub add_macro # {{{
+{
+    my ($self, $trigger, $expansion) = @_;
+    $self->macros->{$trigger} = $expansion;
+} # }}}
+# }}}
 1;
 
 

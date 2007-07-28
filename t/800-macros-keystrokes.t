@@ -12,6 +12,8 @@ SKIP:
     $interhack->load_plugin_or_skip("Keystrokes", 2);
     $interhack->load_plugin_or_skip("Macros", 2);
 
+    $interhack->add_macro("\ce", "E-  Elbereth\n");
+
     $interhack->typing("\ce");
     $interhack->iterate for 1..10;
     is($interhack->sent, "E-  Elbereth\n");
@@ -23,6 +25,8 @@ SKIP:
     my $interhack = Interhack::Test->new();
     $interhack->load_plugin_or_skip("Macros", 2);
     $interhack->load_plugin_or_skip("Keystrokes", 2);
+
+    $interhack->add_macro("\ce", "E-  Elbereth\n");
 
     $interhack->typing("\ce");
     $interhack->iterate for 1..10;
