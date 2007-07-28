@@ -5,8 +5,14 @@ use Test::Builder;
 use Term::VT102;
 use Interhack;
 
-extends 'Interhack';
+extends 'Test::More', 'Interhack';
 
+# Test::More requirements {{{
+sub import_extra
+{
+    Test::More->export_to_level(2);
+}
+# }}}
 # attributes {{{
 has keyboard_in => (
     is => 'rw',

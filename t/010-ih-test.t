@@ -1,8 +1,7 @@
 #!perl
 use strict;
 use warnings;
-use Test::More tests => 16;
-use Interhack::Test;
+use Interhack::Test tests => 16;
 
 # But who tests the testers?
 
