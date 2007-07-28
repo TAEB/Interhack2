@@ -283,6 +283,15 @@ sub load_config # {{{
     my $self = shift;
     Interhack::Config::load_all_config($self);
 } # }}}
+sub load_plugin # {{{
+{
+    my ($self, $plugin) = @_;
+    my $loaded = eval
+    {
+        Interhack::Config::load_plugin($self, $plugin);
+    };
+    return !$@;
+} # }}}
 # }}}
 
 # documentation # {{{
