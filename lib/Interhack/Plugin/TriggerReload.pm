@@ -7,12 +7,13 @@ our $VERSION = '1.99_01';
 # attributes {{{
 # }}}
 # method modifiers {{{
-before 'toscreen' => sub
+after 'toscreen' => sub
 {
     my ($self, $string) = @_;
 
     if ($self->topline =~ /^reload: unknown extended command/)
     {
+        $self->topline(''); # avoid infinite recursion :)
         $self->reload;
     }
 };

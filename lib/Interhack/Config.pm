@@ -3,14 +3,19 @@ package Interhack::Config;
 use Moose;
 
 our $VERSION = '1.99_01';
+our %loaded_plugins;
 
 sub load_all_config
 {
     do
     {
         package Interhack;
-        with "Interhack::Plugin::$_"
-            for qw/Realtime Keystrokes FloatingEye TriggerReload/;
+
+        for my $plugin (qw/Realtime Keystrokes FloatingEye TriggerReload/)
+        {
+            with "Interhack::Plugin::$plugin"
+                unless $loaded_plugins{$plugin}++;
+        }
     };
 }
 

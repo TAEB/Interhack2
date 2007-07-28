@@ -13,7 +13,7 @@ has realtime => (
 );
 
 has previous_time => (
-#metaclass => 'DoNotSerialize',
+    metaclass => 'DoNotSerialize',
     isa => 'Int',
     is => 'rw',
     lazy => 1,

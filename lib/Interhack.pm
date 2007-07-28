@@ -5,18 +5,23 @@ use IO::Socket::INET;
 use Term::ReadKey;
 use Term::VT102;
 use Module::Refresh;
+use MooseX::Storage;
 
 use Interhack::Config;
 
 our $VERSION = '1.99_01';
 
+with Storage('format' => 'YAML', 'io' => 'File');
+
 # attributes {{{
 has 'connected' => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Bool',
 );
 
 has 'socket' => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'IO::Socket::INET',
     lazy => 1,
@@ -24,17 +29,20 @@ has 'socket' => (
 );
 
 has 'config' => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Interhack::Config',
 );
 
 has 'vt' => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Term::VT102',
     default => sub { Term::VT102->new(rows => 24, cols => 80) },
 );
 
 has 'topline' => (
+    metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Str',
     default => '',
@@ -46,7 +54,7 @@ sub BUILD # {{{
 {
     my $self = shift;
     Interhack::Config::load_all_config();
-
+    $self->load_state();
 } # }}}
 sub run # {{{
 {
@@ -189,10 +197,50 @@ sub tonao # {{{
 sub cleanup # {{{
 {
     my $self = shift;
+    $self->save_state();
 } # }}}
 sub reload # {{{
 {
+    my $self = shift;
+
+    $self->save_state();
     Module::Refresh->refresh();
+    $self->load_state();
+} # }}}
+sub save_state # {{{
+{
+    my $self = shift;
+    $self->store(shift || 'interhack.yaml');
+} # }}}
+sub load_state # {{{
+{
+    my $self = shift;
+
+    # first let's make sure we're not recursing due to BUILD
+    do
+    {
+        my $level = 1;
+        while (my @caller = caller($level++))
+        {
+            return if $caller[3] eq 'Interhack::load_state';
+        }
+    };
+
+    my $newself = Interhack->load(shift || 'interhack.yaml')
+        if -r 'interhack.yaml';
+
+    # disclaimer: I AM A BAD HUMAN BEING
+    # load is a class method. I need it to be an instance method
+    # there's no sane way to replace $self so what we do is
+    # we take all the attributes that were serialized and stuff their values
+    # into $self. it's totally not pretty. but this is what meta-object
+    # programming is about! :)
+    while (my ($k, $v) = each %$newself)
+    {
+        my $metaclass = blessed($newself->meta->get_attribute($k));
+        next if $metaclass =~ /DoNotSerialize/;
+        $self->{$k} = $v;
+    }
 } # }}}
 # }}}
 
