@@ -4,6 +4,8 @@ use Moose;
 use IO::Socket::INET;
 use Term::ReadKey;
 use Term::VT102;
+use Module::Refresh;
+
 use Interhack::Config;
 
 our $VERSION = '1.99_01';
@@ -187,6 +189,10 @@ sub tonao # {{{
 sub cleanup # {{{
 {
     my $self = shift;
+} # }}}
+sub reload # {{{
+{
+    Module::Refresh->refresh();
 } # }}}
 # }}}
 

@@ -10,7 +10,7 @@ sub load_all_config
     {
         package Interhack;
         with "Interhack::Plugin::$_"
-            for qw/Realtime Keystrokes FloatingEye/;
+            for qw/Realtime Keystrokes FloatingEye TriggerReload/;
     };
 }
 
