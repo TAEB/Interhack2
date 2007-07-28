@@ -56,14 +56,16 @@ has 'statefile' => (
     required => 1,
     default => 'interhack.yaml',
 );
-
 # }}}
 # methods {{{
 sub BUILD # {{{
 {
     my $self = shift;
+
     $self->load_config();
     $self->load_state();
+
+    Module::Refresh->new();
 } # }}}
 sub run # {{{
 {

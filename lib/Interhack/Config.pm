@@ -3,6 +3,7 @@ package Interhack::Config;
 use Moose;
 
 our $VERSION = '1.99_01';
+our %loaded_plugins;
 
 sub load_all_config
 {
@@ -15,9 +16,15 @@ sub load_plugin
 {
     my ($interhack, $plugin) = @_;
 
+    return if $loaded_plugins{$plugin};
+
     my $class = "Interhack::Plugin::$plugin";
-    Class::MOP::load_class($class);
-    $class->meta->apply($interhack);
+    eval "use $class;";
+
+    package Interhack;
+    with $class;
+
+    $loaded_plugins{$plugin} = 1;
 }
 
 sub load_plugins
