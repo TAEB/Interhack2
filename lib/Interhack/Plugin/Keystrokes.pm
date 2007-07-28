@@ -13,15 +13,14 @@ has keystrokes => (
 );
 # }}}
 # method modifiers {{{
-around 'read_keyboard' => sub
+around 'tonao' => sub
 {
     my $orig = shift;
-    my ($self) = @_;
+    my ($self, $text) = @_;
 
-    my $c = $orig->($self);
-    $self->keystrokes($self->keystrokes + length($c))
-        if defined($c);
-    return $c;
+    $self->keystrokes($self->keystrokes + length($text));
+
+    return $orig->($self, $text);
 };
 
 around 'toscreen' => sub
