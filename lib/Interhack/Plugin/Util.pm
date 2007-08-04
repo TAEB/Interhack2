@@ -33,6 +33,22 @@ sub print_row
     print "\e[u" unless $leave_cursor;
     return;
 } # }}}
+# restore_row {{{
+=head2 restore_row INT
+
+Restores the contents of the row as best as possible. Use this if you're drawing
+on the screen temporarily (such as with force_tab_yn).
+
+=cut
+
+sub restore_row
+{
+    my $self = shift;
+    my $row = shift;
+
+    # not so good yet! but at least now we have only one place to fix it
+    $self->print_row(2, "\e[K");
+} # }}}
 # force_tab_yn {{{
 =head2 force_tab_yn STRING -> BOOLEAN
 
@@ -49,7 +65,7 @@ sub force_tab_yn
 
     $self->print_row(2, "\e[1;31m$input\e[m");
     my $c = ReadKey 0;
-    $self->print_row(2, "\e[K");
+    $self->restore_row(2);
     return $c eq "\t" ? 1 : 0;
 } # }}}
 # }}}
