@@ -201,19 +201,15 @@ sub top_unlike # {{{
 sub load_plugin_or_skip # {{{
 {
     my ($self, $plugin, $howmany) = @_;
-    my $loaded = eval
-    {
-        Interhack::Config::load_plugin($self, $plugin);
-    };
+    my $loaded = $self->load_plugin($plugin);
 
-
-    if ($@ || !$loaded)
+    if (!$loaded)
     {
         Test::More::skip("plugin $plugin unavailable", $howmany);
-        last SKIP;
+        #last SKIP;
     }
 
-    return !$@;
+    return $loaded;
 } # }}}
 # }}}
 

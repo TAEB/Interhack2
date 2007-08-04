@@ -292,6 +292,7 @@ sub load_plugin # {{{
     {
         Interhack::Config::load_plugin($self, $plugin);
     };
+    warn $@ if $@;
     return !$@;
 } # }}}
 # }}}
