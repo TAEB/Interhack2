@@ -6,11 +6,11 @@ with "Interhack::Plugin::Util";
 our $VERSION = '1.99_01';
 
 # attributes {{{
-has confirmeat => (
-    isa => 'Int', # XXX MooseX::Storage 0.05 (current) can't handle Bool
+has confirm_eat => (
+    isa => 'Bool',
     is => 'rw',
     lazy => 1,
-    default => 0,
+    default => 1,
 );
 # }}}
 # method modifiers {{{
@@ -22,11 +22,11 @@ around 'check_input' => sub
     $input = $orig->($self, $input);
     return unless defined $input;
 
-    if ($self->confirmeat && $self->expecting_command && $input =~ /^e/)
+    if ($self->confirm_eat && $self->expecting_command && $input =~ /^e/)
     {
         my $ynq = $self->force_tab_ynq("Press tab or q to eat, q to stop asking, any other key to cancel.");
         if ($ynq == 0) { return }
-        if ($ynq == -1) { $self->confirmeat(0) }
+        if ($ynq == -1) { $self->confirm_eat(0) }
     }
 
     return $input;
