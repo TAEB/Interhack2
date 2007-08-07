@@ -199,9 +199,17 @@ sub toscreen # {{{
 
     print $text;
 } # }}}
+sub check_input # {{{
+{
+    my ($self, $text) = @_;
+    return $text;
+} # }}}
 sub tonao # {{{
 {
     my ($self, $text) = @_;
+
+    $text = $self->check_input($text);
+    return if !defined($text);
 
     print {$self->socket} $text;
 } # }}}
