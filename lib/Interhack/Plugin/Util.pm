@@ -91,6 +91,42 @@ sub force_tab_yn
     $self->restore_row(2);
     return $c eq "\t" ? 1 : 0;
 } # }}}
+# force_tab_ynq {{{
+=head2 force_tab_ynq STRING -> BOOLEAN
+
+Forces the user to press tab to mean "yes" (which will return 1) or any other
+key (which will return 0). The string argument will be displayed to the user
+in red on the second line of the terminal.
+
+If the user types 'q' the special value -1 will be returned.
+
+=cut
+
+sub force_tab_ynq
+{
+    my $self = shift;
+    my $input = shift;
+
+    $self->print_row(2, "\e[1;31m$input\e[m");
+    my $c = ReadKey 0;
+    $self->restore_row(2);
+    return $c eq "\t" ? 1 : $c eq "q" ? -1 : 0;
+} # }}}
+# expecting_command {{{
+=head2 expecting_command -> BOOLEAN
+
+Returns 1 if the game is expecting a new command. This is at best a guess.
+
+=cut
+
+sub expecting_command
+{
+    my $self = shift;
+    return 0 if $self->vt->y == 1;
+    return 0 if $self->vt_like(qr/--More--/, qr/\(\d+ of \d+\)/, qr/\(end\)/);
+    return 1;
+} # }}}
+
 # }}}
 1;
 
