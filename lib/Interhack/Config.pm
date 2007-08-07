@@ -37,8 +37,8 @@ sub load_plugins
 
     for my $plugin (@_)
     {
-        eval { load_plugin($interhack, $plugin) };
-        ++$loaded if !$@;
+        load_plugin($interhack, $plugin);
+        ++$loaded;
     }
 
     return $loaded;
