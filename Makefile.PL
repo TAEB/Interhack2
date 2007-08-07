@@ -8,7 +8,7 @@ all_from 'lib/Interhack.pm';
 # Specific dependencies
 requires 'Moose';
 requires 'Moose::Role';
-requires 'MooseX::Storage';
+requires 'MooseX::Storage' => '0.06'; # <0.06 had bugs with bools and falsity
 requires 'IO::Socket::INET';
 requires 'Term::ReadKey';
 requires 'Term::VT102';
