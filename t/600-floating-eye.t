@@ -1,6 +1,4 @@
 #!perl
-use strict;
-use warnings;
 use Interhack::Test tests => 6;
 
 my $interhack = Interhack::Test->new();

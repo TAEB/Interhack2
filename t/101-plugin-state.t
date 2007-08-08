@@ -22,8 +22,6 @@
     sub loaded { 1 }
 } # }}}
 
-use strict;
-use warnings;
 use Interhack::Test tests => 4;
 
 # test that plugin state is saved and loaded

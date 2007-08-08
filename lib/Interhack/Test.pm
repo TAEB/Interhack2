@@ -12,6 +12,8 @@ extends 'Test::More', 'Interhack';
 sub import_extra
 {
     Test::More->export_to_level(2);
+    strict->import;
+    warnings->import;
 }
 # }}}
 # attributes {{{

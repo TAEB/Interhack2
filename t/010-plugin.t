@@ -16,8 +16,6 @@
     around 'recvd' => sub { my ($orig, $self) = @_; '2' . $orig->($self ) };
 } # }}}
 
-use strict;
-use warnings;
 use Interhack::Test tests => 9;
 
 # test that we can load plugins OK, and things are detected to be be bad if we
