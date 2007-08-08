@@ -1,0 +1,124 @@
+== ADVOCACY ==
+
+Interhack 2.0 is a lot more complicated internally than 1.x. This is a Good
+Thing. The complications allow us to:
+
+  * Save state painlessly (it's actually automatic for plugins, yay)
+  * Let plugins hook into many more places (e.g. autologin will be a plugin
+    when it's written)
+  * Reload plugins dynamically (iterative development ++)
+  * Possibly release on CPAN (since we look more like a real Perl app)
+  * Run interhack from any directory (since we can install into /usr/local)
+  * Tests!
+  * Plugin dependencies
+  * Just plain do things better. Here's the basic implementation of a "block
+    'e' command" for the foodless conduct. This totally isn't even possible in
+    1.x.
+
+    around check_input => sub {
+        if ($self->confirm_eat && $self->expecting_command && $input =~ /^e/)
+        {
+            my $ynq = $self->force_tab_ynq("Press tab or q to eat, q to stop asking, any other key to cancel.");
+            if ($ynq == 0) { return }
+            if ($ynq == -1) { $self->confirm_eat(0) }
+        }
+    };
+
+== LAYOUT ==
+
+Interhack is developed with OOP. In particular, we use the new Moose module for
+Perl. Read "perldoc Moose" (after cpan -i Moose) for information on that. It's
+sexy within sexy.
+
+
+First let me talk about method modifiers, which Moose provides. You have a
+class, Parent, that defines a method, orig. You have a subclass of Parent,
+Child, that redefines orig.
+
+Ordinarily, Parent's orig is never run when Child's orig is invoked. Method
+modifiers let you still call Parent's orig safely and easily. There are three
+kinds of modifiers: before, around, and after. Before and after are simple,
+they just run at the appropriate time relative to the original method. Around
+is a little trickier, but it "surrounds" the parent method, which you call when
+you want (or not). See the Moose documentation for a more rigorous explanation.
+:)
+
+
+The objects (as of this writing) are:
+
+    Interhack
+    Interhack::Config
+    Interhack::Test
+    Interhack::Plugin::ConfirmEat
+    Interhack::Plugin::Macros
+    Interhack::Plugin::Util
+    etc
+
+Interhack controls all IO. If you only use Interhack, you'll get a dumb telnet
+client. This is by design. All the magic of Interhack rightly belongs in the
+Plugins, so each user can configure exactly what he wants Interhack to be.
+
+Interhack provides methods like 'tonao' which is a method that simply takes a
+string as input and sends it to NAO.
+
+Interhack::Config handles reading configuration and loading plugins.
+
+Interhack::Test is a subclass of Interhack that provides methods specific for
+testing. It also overrides some methods so you never end up connecting to NAO
+(tests should always be self-contained).
+
+Interhack plugins are (in Perl 6 and Moose parlance) "roles". Also called
+traits and to some extent, mixins. Roles define new methods and attributes and
+can be "composed" into any class (sometimes with restrictions, but nevermind).
+
+Interhack::Plugin::Foo is 'composed' into Interhack by Interhack::Config (iff
+the user requests to load plugin Foo). If Foo provides any attributes, they'll
+be added to Interhack. If Foo provides any methods, they'll also be added to
+Interhack.
+
+Roles can also define method modifiers. Let's go quickly over how to define a
+new plugin using a new method, a method modifier, and an attribute. This one
+will be for counting keystrokes.
+
+    #!/usr/bin/perl
+    use Moose::Role;
+    # no need to use strict and use warnings, Moose does that for us
+
+    has keystrokes => (   # Moose for defining a new attribute
+        isa => 'Int',     # keystrokes is an integer
+        is => 'rw',       # anyone may read/write this attribute
+        default => 0,     # we start new games with 0 keystrokes
+        lazy => 1,        # necessary for how we're using Moose::Role
+    );
+
+    sub clear_keystrokes  # unnecessary helper method for clearing keystrokes
+    {
+        my $self = shift; # this is an Interhack
+
+        $self->keystrokes(0); # set keystrokes to zero
+                              # if we pass no arg, it would just return the
+                              # number of keystrokes instead
+    }
+
+    before 'tonao' => sub { # define a 'before' method modifier
+        my $self = shift;   # this is an Interhack
+        my $text = shift;   # the text we're sending to NAO
+
+        my $keystrokes = $self->keystrokes; # get
+        $keystrokes += length $text;        # modify
+        $self->keystrokes($keystrokes);     # set
+    };
+
+Hopefully that's not too bad. We hook directly where we want to count
+keystrokes. Because of the way we defined the keystrokes attribute, it will be
+saved for us when Interhack exits, and cleared on new game (Interhack actually
+handles saving/loading, but a plugin, NewGame, handles clearing on new game).
+
+Interhack::Plugin::Util is a plugin that is only there to help other plugins.
+This is where recolor, force_tab, expecting_command, etc. are defined.
+Technically they should be in Interhack::Plugin which every plugin would
+inherit from, BUT Moose doesn't support role subclassing. So instead we're left
+with another role that other roles steal from. Good enough. :)
+
+Please poke through any plugin code and let me know if you have any questions.
+
