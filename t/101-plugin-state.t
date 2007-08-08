@@ -19,10 +19,16 @@
         default => sub { 101 },
     );
 
+    has default_true => (
+        is => 'rw',
+        isa => 'Bool',
+        lazy => 1,
+        default => 1,
+    );
     sub loaded { 1 }
 } # }}}
 
-use Interhack::Test tests => 4;
+use Interhack::Test tests => 5;
 
 # test that plugin state is saved and loaded
 
@@ -33,6 +39,7 @@ use Interhack::Test tests => 4;
 
     $interhack->saved(9999);
     $interhack->notsaved(9999);
+    $interhack->default_true(0);
     $interhack->cleanup;
 }
 
@@ -43,5 +50,6 @@ use Interhack::Test tests => 4;
 
     is($interhack->saved, 9999);
     is($interhack->notsaved, 101);
+    is($interhack->default_true, 0);
 }
 
