@@ -83,7 +83,7 @@ sub connect # {{{
 {
     my $self = shift;
 
-    my ($server, $port) = ('nethack.alt.org', 23);
+    my ($server, $port) = ('sporkhack.nineball.org', 23);
     $self->socket(new IO::Socket::INET(PeerAddr => $server,
                                        PeerPort => $port,
                                        Proto => 'tcp'));
@@ -300,7 +300,7 @@ sub load_plugin # {{{
     {
         Interhack::Config::load_plugin($self, $plugin);
     };
-    warn $@ if $@;
+    warn $@ if $@ && blessed($self) ne 'Interhack::Test';
     return !$@;
 } # }}}
 # }}}

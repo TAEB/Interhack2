@@ -203,7 +203,7 @@ sub top_unlike # {{{
 sub load_plugin_or_skip # {{{
 {
     my ($self, $plugin, $howmany) = @_;
-    my $loaded = $self->load_plugin($plugin);
+    my $loaded = eval { $self->load_plugin($plugin) };
 
     if (!$loaded)
     {

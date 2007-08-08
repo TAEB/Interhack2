@@ -21,10 +21,8 @@ sub load_plugin
     my $class = "Interhack::Plugin::$plugin";
     my $package = blessed $interhack;
 
-    {
-        package Interhack;
-        with $class;
-    }
+    eval "package $package; with '$class';";
+    die "$@\n" if $@;
 
     #$package->meta->add_role($class->meta);
     $loaded_plugins{$plugin} = 1;
