@@ -1,22 +1,26 @@
 #!/usr/bin/perl
 package Interhack::Plugin::TriggerReload;
 use Moose::Role;
+with "Interhack::Plugin::Util";
 
 our $VERSION = '1.99_01';
 
 # attributes {{{
 # }}}
 # method modifiers {{{
-after 'toscreen' => sub
+sub SETUP
 {
-    my ($self, $string) = @_;
-
-    if ($self->topline =~ /^reload: unknown extended command/)
-    {
-        $self->topline(''); # avoid infinite recursion :)
-        $self->reload;
-    }
-};
+    my $self = shift;
+    $self->extended_command(reload => \&reload);
+}
+# }}}
+# methods {{{
+sub reload
+{
+    my $self = shift;
+    $self->topline(''); # avoid infinite recursion :)
+    $self->reload;
+}
 # }}}
 
 1;

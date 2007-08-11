@@ -7,6 +7,14 @@ our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
 
 # attributes {{{
+has extended_commands => (
+    metaclass => 'DoNotSerialize',
+    is => 'rw',
+    isa => 'HashRef',
+    lazy => 1,
+    default => sub { {} },
+);
+
 # }}}
 # method modifiers {{{
 # }}}
@@ -127,7 +135,41 @@ sub expecting_command
     return 0 if $self->vt_like(qr/--More--/, qr/\(\d+ of \d+\)/, qr/\(end\)/);
     return 1;
 } # }}}
+# extended_command {{{
+=head2 extended_command name, code
 
+Lets you define new extended commands. If the user types in your extended
+command, the coderef will be run.
+
+Extended commands can have arguments. The first argument passed to an extended
+command is the Interhack object. The second is exactly what the user typed to
+trigger it (so the command name). The third is everything that came after the
+second argument.
+
+Only one coderef may be associated with an extended command. Extended commands
+that share names with those in NetHack will never be run. Do not depend on
+case.
+
+=cut
+
+after toscreen => sub
+{
+    my $self = shift;
+
+    while (my ($name, $code) = each %{$self->extended_commands})
+    {
+        if ($self->topline =~ /^(\Q$name\E)(?:\s+(.*?))?: unknown extended command\. *$/)
+        {
+            $code->($self, $1, $2);
+        }
+    }
+};
+
+sub extended_command
+{
+    my ($self, $name, $code) = @_;
+    $self->extended_commands->{$name} = $code;
+} # }}}
 # }}}
 1;
 
