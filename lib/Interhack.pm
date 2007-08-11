@@ -155,6 +155,10 @@ sub read_socket # {{{
 {
     my $self = shift;
 
+    # the reason this is so complicated is because packets can be broken up
+    # we can't detect this perfectly, but it's only an issue if an escape code
+    # is broken into two parts, and we can check for that
+
     my $from_nao;
 
     ITER: for (1..100)
