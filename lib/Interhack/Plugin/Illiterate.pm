@@ -24,9 +24,9 @@ around 'check_input' => sub
 
     if ($self->confirm_literacy && $self->expecting_command)
     {
-        if ($input =~ /^[rE]/)
+        if ($input =~ /^([rE])/)
         {
-            my $command = $input eq 'r' ? 'read' : 'engrave';
+            my $command = $1 eq 'r' ? 'read' : 'engrave';
             my $ynq = $self->force_tab_ynq("Press tab or q to $command, q to stop asking, any other key to cancel.");
             if ($ynq == 0) { return }
             if ($ynq == -1) { $self->confirm_literacy(0) }
