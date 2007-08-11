@@ -8,7 +8,7 @@ our %loaded_plugins;
 sub load_all_config
 {
     my $interhack = shift;
-    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated/;
+    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate/;
     load_plugins($interhack, @plugins);
 }
 
