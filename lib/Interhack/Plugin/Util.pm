@@ -122,6 +122,7 @@ Returns 1 if the game is expecting a new command. This is at best a guess.
 sub expecting_command
 {
     my $self = shift;
+    return 0 if !$self->in_game;
     return 0 if $self->vt->y == 1;
     return 0 if $self->vt_like(qr/--More--/, qr/\(\d+ of \d+\)/, qr/\(end\)/);
     return 1;
