@@ -88,6 +88,15 @@ sub restore_row
 {
     my $self = shift;
     my $row = shift;
+    my $color = shift;
+
+    if ($color)
+    {
+        $self->print_row($row, "\e[K$color"
+                             . $self->vt->row_plaintext($row)
+                             . "\e[m");
+        return;
+    }
 
     my @attrs = split '', $self->vt->row_attr($row);
     my @chars = split '', $self->vt->row_plaintext($row);
