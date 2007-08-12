@@ -217,6 +217,13 @@ after toscreen => sub
 sub extended_command
 {
     my ($self, $name, $code) = @_;
+
+    if (ref($code) ne "CODE")
+    {
+        $self->warn("Second argument to extended_command must be a sub.");
+        return;
+    }
+
     $self->extended_commands->{$name} = $code;
 } # }}}
 # logging {{{
