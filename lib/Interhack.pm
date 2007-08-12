@@ -209,7 +209,12 @@ sub parse # {{{
 
     $self->vt->process($text);
     $self->topline( $self->vt->row_plaintext(1) );
-    $self->toscreen($text);
+    $self->toscreen($self->mangle_output($text));
+} # }}}
+sub mangle_output # {{{
+{
+    my ($self, $text) = @_;
+    return $text;
 } # }}}
 sub toscreen # {{{
 {
