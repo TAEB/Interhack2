@@ -76,7 +76,7 @@ after 'connect' => sub {
     $self->get_pass;
     $self->autologin;
     $self->clear_buffers;
-}
+};
 # }}}
 # methods {{{
 # server {{{
@@ -168,9 +168,10 @@ sub get_pass {
 
     if ($self->pass eq '')
     {
-        # XXX: do either of these two lines make sense at all?
         $self->pass(do { local @ARGV = "$pass_dir/" . $self->nick; <> });
-        chomp $self->pass;
+        # XXX: what's the correct way to do this?
+        $self->pass($1) if $self->pass =~ m{(.*)$/}
+        #chomp $self->pass;
     }
 } # }}}
 # autologin {{{
