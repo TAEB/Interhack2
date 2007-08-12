@@ -8,7 +8,6 @@ use Term::ReadKey;
 $| = 1;
 ReadMode 3;
 END { ReadMode 0 }
-$SIG{INT} = sub {};
 
 Interhack->new->run;
 

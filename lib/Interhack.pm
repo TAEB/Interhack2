@@ -84,6 +84,7 @@ sub run # {{{
 {
     my $self = shift;
     $self->connect;
+    $SIG{INT} = sub {};
 
     while ($self->connected)
     {
