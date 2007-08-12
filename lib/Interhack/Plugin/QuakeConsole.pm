@@ -48,7 +48,14 @@ around 'check_input' => sub
         {
             if (exists $self->extended_commands->{$1})
             {
-                $ret = $self->extended_commands->{$1}->($self, $1, $2);
+                if ($1 eq "reload")
+                {
+                    $ret = "Do NOT use #reload in the console!";
+                }
+                else
+                {
+                    $ret = $self->extended_commands->{$1}->($self, $1, $2);
+                }
             }
             else
             {
