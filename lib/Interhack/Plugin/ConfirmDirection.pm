@@ -18,7 +18,7 @@ around 'toserver' => sub
     if ($self->vt->y == 1 && $self->topline =~ /^In what direction\?/)
     {
         # TODO: check for vi keys or numpad
-        unless ($text =~ /^[\e1-9.<>]/ || $text =~ /^[\ehjklyubn.<>]/)
+        unless ($text =~ /^[\e\n1-9.<>]/ || $text =~ /^[\e\nhjklyubn.<>]/)
         {
             my $force = $self->force_tab_yn("Press tab to send your invalid direction, any other key to cancel.");
             return unless $force;
