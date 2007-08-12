@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 package Interhack::Plugin::NewGame;
 use Moose::Role;
+with "Interhack::Plugin::Util";
 
 our $VERSION = '1.99_01';
 
@@ -22,11 +23,13 @@ after 'toscreen' => sub
     {
         if ($self->topline =~ /^\w+ \w+(?: \w+), welcome to NetHack!  You are a/)
         {
+            $self->debug("New game detected!");
             $self->new_state();
             $self->in_game(1);
         }
         elsif ($self->topline =~ /^\w+ \w+(?: \w+), the.*?, welcome back to NetHack!/)
         {
+            $self->debug("Existing game detected!");
             $self->in_game(1);
         }
     }

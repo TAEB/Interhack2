@@ -26,7 +26,11 @@ around 'check_input' => sub
     {
         my $ynq = $self->force_tab_ynq("Press tab or q to wield, q to stop asking, any other key to cancel.");
         if ($ynq == 0) { return }
-        if ($ynq == -1) { $self->confirm_wield(0) }
+        if ($ynq == -1)
+        {
+            $self->debug("Disabled 'wield' confirmations.");
+            $self->confirm_wield(0)
+        }
     }
 
     return $input;

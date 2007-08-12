@@ -2,6 +2,7 @@
 package Interhack::Plugin::Util;
 use Moose::Role;
 use Term::ReadKey;
+use Log::Log4perl;
 
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
@@ -15,6 +16,16 @@ has extended_commands => (
     default => sub { {} },
 );
 
+has logger => (
+    metaclass => 'DoNotSerialize',
+    is => 'rw',
+    lazy => 1,
+    default => sub
+    {
+        Log::Log4perl->init("$ENV{HOME}/.interhack/log4perl.conf");
+        Log::Log4perl->get_logger("Interhack");
+    }
+);
 # }}}
 # method modifiers {{{
 # }}}
@@ -170,6 +181,33 @@ sub extended_command
     my ($self, $name, $code) = @_;
     $self->extended_commands->{$name} = $code;
 } # }}}
+# logging {{{
+sub debug
+{
+    my $self = shift;
+    $self->logger->debug(@_);
+}
+sub info
+{
+    my $self = shift;
+    $self->logger->info(@_);
+}
+sub warn
+{
+    my $self = shift;
+    $self->logger->warn(@_);
+}
+sub error
+{
+    my $self = shift;
+    $self->logger->error(@_);
+}
+sub fatal
+{
+    my $self = shift;
+    $self->logger->fatal(@_);
+}
+# }}}
 # }}}
 1;
 

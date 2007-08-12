@@ -29,7 +29,11 @@ around 'check_input' => sub
             my $command = $1 eq 'r' ? 'read' : 'engrave';
             my $ynq = $self->force_tab_ynq("Press tab or q to $command, q to stop asking, any other key to cancel.");
             if ($ynq == 0) { return }
-            if ($ynq == -1) { $self->confirm_literacy(0) }
+            if ($ynq == -1)
+            {
+                $self->debug("Disabled 'read' and 'engrave' confirmations.");
+                $self->confirm_literacy(0)
+            }
         }
     }
 

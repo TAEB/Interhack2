@@ -18,11 +18,21 @@ sub load_plugin
 
     return if $loaded_plugins{$plugin};
 
+    if ($interhack->can('debug'))
+    {
+        $interhack->debug("Loading plugin $plugin...");
+    }
+
     my $class = "Interhack::Plugin::$plugin";
     my $package = blessed $interhack;
 
     eval "package $package; with '$class'; $class\::SETUP(\$interhack) if $class->can('SETUP')";
     die "$@\n" if $@;
+
+    if ($interhack->can('debug'))
+    {
+        $interhack->debug("Loaded plugin $plugin without incident.");
+    }
 
     #$package->meta->add_role($class->meta);
     $loaded_plugins{$plugin} = 1;

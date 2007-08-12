@@ -26,7 +26,11 @@ around 'check_input' => sub
     {
         my $ynq = $self->force_tab_ynq("Press tab or q to eat, q to stop asking, any other key to cancel.");
         if ($ynq == 0) { return }
-        if ($ynq == -1) { $self->confirm_eat(0) }
+        if ($ynq == -1)
+        {
+            $self->debug("Disabled 'eat' confirmations.");
+            $self->confirm_eat(0);
+        }
     }
 
     return $input;

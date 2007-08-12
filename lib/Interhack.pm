@@ -67,6 +67,10 @@ sub BUILD # {{{
 
     Module::Refresh->new();
 } # }}}
+sub SETUP # {{{
+{
+    # Don't put anything in here! This is here because plugins depend on it
+} # }}}
 sub run # {{{
 {
     my $self = shift;
