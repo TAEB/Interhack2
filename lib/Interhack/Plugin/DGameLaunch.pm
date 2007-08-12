@@ -173,8 +173,8 @@ sub get_nick {
 # get_pass {{{
 sub get_pass {
     my $self = shift;
-    my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
 
+    my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
     if ($self->pass eq '')
     {
         $self->pass(do { local @ARGV = "$pass_dir/" . $self->nick; <> });
