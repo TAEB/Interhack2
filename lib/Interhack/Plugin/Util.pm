@@ -127,18 +127,15 @@ sub restore_row
         return;
     }
 
-    my @attrs = split '', $self->vt->row_attr($row);
+    my @attrs = $self->vt->row_attr($row) =~ /../g;
     my @chars = split '', $self->vt->row_plaintext($row);
 
     for (0..$#attrs)
     {
-        my ($fg, $bg, $bold, $faint, $standout, $underline, $blink, $reverse)
+        my %attr;
+        @attr{qw/fg bg bold faint standout underline blink reverse/}
             = $self->vt->attr_unpack($attrs[$_]);
-        next unless $fg;
-
-        $bold = $bold ? '1;' : '';
-        my $escape = "\e[$bold${fg}m";
-        $chars[$_] = $escape . $chars[$_] . "\e[m";
+        $chars[$_] = $self->attr_to_ansi(%attr) . $chars[$_];
     }
 
     # not so good yet! but at least now we have only one place to fix it
@@ -268,6 +265,31 @@ sub fatal
     $self->logger->fatal(@_);
 }
 # }}}
+sub attr_to_ansi # {{{
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $fg = 3 . ($args{fg} || 7);
+    $fg =~ s/^3(3.)/$1/;
+
+    my $bg = 4 . ($args{bg} || 0);
+    $bg =~ s/^4(4.)/$1/;
+
+    my $color = "\e[0";
+    $color .= ";1" if $args{bold};
+    $color .= ";2" if $args{faint};
+    $color .= ";3" if $args{standout};
+    $color .= ";4" if $args{underline};
+    $color .= ";5" if $args{blink};
+    $color .= ";7" if $args{reverse};
+
+    $color .= ";$fg" if $fg != 37;
+    $color .= ";$bg" if $bg != 40;
+
+    return $color . 'm';
+} # }}}
 # }}}
+
 1;
 
