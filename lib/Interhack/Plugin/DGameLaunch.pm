@@ -76,6 +76,14 @@ has do_autologin => (
     lazy => 1,
     default => 0,
 );
+
+has logged_in => (
+    metaclass => 'DoNotSerialize',
+    isa => 'Bool',
+    is => 'rw',
+    lazy => 1,
+    default => 0,
+);
 # }}}
 # method modifiers {{{
 after 'connect' => sub {
