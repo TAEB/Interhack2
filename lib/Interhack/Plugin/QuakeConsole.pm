@@ -26,21 +26,15 @@ around 'check_input' => sub
     {
         $self->print_row($_, "\e[K");
     }
+    for (14..24)
+    {
+        $self->restore_row($_, "\e[1;30m");
+    }
 
     $self->print_row(13, "\e[K\e[1;30m+" . ('-' x 78) . "+\e[m");
     print "\e[1;12r\e[12;1H";
     while (1)
     {
-        for (14..24)
-        {
-            $self->restore_row($_, sub
-            {
-                my $char = pop; return $char if $char eq ' ';
-                (rand(4) < 1 ? "\e[1;31m" : "\e[0;31m")
-                    . $char
-            });
-        }
-
         print "> ";
         my $line = <>;
         last if !defined($line);
