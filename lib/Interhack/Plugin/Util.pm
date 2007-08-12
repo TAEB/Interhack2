@@ -78,7 +78,7 @@ sub restore_row
     my $row = shift;
 
     # not so good yet! but at least now we have only one place to fix it
-    $self->print_row(2, "\e[K");
+    $self->print_row(2, "\e[K" . $self->vt->row_plaintext(2));
 } # }}}
 # force_tab_yn {{{
 =head2 force_tab_yn STRING -> BOOLEAN
