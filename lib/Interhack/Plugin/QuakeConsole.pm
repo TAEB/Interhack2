@@ -35,11 +35,34 @@ around 'check_input' => sub
     print "\e[1;12r\e[12;1H";
     while (1)
     {
-        print "\n> ";
+        print "> ";
         my $line = <>;
         last if !defined($line);
-        print eval $line;
-        warn $@ if $@;
+        chomp $line;
+        last if $line eq ":q";
+        next if $line =~ /^\s*$/;
+
+        my $ret;
+
+        if ($line =~ /^#(\S+)(?:\s+(.*?))?$/)
+        {
+            if (exists $self->extended_commands->{$1})
+            {
+                $ret = $self->extended_commands->{$1}->($self, $1, $2);
+            }
+            else
+            {
+                $ret = "Unknown extended command: $1.";
+            }
+        }
+        else
+        {
+            $ret = eval $line;
+        }
+
+        $ret = "undef" if !defined($ret);
+        print "\e[32m$ret\e[m\n";
+        warn "\e[31m$@\e[m\n" if $@;
     }
     print "\ec";
 
