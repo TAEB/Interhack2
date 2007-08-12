@@ -23,17 +23,6 @@ around 'toserver' => sub
     return $orig->($self, $text);
 };
 
-around 'toscreen' => sub
-{
-    my $orig = shift;
-    my ($self, $text) = @_;
-
-    my $keys = $self->keystrokes;
-    $text =~ s/ S:\d+/ K:$keys/;
-
-    $orig->($self, $text);
-};
-
 before 'cleanup' => sub
 {
     my ($self) = @_;

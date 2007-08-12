@@ -36,19 +36,6 @@ after 'toserver' => sub
     $self->realtime($self->realtime + $diff);
 };
 
-around 'toscreen' => sub
-{
-    my $orig = shift;
-    my ($self, $text) = @_;
-
-    my $time = $self->serialize_time . ' ';
-    my $length = length($time);
-
-    $text =~ s/(\e\[23(?:;1)?H).{$length}/$1$time/;
-
-    $orig->($self, $text);
-};
-
 before 'cleanup' => sub
 {
     my ($self) = @_;
