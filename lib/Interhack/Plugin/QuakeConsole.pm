@@ -31,7 +31,16 @@ around 'check_input' => sub
         $self->restore_row($_, "\e[1;30m");
     }
 
-    $self->print_row(13, "\e[K\e[1;30m+" . ('-' x 78) . "+\e[m");
+    $self->print_row(13, "\e[K"
+                       . "\e[1;37m+"
+                       . "\e[1;30m" . ('-' x 50)
+                       . "\e[1;37m[ "
+                       . "\e[1;36mI\e[0;36mnterhack \e[1;36mC\e[0;36monsole"
+                       . " \e[1;37m]"
+                       . "\e[1;30m" . ('-' x 7)
+                       . "\e[1;37m+"
+                       . "\e[m");
+
     print "\e[1;12r\e[12;1H";
     while (1)
     {
