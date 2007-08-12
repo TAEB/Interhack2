@@ -56,6 +56,15 @@ has 'statefile' => (
     required => 1,
     default => 'interhack.yaml',
 );
+
+# XXX: this should go into the Config role once it is written
+has 'config_dir' => (
+    metaclass => 'DoNotSerialize',
+    is => 'rw',
+    isa => 'Str',
+    required => 1,
+    default => "$ENV{HOME}/.interhack2",
+);
 # }}}
 # methods {{{
 sub BUILD # {{{
