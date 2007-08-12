@@ -91,10 +91,15 @@ sub print_row
     return;
 } # }}}
 # restore_row {{{
-=head2 restore_row INT
+=head2 restore_row INT, COLOR
 
 Restores the contents of the row as best as possible. Use this if you're drawing
 on the screen temporarily (such as with force_tab_yn).
+
+If the second argument is true, it will force all characters to be that color.
+You may pass a code reference here and it will be invoked for every screen
+coordinate (it's given the arguments C<$self>, C<$x>, C<$y>, and C<$char>).
+It must return the C<$char> to use in that cell.
 
 =cut
 
@@ -104,7 +109,17 @@ sub restore_row
     my $row = shift;
     my $color = shift;
 
-    if ($color)
+    if (ref($color) eq 'CODE')
+    {
+        my @chars = split //, $self->vt->row_plaintext($row);
+        for (0..$#chars)
+        {
+            $chars[$_] = $color->($self, 1+$_, $row, $chars[$_]);
+        }
+        $self->print_row($row, "\e[K" . join('', @chars) . "\e[m");
+        return;
+    }
+    elsif ($color)
     {
         $self->print_row($row, "\e[K$color"
                              . $self->vt->row_plaintext($row)
