@@ -88,8 +88,22 @@ sub restore_row
     my $self = shift;
     my $row = shift;
 
+    my @attrs = split '', $self->vt->row_attr($row);
+    my @chars = split '', $self->vt->row_plaintext($row);
+
+    for (0..$#attrs)
+    {
+        my ($fg, $bg, $bold, $faint, $standout, $underline, $blink, $reverse)
+            = $self->vt->attr_unpack($attrs[$_]);
+        next unless $fg;
+
+        $bold = $bold ? '1;' : '';
+        my $escape = "\e[$bold${fg}m";
+        $chars[$_] = $escape . $chars[$_] . "\e[m";
+    }
+
     # not so good yet! but at least now we have only one place to fix it
-    $self->print_row(2, "\e[K" . $self->vt->row_plaintext(2));
+    $self->print_row($row, "\e[K" . join '', @chars);
 } # }}}
 # force_tab_yn {{{
 =head2 force_tab_yn STRING -> BOOLEAN
