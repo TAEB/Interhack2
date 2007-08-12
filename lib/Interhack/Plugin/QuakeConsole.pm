@@ -67,6 +67,7 @@ around 'check_input' => sub
             {
                 $ret = "Unknown extended command: $1.";
             }
+            eval {}; # clear $@
         }
         else
         {
