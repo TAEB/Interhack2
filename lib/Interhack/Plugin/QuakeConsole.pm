@@ -20,6 +20,7 @@ around 'check_input' => sub
     return $input unless $self->expecting_command && $input =~ /^~/;
 
     ReadMode 0;
+    my ($x, $y) = ($self->vt->x, $self->vt->y);
 
     for (1..12)
     {
@@ -29,6 +30,7 @@ around 'check_input' => sub
     {
         $self->restore_row($_, "\e[1;30m");
     }
+
     $self->print_row(13, "\e[K\e[1;30m+" . ('-' x 78) . "+\e[m");
     print "\e[1;12r\e[12;1H";
     while (1)
@@ -43,7 +45,13 @@ around 'check_input' => sub
 
     ReadMode 3;
 
-    return "\cr";
+    for (1..24)
+    {
+        $self->restore_row($_);
+    }
+    $self->goto($x, $y);
+
+    return;
 };
 # }}}
 # methods {{{
