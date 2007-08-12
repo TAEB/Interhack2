@@ -27,7 +27,6 @@ after 'toscreen' => sub
         }
         elsif ($self->topline =~ /^\w+ \w+(?: \w+), the.*?, welcome back to NetHack!/)
         {
-            $self->new_state();
             $self->in_game(1);
         }
     }
