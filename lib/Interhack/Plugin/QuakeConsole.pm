@@ -24,7 +24,7 @@ around 'check_input' => sub
 
     for (1..12)
     {
-        $self->print_row($_, "\e[K");        
+        $self->print_row($_, "\e[K");
     }
 
     $self->print_row(13, "\e[K\e[1;30m+" . ('-' x 78) . "+\e[m");
@@ -78,7 +78,8 @@ around 'check_input' => sub
         print "\e[32m$ret\e[m\n";
         warn "\e[31m$@\e[m\n" if $@;
     }
-    print "\ec";
+
+    print "\ec"; # remove scrolling
 
     ReadMode 3;
 
