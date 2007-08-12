@@ -6,6 +6,7 @@ our $VERSION = '1.99_01';
 
 # attributes {{{
 has server_name => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -13,6 +14,7 @@ has server_name => (
 );
 
 has server_address => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -20,6 +22,7 @@ has server_address => (
 );
 
 has server_port => (
+    metaclass => 'DoNotSerialize',
     isa => 'Int',
     is => 'rw',
     lazy => 1,
@@ -27,6 +30,7 @@ has server_port => (
 );
 
 has rc_dir => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -34,6 +38,7 @@ has rc_dir => (
 );
 
 has dgl_line1 => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -41,6 +46,7 @@ has dgl_line1 => (
 );
 
 has dgl_line2 => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -48,6 +54,7 @@ has dgl_line2 => (
 );
 
 has nick => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -55,6 +62,7 @@ has nick => (
 );
 
 has pass => (
+    metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -62,6 +70,7 @@ has pass => (
 );
 
 has do_autologin => (
+    metaclass => 'DoNotSerialize',
     isa => 'Bool',
     is => 'rw',
     lazy => 1,
