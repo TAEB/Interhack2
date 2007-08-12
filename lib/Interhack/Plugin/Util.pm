@@ -42,7 +42,7 @@ with the screen, use 1-based coordinates.
 sub goto
 {
     my ($self, $x, $y) = @_;
-    print "\e[$y;${x}H";
+    $self->toscreen("\e[$y;${x}H");
 }
 # }}}
 # vt_like {{{
@@ -85,9 +85,9 @@ sub print_row
     my $text = shift;
     my $leave_cursor = shift;
 
-    print "\e[s" unless $leave_cursor;
-    print "\e[${row}H$text";
-    print "\e[u" unless $leave_cursor;
+    $self->toscreen("\e[s") unless $leave_cursor;
+    $self->toscreen("\e[${row}H$text");
+    $self->toscreen("\e[u") unless $leave_cursor;
     return;
 } # }}}
 # restore_row {{{

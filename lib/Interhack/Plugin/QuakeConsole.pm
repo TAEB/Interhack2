@@ -41,10 +41,10 @@ around 'check_input' => sub
                        . "\e[1;37m+"
                        . "\e[m");
 
-    print "\e[1;12r\e[12;1H";
+    $self->toscreen("\e[1;12r\e[12;1H");
     while (1)
     {
-        print "> ";
+        $self->toscreen("> ");
         my $line = <>;
         last if !defined($line);
         chomp $line;
@@ -78,11 +78,11 @@ around 'check_input' => sub
         }
 
         $ret = "undef" if !defined($ret);
-        print "\e[32m$ret\e[m\n";
+        $self->toscreen("\e[32m$ret\e[m\n");
         warn "\e[31m$@\e[m\n" if $@;
     }
 
-    print "\ec"; # remove scrolling
+    $self->toscreen("\ec"); # remove scrolling
 
     ReadMode 3;
 
