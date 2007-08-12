@@ -10,7 +10,7 @@ our $SUMMARY = 'Disallows any invalid direction at a "In what direction?" prompt
 # attributes {{{
 # }}}
 # method modifiers {{{
-around 'tonao' => sub
+around 'toserver' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;

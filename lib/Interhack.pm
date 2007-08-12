@@ -137,7 +137,7 @@ sub iterate # {{{
     my $fromkeyboard = $self->read_keyboard();
     if (defined($fromkeyboard))
     {
-        $self->tonao($fromkeyboard);
+        $self->toserver($fromkeyboard);
     }
 
     my $fromsocket = $self->read_socket();
@@ -159,7 +159,7 @@ sub read_socket # {{{
     # we can't detect this perfectly, but it's only an issue if an escape code
     # is broken into two parts, and we can check for that
 
-    my $from_nao;
+    my $from_server;
 
     ITER: for (1..100)
     {
@@ -175,7 +175,7 @@ sub read_socket # {{{
         }
 
         # need to store what we read
-        $from_nao .= $_;
+        $from_server .= $_;
 
         # check for broken escape code or DEC string
         if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
@@ -187,7 +187,7 @@ sub read_socket # {{{
         last ITER;
     }
 
-    return $from_nao;
+    return $from_server;
 } # }}}
 sub parse # {{{
 {
@@ -208,7 +208,7 @@ sub check_input # {{{
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub tonao # {{{
+sub toserver # {{{
 {
     my ($self, $text) = @_;
 

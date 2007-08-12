@@ -13,7 +13,7 @@ has keystrokes => (
 );
 # }}}
 # method modifiers {{{
-around 'tonao' => sub
+around 'toserver' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;

@@ -58,8 +58,8 @@ Interhack controls all IO. If you only use Interhack, you'll get a dumb telnet
 client. This is by design. All the magic of Interhack rightly belongs in the
 Plugins, so each user can configure exactly what he wants Interhack to be.
 
-Interhack provides methods like 'tonao' which is a method that simply takes a
-string as input and sends it to NAO.
+Interhack provides methods like 'toserver' which is a method that simply takes a
+string as input and sends it to the server.
 
 Interhack::Config handles reading configuration and loading plugins.
 
@@ -100,9 +100,9 @@ will be for counting keystrokes.
                               # number of keystrokes instead
     }
 
-    before 'tonao' => sub { # define a 'before' method modifier
-        my $self = shift;   # this is an Interhack
-        my $text = shift;   # the text we're sending to NAO
+    before 'toserver' => sub { # define a 'before' method modifier
+        my $self = shift;      # this is an Interhack
+        my $text = shift;      # the text we're sending to the server
 
         my $keystrokes = $self->keystrokes; # get
         $keystrokes += length $text;        # modify

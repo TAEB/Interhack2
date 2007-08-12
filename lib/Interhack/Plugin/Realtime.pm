@@ -21,7 +21,7 @@ has previous_time => (
 );
 # }}}
 # method modifiers {{{
-after 'tonao' => sub
+after 'toserver' => sub
 {
     my ($self) = @_;
 

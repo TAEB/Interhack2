@@ -121,7 +121,7 @@ override 'toscreen' => sub # {{{
     $self->monitor->process($text);
     $self->screen_out($self->screen_out . $text);
 }; # }}}
-override 'tonao' => sub # {{{
+override 'toserver' => sub # {{{
 {
     my $self = shift;
     my $text = shift;
