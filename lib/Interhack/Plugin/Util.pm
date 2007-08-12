@@ -205,11 +205,11 @@ after toscreen => sub
 {
     my $self = shift;
 
-    while (my ($name, $code) = each %{$self->extended_commands})
+    if ($self->topline =~ /^(\S+)(?:\s+(.*?))?: unknown extended command\. *$/)
     {
-        if ($self->topline =~ /^(\Q$name\E)(?:\s+(.*?))?: unknown extended command\. *$/)
+        if (exists $self->extended_commands->{$1})
         {
-            $code->($self, $1, $2);
+            $self->extended_commands->{$1}->($self, $1, $2);
         }
     }
 };
