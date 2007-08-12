@@ -20,12 +20,12 @@ after 'toscreen' => sub
 
     if (!$self->in_game)
     {
-        if ($self->topline =~ /^\w+ \w+, welcome to NetHack!  You are a/)
+        if ($self->topline =~ /^\w+ \w+(?: \w+), welcome to NetHack!  You are a/)
         {
             $self->new_state();
             $self->in_game(1);
         }
-        elsif ($self->topline =~ /^\w+ \w+, the.*?, welcome back to NetHack!/)
+        elsif ($self->topline =~ /^\w+ \w+(?: \w+), the.*?, welcome back to NetHack!/)
         {
             $self->new_state();
             $self->in_game(1);
