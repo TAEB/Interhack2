@@ -31,6 +31,20 @@ has logger => (
 # method modifiers {{{
 # }}}
 # methods {{{
+# goto {{{
+=head2 goto X, Y
+
+Moves the cursor to the given (X, Y) coordinates. Like everything else dealing
+with the screen, use 1-based coordinates.
+
+=cut
+
+sub goto
+{
+    my ($self, $x, $y) = @_;
+    print "\e[$y;${x}H";
+}
+# }}}
 # vt_like {{{
 =head2 vt_like REGEXES -> INT
 
