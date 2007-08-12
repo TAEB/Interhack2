@@ -22,7 +22,8 @@ has logger => (
     lazy => 1,
     default => sub
     {
-        Log::Log4perl->init("$ENV{HOME}/.interhack2/log4perl.conf");
+        my $self = shift;
+        Log::Log4perl->init($self->config_dir . "/log4perl.conf");
         Log::Log4perl->get_logger("Interhack");
     }
 );
