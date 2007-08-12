@@ -83,7 +83,7 @@ sub connect # {{{
 {
     my $self = shift;
 
-    my ($server, $port) = ('nethack.eotl.org', 2000);
+    my ($server, $port) = ('nethack.alt.org', 23);
     $self->socket(new IO::Socket::INET(PeerAddr => $server,
                                        PeerPort => $port,
                                        Proto => 'tcp'));
