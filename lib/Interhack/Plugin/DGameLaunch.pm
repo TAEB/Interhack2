@@ -4,8 +4,6 @@ use Moose::Role;
 
 our $VERSION = '1.99_01';
 
-# XXX: ask eid: are $self->server_name, etc variables or no-arg functions?
-# (i.e. can they be interpolated?)
 # attributes {{{
 has server_name => (
     isa => 'Str',
