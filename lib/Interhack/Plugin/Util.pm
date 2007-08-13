@@ -242,27 +242,37 @@ sub extended_command
 sub debug
 {
     my $self = shift;
-    $self->logger->debug(@_);
+    unshift @_, $self->logger;
+    my $coderef = $self->logger->can('debug');
+    goto &$coderef;
 }
 sub info
 {
     my $self = shift;
-    $self->logger->info(@_);
+    unshift @_, $self->logger;
+    my $coderef = $self->logger->can('info');
+    goto &$coderef;
 }
 sub warn
 {
     my $self = shift;
-    $self->logger->warn(@_);
+    unshift @_, $self->logger;
+    my $coderef = $self->logger->can('warn');
+    goto &$coderef;
 }
 sub error
 {
     my $self = shift;
-    $self->logger->error(@_);
+    unshift @_, $self->logger;
+    my $coderef = $self->logger->can('error');
+    goto &$coderef;
 }
 sub fatal
 {
     my $self = shift;
-    $self->logger->fatal(@_);
+    unshift @_, $self->logger;
+    my $coderef = $self->logger->can('fatal');
+    goto &$coderef;
 }
 # }}}
 sub attr_to_ansi # {{{
