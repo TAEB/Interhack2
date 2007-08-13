@@ -7,7 +7,7 @@ our $VERSION = '1.99_01';
 # attributes {{{
 # }}}
 # method modifiers {{{
-around 'toscreen' => sub
+around 'mangle_output' => sub
 {
     my $orig = shift;
     my ($self, $string) = @_;

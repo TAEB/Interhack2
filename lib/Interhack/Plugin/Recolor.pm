@@ -73,7 +73,7 @@ has recolors => (
 );
 # }}}
 # method modifiers {{{
-around 'toscreen' => sub
+around 'mangle_output' => sub
 {
     my $orig = shift;
     my ($self, $string) = @_;
