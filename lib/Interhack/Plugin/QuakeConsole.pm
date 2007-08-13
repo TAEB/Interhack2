@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::QuakeConsole;
 use Moose::Role;
-use Term::ReadLine;
 use Term::ReadKey;
 
 our $VERSION = '1.99_01';
