@@ -14,6 +14,7 @@ requires 'Term::ReadKey';
 requires 'Term::VT102';
 requires 'Module::Refresh';
 requires 'Log::Log4perl';
+requires 'Sort::Topological';
 
 build_requires 'Test::More';
 build_requires 'Test::Builder';
