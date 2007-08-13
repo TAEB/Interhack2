@@ -205,8 +205,11 @@ sub autologin {
     if ($self->do_autologin)
     {
         $self->debug("Doing autologin");
-        print {$self->socket} "l" . $self->nick . "\n";
-        print {$self->socket} $self->pass . "\n" if $self->pass ne '';
+        # meh, i thought to keep these as prints for security reasons, but
+        # really, any of the helper function here can be wrapped, not just
+        # dgl_toserver, so it's really not worth it.
+        $self->dgl_toserver("l" . $self->nick . "\n");
+        $self->dgl_toserver($self->pass . "\n") if $self->pass ne '';
     }
 } # }}}
 # clear_buffers {{{
