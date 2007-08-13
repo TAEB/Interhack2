@@ -84,6 +84,14 @@ has logged_in => (
     lazy => 1,
     default => 0,
 );
+
+has in_game => (
+    metaclass => 'DoNotSerialize',
+    isa => 'Bool',
+    is => 'rw',
+    lazy => 1,
+    default => 0,
+);
 # }}}
 # method modifiers {{{
 after 'connect' => sub {
