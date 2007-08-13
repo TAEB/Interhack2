@@ -6,6 +6,7 @@
 ConfirmDirection: Util
 DGameLaunch: NewGame Util
 DGL_LocalConfig: DGameLaunch Util
+DGL_Fortune: DGameLaunch
 Eidocolors: Recolor
 Foodless: Util
 Illiterate: Util
