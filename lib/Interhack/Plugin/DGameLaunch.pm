@@ -181,6 +181,7 @@ sub get_nick {
                 }
                 else
                 {
+                    $self->debug("Using login name $_");
                     $self->nick($_);
                 }
             }
@@ -195,6 +196,7 @@ sub get_pass {
     my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
     if ($self->pass eq '')
     {
+        $self->debug("Getting password from the password file");
         my $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> };
         chomp $pass;
         $self->pass($pass);
@@ -206,6 +208,7 @@ sub autologin {
 
     if ($self->do_autologin)
     {
+        $self->debug("Doing autologin");
         print {$self->socket} "l" . $self->nick . "\n";
         print {$self->socket} $self->pass . "\n" if $self->pass ne '';
     }
@@ -215,6 +218,7 @@ sub clear_buffers {
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
+        $self->debug("Clearing out socket buffer ($found)...");
         next unless defined(recv($self->socket, $_, 4096, 0));
         last if /There was a problem with your last entry\./;
         my $line1 = $self->dgl_line1;
