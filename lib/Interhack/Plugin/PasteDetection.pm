@@ -2,7 +2,6 @@
 package Interhack::Plugin::PasteDetection;
 use Moose::Role;
 use Term::ReadKey;
-with "Interhack::Plugin::Util";
 
 our $VERSION = '1.99_01';
 

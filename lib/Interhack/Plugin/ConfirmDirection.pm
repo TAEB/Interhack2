@@ -2,8 +2,6 @@
 package Interhack::Plugin::ConfirmDirection;
 use Moose::Role;
 
-with "Interhack::Plugin::Util";
-
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Disallows any invalid direction at a "In what direction?" prompt';
 

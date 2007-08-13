@@ -3,7 +3,6 @@ package Interhack::Plugin::QuakeConsole;
 use Moose::Role;
 use Term::ReadLine;
 use Term::ReadKey;
-with "Interhack::Plugin::Util";
 
 our $VERSION = '1.99_01';
 

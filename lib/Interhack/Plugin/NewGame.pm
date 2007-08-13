@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::NewGame;
 use Moose::Role;
-with "Interhack::Plugin::Util";
 
 our $VERSION = '1.99_01';
 

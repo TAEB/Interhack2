@@ -1,7 +1,6 @@
 #!perl
 package Interhack::Plugin::Eidocolors;
 use Moose::Role;
-with "Interhack::Plugin::Recolor";
 
 our $VERSION = '1.99_01';
 our (%ece, %eci, %ec);
