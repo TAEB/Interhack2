@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 package Interhack::Plugin::DGameLaunch;
 use Moose::Role;
+with "Interhack::Plugin::NewGame";
 
 our $VERSION = '1.99_01';
 
@@ -78,14 +79,6 @@ has do_autologin => (
 );
 
 has logged_in => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Bool',
-    is => 'rw',
-    lazy => 1,
-    default => 0,
-);
-
-has in_game => (
     metaclass => 'DoNotSerialize',
     isa => 'Bool',
     is => 'rw',
