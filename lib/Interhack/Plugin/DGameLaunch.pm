@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 package Interhack::Plugin::DGameLaunch;
 use Moose::Role;
+use Term::ReadKey;
 
 our $VERSION = '1.99_01';
 
@@ -93,6 +94,8 @@ after 'connect' => sub {
     $self->get_pass;
     $self->autologin;
     $self->clear_buffers;
+    my $keep_looping = 1;
+    $keep_looping = $self->dgl_iterate until !$keep_looping;
 };
 # }}}
 # methods {{{
@@ -223,7 +226,91 @@ sub clear_buffers {
             $found++ if $2;
         }
     }
-    print;
+    $self->dgl_toscreen($_);
+} # }}}
+# XXX: these are just a copy of the interhack main loop... we should abstract
+# this out into a helper lib at some point... or maybe just have a way to do
+# the Interhack.pm main loop in phases that modules can hook into... in any
+# case, anyone who wants to should feel free to rewrite this
+# dgl_iterate {{{
+sub dgl_iterate
+{
+    my $self = shift;
+
+    my $fromkeyboard = $self->dgl_read_keyboard();
+    if (defined($fromkeyboard))
+    {
+        $self->dgl_toserver($fromkeyboard);
+        return 0 if $self->logged_in && $fromkeyboard eq 'p';
+    }
+
+    my ($fromsocket, $conn) = $self->dgl_read_socket();
+    return 0 unless $conn;
+    if (defined($fromsocket))
+    {
+        $self->dgl_toscreen($fromsocket);
+    }
+    return 1;
+} # }}}
+# dgl_read_socket {{{
+sub dgl_read_socket
+{
+    my $self = shift;
+
+    # the reason this is so complicated is because packets can be broken up
+    # we can't detect this perfectly, but it's only an issue if an escape code
+    # is broken into two parts, and we can check for that
+
+    my $from_server;
+
+    ITER: for (1..100)
+    {
+        # would block
+        next ITER
+            unless defined(recv($self->socket, $_, 4096, 0));
+
+        # 0 = error
+        if (length == 0)
+        {
+            $self->connected(0);
+            return;
+        }
+
+        # need to store what we read
+        $from_server .= $_;
+
+        # check for broken escape code or DEC string
+        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
+        {
+            next ITER;
+        }
+
+        # cut it and release
+        last ITER;
+    }
+
+    return ($from_server, 1);
+} # }}}
+# dgl_read_keyboard {{{
+sub dgl_read_keyboard
+{
+    my $self = shift;
+    ReadKey 0.05;
+} # }}}
+# dgl_toserver {{{
+sub dgl_toserver {
+    my ($self, $text) = @_;
+
+    print {$self->socket} $text;
+} # }}}
+# dgl_toscreen {{{
+sub dgl_toscreen {
+    my ($self, $text) = @_;
+
+    my $nick = $self->nick;
+    $self->logged_in(1) if $text =~ /Logged in as: $nick/;
+
+    print $text;
 } # }}}
 # }}}
 
