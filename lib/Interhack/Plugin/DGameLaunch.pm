@@ -195,10 +195,9 @@ sub get_pass {
     my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
     if ($self->pass eq '')
     {
-        $self->pass(do { local @ARGV = "$pass_dir/" . $self->nick; <> });
-        # XXX: what's the correct way to do this?
-        $self->pass($1) if $self->pass =~ m{(.*)$/}
-        #chomp $self->pass;
+        my $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> };
+        chomp $pass;
+        $self->pass($pass);
     }
 } # }}}
 # autologin {{{
