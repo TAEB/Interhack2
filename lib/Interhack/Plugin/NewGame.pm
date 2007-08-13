@@ -15,7 +15,7 @@ has in_game => (
 );
 # }}}
 # method modifiers {{{
-after 'toscreen' => sub
+before 'mangle_output' => sub
 {
     my ($self, $string) = @_;
 
