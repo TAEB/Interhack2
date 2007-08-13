@@ -1,0 +1,19 @@
+# soft dependencies: if both plugins are present, one should be loaded before
+#                    the other so that method modifiers are applied correctly
+
+Macros: PasteDetection
+
+# hard dependencies: one plugin literally depends on another
+
+ConfirmDirection: Util NetHackConfig
+DGameLaunch: NewGame
+Eidocolors: Recolor
+Foodless: Util
+Illiterate: Util
+NewGame: Util
+PasteDetection: Util
+QuakeConsole: Util
+Satiated: Util
+TriggerReload: Util
+Weaponless: Util
+
