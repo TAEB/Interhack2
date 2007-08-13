@@ -47,7 +47,14 @@ around 'dgl_toserver' => sub
             chomp $nethackrc;
             $orig->($self, "o:0,\$d\ni");
             $orig->($self, "$nethackrc\eg");
-            until (defined(recv($self->socket, $_, 1024, 0)) && /\e\[.*?'g' is not implemented/) {}
+            my $last_buf = '';
+            my $buf = '';
+            while (1) {
+                next unless defined(recv($self->socket, $buf, 1024, 0));
+                $_ = $last_buf . $buf;
+                last if /\e\[.*?'g' is not implemented/;
+                $last_buf = $buf;
+            }
             $orig->($self, ":wq\n");
         }
     }
