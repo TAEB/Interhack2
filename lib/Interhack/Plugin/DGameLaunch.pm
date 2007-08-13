@@ -96,6 +96,7 @@ after 'connect' => sub {
     $self->clear_buffers;
     my $keep_looping = 1;
     $keep_looping = $self->dgl_iterate until !$keep_looping;
+    $self->debug("Leaving DGL, starting the game");
 };
 # }}}
 # methods {{{
@@ -226,6 +227,7 @@ sub clear_buffers {
             $found++ if $2;
         }
     }
+    $self->debug("Done clearing out socket buffer");
     $self->dgl_toscreen($_);
 } # }}}
 # XXX: these are just a copy of the interhack main loop... we should abstract
@@ -308,7 +310,10 @@ sub dgl_toscreen {
     my ($self, $text) = @_;
 
     my $nick = $self->nick;
-    $self->logged_in(1) if $text =~ /Logged in as: $nick/;
+    if ($text =~ /Logged in as: $nick/) {
+        $self->debug("Login detected");
+        $self->logged_in(1);
+    }
 
     print $text;
 } # }}}
