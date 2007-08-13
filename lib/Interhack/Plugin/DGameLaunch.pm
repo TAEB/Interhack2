@@ -212,7 +212,7 @@ sub clear_buffers {
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
-        $self->debug("Clearing out socket buffer ($found)...");
+        $self->debug("Clearing out socket buffer...");
         next unless defined(recv($self->socket, $_, 4096, 0));
         last if /There was a problem with your last entry\./;
         my $line1 = $self->dgl_line1;
