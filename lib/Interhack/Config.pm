@@ -6,6 +6,8 @@ use Sort::Topological 'toposort';
 our $VERSION = '1.99_01';
 our %loaded_plugins;
 
+# XXX: does NOT handle circular dependencies well - goes into an infinite loop
+#       we'll want a new module for toposort, but it's good enough for now
 sub calc_deps
 {
     my %is_wanted = map {$_ => 1} @_;
