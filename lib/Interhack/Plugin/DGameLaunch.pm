@@ -126,24 +126,27 @@ sub server {
     my $self = shift;
     my $new_server;
 
-    if (@_ == 0) {
+    if (@_ == 0)
+    {
         $self->warn("server called with no parameters");
         return;
     }
-    elsif (@_ == 1) {
-        if (ref($_[0]) eq 'HASH') {
+    elsif (@_ == 1)
+    {
+        if (ref($_[0]) eq 'HASH')
+        {
             $new_server = $_[0];
         }
-        else {
+        else
+        {
             $new_server = $servers{$_[0]} or do {
                 $self->warn("Unknown server '$_[0]'");
                 return;
             }
         }
     }
-    else {
-        # XXX: test this
-        #$new_server = \%@_;
+    else
+    {
         $new_server = \do {my %args = @_};
     }
 
@@ -165,7 +168,6 @@ sub get_nick {
     my $self = shift;
 
     my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
-    # XXX: does plain ARGV work here? or will i need to use main::ARGV?
     if (@ARGV)
     {
         for (glob("$pass_dir/*"))
@@ -218,7 +220,8 @@ sub clear_buffers {
         last if /There was a problem with your last entry\./;
         my $line1 = $self->dgl_line1;
         my $line2 = $self->dgl_line2;
-        if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s) {
+        if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
+        {
             $found++;
             $found++ if $2;
         }
