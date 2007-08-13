@@ -15,6 +15,8 @@ requires 'Term::VT102';
 requires 'Module::Refresh';
 requires 'Log::Log4perl';
 requires 'Sort::Topological';
+requires 'LWP::Simple';
+requires 'File::Temp';
 
 build_requires 'Test::More';
 build_requires 'Test::Builder';

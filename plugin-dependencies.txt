@@ -4,7 +4,8 @@
 # hard dependencies: one plugin literally depends on another
 
 ConfirmDirection: Util
-DGameLaunch: NewGame
+DGameLaunch: NewGame Util
+DGL_LocalConfig: DGameLaunch Util
 Eidocolors: Recolor
 Foodless: Util
 Illiterate: Util
