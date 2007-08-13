@@ -215,6 +215,8 @@ sub autologin {
 } # }}}
 # clear_buffers {{{
 sub clear_buffers {
+    my $self = shift;
+
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
