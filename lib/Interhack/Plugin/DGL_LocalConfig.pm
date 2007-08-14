@@ -50,6 +50,9 @@ around 'dgl_write_server_input' => sub
             my $last_buf = '';
             my $buf = '';
             while (1) {
+                # XXX: probably don't want to be directly messing with
+                # self->socket here... that should probably only happen in
+                # the telnet code (so we can swap it out for ssh, etc)
                 next unless defined(recv($self->socket, $buf, 1024, 0));
                 $_ = $last_buf . $buf;
                 last if /\e\[.*?'g' is not implemented/;

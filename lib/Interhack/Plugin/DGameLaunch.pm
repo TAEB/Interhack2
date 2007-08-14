@@ -246,6 +246,8 @@ sub dgl_read_server_output
 
     ITER: for (1..100)
     {
+        # XXX: reading and writing on $self->socket should be methods in the
+        # Telnet plugin; we shouldn't be directly accessing $self->socket here
         # would block
         next ITER
             unless defined(recv($self->socket, $_, 4096, 0));
