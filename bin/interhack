@@ -6,6 +6,12 @@ use Interhack;
 use Term::ReadKey;
 
 $| = 1;
+sub cont {
+    ReadMode 3;
+    # XXX: redraw the screen here...
+    $SIG{CONT} = \&cont;
+}
+$SIG{CONT} = \&cont;
 ReadMode 3;
 END { ReadMode 0 }
 
