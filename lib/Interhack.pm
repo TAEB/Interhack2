@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 package Interhack;
 use Moose;
-use IO::Socket::INET;
+use IO::Pty::Easy;
 use Term::ReadKey;
 use Term::VT102;
 use Module::Refresh;
@@ -20,12 +20,10 @@ has 'connected' => (
     isa => 'Bool',
 );
 
-has 'socket' => (
+has 'pty' => (
     metaclass => 'DoNotSerialize',
     is => 'rw',
-    isa => 'IO::Socket::INET',
-    lazy => 1,
-    default => sub { {} },
+    isa => 'IO::Pty::Easy',
 );
 
 has 'config' => (
@@ -97,50 +95,8 @@ sub connect # {{{
 {
     my $self = shift;
 
-    my ($server, $port) = ('nethack.alt.org', 23);
-    $self->socket(new IO::Socket::INET(PeerAddr => $server,
-                                       PeerPort => $port,
-                                       Proto => 'tcp'));
-    die "Could not create socket: $!\n" unless $self->socket;
-    $self->socket->blocking(0);
-
-    my $IAC = chr(255);
-    my $SB = chr(250);
-    my $SE = chr(240);
-    my $WILL = chr(251);
-    my $WONT = chr(252);
-    my $DO = chr(253);
-    my $DONT = chr(254);
-    my $TTYPE = chr(24);
-    my $TSPEED = chr(32);
-    my $XDISPLOC = chr(35);
-    my $NEWENVIRON = chr(39);
-    my $IS = chr(0);
-    my $GOAHEAD = chr(3);
-    my $ECHO = chr(1);
-    my $NAWS = chr(31);
-    my $STATUS = chr(5);
-    my $LFLOW = chr(33);
-
-    if ($server =~ /noway\.ratry\.ru/)
-    {
-        print {$self->socket} "$IAC$DO$ECHO"
-                             ."$IAC$DO$GOAHEAD"
-    }
-    else
-    {
-        print {$self->socket} "$IAC$WILL$TTYPE"
-                             ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
-                             ."$IAC$WONT$TSPEED"
-                             ."$IAC$WONT$XDISPLOC"
-                             ."$IAC$WONT$NEWENVIRON"
-                             ."$IAC$DONT$GOAHEAD"
-                             ."$IAC$WILL$ECHO"
-                             ."$IAC$DO$STATUS"
-                             ."$IAC$WILL$LFLOW"
-                             ."$IAC$WILL$NAWS"
-                             ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE";
-    }
+    $self->pty(new IO::Pty::Easy(handle_pty_size => 0));
+    $self->pty->spawn("nethack");
 
     $self->connected(1);
 } # }}}
@@ -169,39 +125,14 @@ sub read_socket # {{{
 {
     my $self = shift;
 
-    # the reason this is so complicated is because packets can be broken up
-    # we can't detect this perfectly, but it's only an issue if an escape code
-    # is broken into two parts, and we can check for that
-
-    my $from_server;
-
-    ITER: for (1..100)
-    {
-        # would block
-        next ITER
-            unless defined(recv($self->socket, $_, 4096, 0));
-
-        # 0 = error
-        if (length == 0)
-        {
-            $self->connected(0);
-            return;
-        }
-
-        # need to store what we read
-        $from_server .= $_;
-
-        # check for broken escape code or DEC string
-        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
-        {
-            next ITER;
-        }
-
-        # cut it and release
-        last ITER;
+    my $buf;
+    # 0 == undef? perl is ridiculous
+    my $ret = $self->pty->read($buf, 0);
+    if (defined($ret) && $ret == 0) {
+        $self->connected(0);
+        return;
     }
-
-    return $from_server;
+    return $buf;
 } # }}}
 sub parse # {{{
 {
@@ -229,12 +160,16 @@ sub check_input # {{{
 } # }}}
 sub toserver # {{{
 {
-    my ($self, $text) = @_;
+    my $self = shift;
+    my ($text) = @_;
 
     $text = $self->check_input($text);
     return if !defined($text);
-
-    print {$self->socket} $text;
+    my $ret = $self->pty->write($text, 0);
+    if (defined($ret) && $ret == 0) {
+        $self->connected(0);
+        return;
+    }
 } # }}}
 sub cleanup # {{{
 {

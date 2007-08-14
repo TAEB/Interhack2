@@ -48,7 +48,7 @@ sub calc_deps
 sub load_all_config
 {
     my $interhack = shift;
-    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole DGameLaunch DGL_LocalConfig DGL_Fortune/;
+    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole/;
     load_plugins($interhack, calc_deps(@plugins));
 }
 
