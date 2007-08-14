@@ -4,7 +4,7 @@
 # hard dependencies: one plugin literally depends on another
 
 ConfirmDirection: Util
-DGameLaunch: NewGame Util
+DGameLaunch: Telnet NewGame Util
 DGL_LocalConfig: DGameLaunch Util
 DGL_Fortune: DGameLaunch
 Eidocolors: Recolor
@@ -14,6 +14,7 @@ NewGame: Util
 PasteDetection: Util
 QuakeConsole: Util
 Satiated: Util
+Telnet: Util
 TriggerReload: Util
 Weaponless: Util
 

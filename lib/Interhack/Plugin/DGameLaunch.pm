@@ -6,30 +6,6 @@ use Term::ReadKey;
 our $VERSION = '1.99_01';
 
 # attributes {{{
-has server_name => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => 'nao',
-);
-
-has server_address => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => 'nethack.alt.org',
-);
-
-has server_port => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Int',
-    is => 'rw',
-    lazy => 1,
-    default => 23,
-);
-
 has rc_dir => (
     metaclass => 'DoNotSerialize',
     isa => 'Str',
@@ -148,9 +124,9 @@ sub server {
 
     $self->server_name($new_server->{name})
         or $self->warn("Server name not set");
-    $self->server_address($new_server->{server})
+    $self->telnet_server($new_server->{server})
         or $self->warn("Server address not set");
-    $self->server_port($new_server->{port})
+    $self->telnet_port($new_server->{port})
         or $self->warn("Server port not set");
     $self->rc_dir($new_server->{rc_dir})
         or $self->warn("Server RC path URL not set");
