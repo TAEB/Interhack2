@@ -21,7 +21,7 @@ has previous_time => (
 );
 # }}}
 # method modifiers {{{
-after 'toserver' => sub
+after 'write_game_input' => sub
 {
     my ($self) = @_;
 

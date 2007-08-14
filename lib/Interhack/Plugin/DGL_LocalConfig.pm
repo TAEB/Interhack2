@@ -8,7 +8,7 @@ use File::Temp qw/tempfile/;
 our $VERSION = '1.99_01';
 
 # method modifiers {{{
-around 'dgl_toserver' => sub
+around 'dgl_write_server_input' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;
@@ -16,7 +16,7 @@ around 'dgl_toserver' => sub
     if ($text eq "\t" && $self->logged_in)
     {
         $self->debug("Downloading rc file");
-        $self->dgl_toscreen("\e[1;30mPlease wait while I download the existing rcfile.\e[0m");
+        $self->dgl_write_user_output("\e[1;30mPlease wait while I download the existing rcfile.\e[0m");
         my $nethackrc = get($self->rc_dir . "/" . $self->nick . ".nethackrc");
         my ($fh, $name) = tempfile();
         print {$fh} $nethackrc;
@@ -37,13 +37,13 @@ around 'dgl_toserver' => sub
         if ($nethackrc eq '')
         {
             $self->warn("Ignoring empty rc file");
-            $self->dgl_toscreen("\e[24H\e[1;30mYour nethackrc came out empty, so I'm bailing.--More--\e[0m");
+            $self->dgl_write_user_output("\e[24H\e[1;30mYour nethackrc came out empty, so I'm bailing.--More--\e[0m");
             ReadKey 0;
         }
         else
         {
             $self->debug("Updating rc file");
-            $self->dgl_toscreen("\e[24H\e[1;30mPlease wait while I update the serverside rcfile.\e[0m");
+            $self->dgl_write_user_output("\e[24H\e[1;30mPlease wait while I update the serverside rcfile.\e[0m");
             chomp $nethackrc;
             $orig->($self, "o:0,\$d\ni");
             $orig->($self, "$nethackrc\eg");
@@ -64,7 +64,7 @@ around 'dgl_toserver' => sub
     }
 };
 
-around 'dgl_toscreen' => sub
+around 'dgl_write_user_output' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;

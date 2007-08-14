@@ -13,7 +13,7 @@ has macros => (
 );
 # }}}
 # method modifiers {{{
-around 'read_keyboard' => sub
+around 'read_user_input' => sub
 {
     my $orig = shift;
     my ($self) = @_;

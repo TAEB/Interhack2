@@ -63,7 +63,7 @@ has logged_in => (
 );
 # }}}
 # method modifiers {{{
-after 'connect' => sub {
+after 'initialize' => sub {
     my ($self) = @_;
 
     $self->get_nick;
@@ -183,9 +183,9 @@ sub autologin {
         $self->debug("Doing autologin");
         # meh, i thought to keep these as prints for security reasons, but
         # really, any of the helper function here can be wrapped, not just
-        # dgl_toserver, so it's really not worth it.
-        $self->dgl_toserver("l" . $self->nick . "\n");
-        $self->dgl_toserver($self->pass . "\n") if $self->pass ne '';
+        # dgl_write_server_input, so it's really not worth it.
+        $self->dgl_write_server_input("l" . $self->nick . "\n");
+        $self->dgl_write_server_input($self->pass . "\n") if $self->pass ne '';
     }
 } # }}}
 # clear_buffers {{{
@@ -207,7 +207,7 @@ sub clear_buffers {
         }
     }
     $self->debug("Done clearing out socket buffer");
-    $self->dgl_toscreen($_);
+    $self->dgl_write_user_output($_);
 } # }}}
 # XXX: these are just a copy of the interhack main loop... we should abstract
 # this out into a helper lib at some point... or maybe just have a way to do
@@ -218,23 +218,23 @@ sub dgl_iterate
 {
     my $self = shift;
 
-    my $fromkeyboard = $self->dgl_read_keyboard();
-    if (defined($fromkeyboard))
+    my $userinput = $self->dgl_read_user_input();
+    if (defined($userinput))
     {
-        $self->dgl_toserver($fromkeyboard);
-        return 0 if $self->logged_in && $fromkeyboard eq 'p';
+        $self->dgl_write_server_input($userinput);
+        return 0 if $self->logged_in && $userinput eq 'p';
     }
 
-    my ($fromsocket, $conn) = $self->dgl_read_socket();
+    my ($serveroutput, $conn) = $self->dgl_read_server_output();
     return 0 unless $conn;
-    if (defined($fromsocket))
+    if (defined($serveroutput))
     {
-        $self->dgl_toscreen($fromsocket);
+        $self->dgl_write_user_output($serveroutput);
     }
     return 1;
 } # }}}
-# dgl_read_socket {{{
-sub dgl_read_socket
+# dgl_read_server_output {{{
+sub dgl_read_server_output
 {
     my $self = shift;
 
@@ -253,7 +253,7 @@ sub dgl_read_socket
         # 0 = error
         if (length == 0)
         {
-            $self->connected(0);
+            $self->running(0);
             return;
         }
 
@@ -272,20 +272,20 @@ sub dgl_read_socket
 
     return ($from_server, 1);
 } # }}}
-# dgl_read_keyboard {{{
-sub dgl_read_keyboard
+# dgl_read_user_input {{{
+sub dgl_read_user_input
 {
     my $self = shift;
     ReadKey 0.05;
 } # }}}
-# dgl_toserver {{{
-sub dgl_toserver {
+# dgl_write_server_input {{{
+sub dgl_write_server_input {
     my ($self, $text) = @_;
 
     print {$self->socket} $text;
 } # }}}
-# dgl_toscreen {{{
-sub dgl_toscreen {
+# dgl_write_user_output {{{
+sub dgl_write_user_output {
     my ($self, $text) = @_;
 
     my $nick = $self->nick;

@@ -14,7 +14,7 @@ our $VERSION = '1.99_01';
 with Storage('format' => 'YAML', 'io' => 'File');
 
 # attributes {{{
-has 'connected' => (
+has 'running' => (
     metaclass => 'DoNotSerialize',
     is => 'rw',
     isa => 'Bool',
@@ -81,48 +81,48 @@ sub SETUP # {{{
 sub run # {{{
 {
     my $self = shift;
-    $self->connect;
+    $self->initialize();
     $SIG{INT} = sub {};
 
-    while ($self->connected)
+    while ($self->running)
     {
         $self->iterate();
     }
 
     $self->cleanup();
 } # }}}
-sub connect # {{{
+sub initialize # {{{
 {
     my $self = shift;
 
     $self->pty(new IO::Pty::Easy(handle_pty_size => 0));
     $self->pty->spawn("nethack");
 
-    $self->connected(1);
+    $self->running(1);
 } # }}}
 sub iterate # {{{
 {
     my $self = shift;
 
-    my $fromkeyboard = $self->read_keyboard();
-    $fromkeyboard = $self->check_input($fromkeyboard);
-    if (defined($fromkeyboard))
+    my $userinput = $self->read_user_input();
+    $userinput = $self->check_input($userinput);
+    if (defined($userinput))
     {
-        $self->toserver($fromkeyboard);
+        $self->write_game_input($userinput);
     }
 
-    my $fromsocket = $self->read_socket();
-    if (defined($fromsocket))
+    my $gameoutput = $self->read_game_output();
+    if (defined($gameoutput))
     {
-        $self->parse($fromsocket);
+        $self->parse($gameoutput);
     }
 } # }}}
-sub read_keyboard # {{{
+sub read_user_input # {{{
 {
     my $self = shift;
     ReadKey 0.05;
 } # }}}
-sub read_socket # {{{
+sub read_game_output # {{{
 {
     my $self = shift;
 
@@ -130,7 +130,7 @@ sub read_socket # {{{
     # 0 == undef? perl is ridiculous
     my $ret = $self->pty->read($buf, 0);
     if (defined($ret) && $ret == 0) {
-        $self->connected(0);
+        $self->running(0);
         return;
     }
     return $buf;
@@ -141,14 +141,14 @@ sub parse # {{{
 
     $self->vt->process($text);
     $self->topline( $self->vt->row_plaintext(1) );
-    $self->toscreen($self->mangle_output($text));
+    $self->write_user_output($self->mangle_output($text));
 } # }}}
 sub mangle_output # {{{
 {
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub toscreen # {{{
+sub write_user_output # {{{
 {
     my ($self, $text) = @_;
 
@@ -159,14 +159,14 @@ sub check_input # {{{
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub toserver # {{{
+sub write_game_input # {{{
 {
     my $self = shift;
     my ($text) = @_;
 
     my $ret = $self->pty->write($text, 0);
     if (defined($ret) && $ret == 0) {
-        $self->connected(0);
+        $self->running(0);
         return;
     }
 } # }}}

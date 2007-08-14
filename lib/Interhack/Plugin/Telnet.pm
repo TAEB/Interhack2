@@ -39,7 +39,7 @@ has 'socket' => (
 );
 # }}}
 # method modifiers {{{
-around 'connect' => sub {
+around 'initialize' => sub {
     my $orig = shift;
     my $self = shift;
 
@@ -87,10 +87,10 @@ around 'connect' => sub {
                              ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE";
     }
 
-    $self->connected(1);
+    $self->running(1);
 };
 
-around 'read_socket' => sub {
+around 'read_game_output' => sub {
     my $orig = shift;
     my $self = shift;
 
@@ -109,7 +109,7 @@ around 'read_socket' => sub {
         # 0 = error
         if (length == 0)
         {
-            $self->connected(0);
+            $self->running(0);
             return;
         }
 
@@ -129,7 +129,7 @@ around 'read_socket' => sub {
     return $from_server;
 };
 
-around 'toserver' => sub {
+around 'write_game_input' => sub {
     my $orig = shift;
     my ($self, $text) = @_;
 
