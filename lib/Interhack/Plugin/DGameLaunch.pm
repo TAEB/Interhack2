@@ -75,6 +75,10 @@ my %servers = (
                  },
 );
 
+# XXX: this is almost certainly the wrong place for this method, and it should
+# likely be split up into multiple parts (i.e. one that initializes things like
+# hostname and port, and another that initializes things like dgl nick). It's
+# fine now since dgl is the only thing using the telnet code.
 sub server {
     my $self = shift;
     my $new_server;
