@@ -4,7 +4,7 @@
 # hard dependencies: one plugin literally depends on another
 
 ConfirmDirection: Util
-DGameLaunch: Telnet NewGame Util
+DGameLaunch: Telnet Util
 DGL_LocalConfig: DGameLaunch Util
 DGL_Fortune: DGameLaunch
 Eidocolors: Recolor
