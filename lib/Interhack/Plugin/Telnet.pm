@@ -137,6 +137,12 @@ around 'write_game_input' => sub {
 };
 # }}}
 # methods {{{
+# XXX: these still aren't ideal... we really should just have higher level
+# read/write functions that these just override, so that we can abstract out
+# the dgl code to work with both ssh and telnet connections. i'm not quite sure
+# how to handle that though, since i don't think that 'around' does exactly
+# what i want. leaving it this way for now, since it's at least better than
+# direct socket manipulation.
 sub telnet_read { # {{{
     my $self = shift;
     my ($buf, $nbytes) = @_;

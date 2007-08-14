@@ -224,11 +224,9 @@ sub dgl_read_server_output
 
     ITER: for (1..100)
     {
-        # XXX: reading and writing on $self->socket should be methods in the
-        # Telnet plugin; we shouldn't be directly accessing $self->socket here
         # would block
         next ITER
-            unless defined(recv($self->socket, $_, 4096, 0));
+            unless defined($self->telnet_read($_, 4096));
 
         # 0 = error
         if (length == 0)
@@ -262,7 +260,7 @@ sub dgl_read_user_input
 sub dgl_write_server_input {
     my ($self, $text) = @_;
 
-    print {$self->socket} $text;
+    $self->telnet_write($text);
 } # }}}
 # dgl_write_user_output {{{
 sub dgl_write_user_output {
