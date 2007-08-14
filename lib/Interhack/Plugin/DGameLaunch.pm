@@ -175,7 +175,7 @@ sub clear_buffers {
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
-        next unless defined(recv($self->socket, $_, 4096, 0));
+        next unless defined($self->telnet_read($_, 4096));
         $self->debug("Clearing out socket buffer...");
         last if /There was a problem with your last entry\./;
         if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
