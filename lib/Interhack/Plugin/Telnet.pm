@@ -69,22 +69,22 @@ around 'initialize' => sub {
 
     if ($self->server_name =~ /termcast/)
     {
-        print {$self->socket} "$IAC$DO$ECHO"
-                             ."$IAC$DO$GOAHEAD"
+        $self->telnet_write("$IAC$DO$ECHO"
+                           ."$IAC$DO$GOAHEAD")
     }
     else
     {
-        print {$self->socket} "$IAC$WILL$TTYPE"
-                             ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
-                             ."$IAC$WONT$TSPEED"
-                             ."$IAC$WONT$XDISPLOC"
-                             ."$IAC$WONT$NEWENVIRON"
-                             ."$IAC$DONT$GOAHEAD"
-                             ."$IAC$WILL$ECHO"
-                             ."$IAC$DO$STATUS"
-                             ."$IAC$WILL$LFLOW"
-                             ."$IAC$WILL$NAWS"
-                             ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE";
+        $self->telnet_write("$IAC$WILL$TTYPE"
+                           ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
+                           ."$IAC$WONT$TSPEED"
+                           ."$IAC$WONT$XDISPLOC"
+                           ."$IAC$WONT$NEWENVIRON"
+                           ."$IAC$DONT$GOAHEAD"
+                           ."$IAC$WILL$ECHO"
+                           ."$IAC$DO$STATUS"
+                           ."$IAC$WILL$LFLOW"
+                           ."$IAC$WILL$NAWS"
+                           ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE");
     }
 
     $self->running(1);
@@ -104,7 +104,7 @@ around 'read_game_output' => sub {
     {
         # would block
         next ITER
-            unless defined(recv($self->socket, $_, 4096, 0));
+            unless defined($self->telnet_read($_, 4096));
 
         # 0 = error
         if (length == 0)
@@ -133,8 +133,22 @@ around 'write_game_input' => sub {
     my $orig = shift;
     my ($self, $text) = @_;
 
-    print {$self->socket} $text;
+    $self->telnet_write($text);
 };
+# }}}
+# methods {{{
+sub telnet_read { # {{{
+    my $self = shift;
+    my ($buf, $nbytes) = @_;
+
+    return recv($self->socket, $_[0], $nbytes, 0);
+} # }}}
+sub telnet_write { # {{{
+    my $self = shift;
+    my ($text) = @_;
+
+    print {$self->socket} $text;
+} # }}}
 # }}}
 
 1;
