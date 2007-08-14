@@ -5,6 +5,11 @@ use Term::ReadKey;
 
 our $VERSION = '1.99_01';
 
+# private variables {{{
+my $line1 = ' dgamelaunch - network console game launcher';
+my $line2 = ' version 1.4.6';
+my $pass = '';
+# }}}
 # attributes {{{
 has rc_dir => (
     metaclass => 'DoNotSerialize',
@@ -14,31 +19,7 @@ has rc_dir => (
     default => 'http://alt.org/nethack/rcfiles',
 );
 
-has dgl_line1 => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => ' dgamelaunch - network console game launcher',
-);
-
-has dgl_line2 => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => ' version 1.4.6',
-);
-
 has nick => (
-    metaclass => 'DoNotSerialize',
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => '',
-);
-
-has pass => (
     metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
@@ -130,10 +111,8 @@ sub server {
         or $self->warn("Server port not set");
     $self->rc_dir($new_server->{rc_dir})
         or $self->warn("Server RC path URL not set");
-    $self->dgl_line1($new_server->{line1})
-        or $self->warn("Server main screen detection (line 1) not set");
-    $self->dgl_line2($new_server->{line2})
-        or $self->warn("Server main screen detection (line 2) not set");
+    $line1 = $new_server->{line1};
+    $line2 = $new_server->{line2};
 } # }}}
 # get_nick {{{
 sub get_nick {
@@ -166,13 +145,9 @@ sub get_pass {
     my $self = shift;
 
     my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
-    if ($self->pass eq '')
-    {
-        $self->debug("Getting password from the password file");
-        my $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> };
-        chomp $pass;
-        $self->pass($pass);
-    }
+    $self->debug("Getting password from the password file");
+    $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> };
+    chomp $pass;
 } # }}}
 # autologin {{{
 sub autologin {
@@ -185,7 +160,8 @@ sub autologin {
         # really, any of the helper function here can be wrapped, not just
         # dgl_write_server_input, so it's really not worth it.
         $self->dgl_write_server_input("l" . $self->nick . "\n");
-        $self->dgl_write_server_input($self->pass . "\n") if $self->pass ne '';
+        $self->dgl_write_server_input($pass . "\n") if $pass ne '';
+        $pass = '';
     }
 } # }}}
 # clear_buffers {{{
@@ -198,8 +174,6 @@ sub clear_buffers {
         $self->debug("Clearing out socket buffer...");
         next unless defined(recv($self->socket, $_, 4096, 0));
         last if /There was a problem with your last entry\./;
-        my $line1 = $self->dgl_line1;
-        my $line2 = $self->dgl_line2;
         if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
         {
             $found++;
