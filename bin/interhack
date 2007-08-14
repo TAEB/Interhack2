@@ -7,6 +7,7 @@ use Term::ReadKey;
 
 $| = 1;
 sub cont {
+    ReadMode 0;
     ReadMode 3;
     # XXX: redraw the screen here...
     $SIG{CONT} = \&cont;
