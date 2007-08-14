@@ -105,6 +105,7 @@ sub iterate # {{{
     my $self = shift;
 
     my $fromkeyboard = $self->read_keyboard();
+    $fromkeyboard = $self->check_input($fromkeyboard);
     if (defined($fromkeyboard))
     {
         $self->toserver($fromkeyboard);
@@ -163,8 +164,6 @@ sub toserver # {{{
     my $self = shift;
     my ($text) = @_;
 
-    $text = $self->check_input($text);
-    return if !defined($text);
     my $ret = $self->pty->write($text, 0);
     if (defined($ret) && $ret == 0) {
         $self->connected(0);
