@@ -231,7 +231,7 @@ sub dgl_iterate
     {
         $self->dgl_write_user_output($serveroutput);
     }
-    return 1;
+    return $self->running;
 } # }}}
 # dgl_read_server_output {{{
 sub dgl_read_server_output
