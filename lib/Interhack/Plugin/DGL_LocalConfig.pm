@@ -8,6 +8,9 @@ use File::Temp qw/tempfile/;
 our $VERSION = '1.99_01';
 
 # method modifiers {{{
+# XXX: is it safe to be calling orig() more than once? strikes me as no in
+# general... it's not harmful here, since all it's doing is writing to the
+# socket, but probably better to fix this.
 around 'dgl_write_server_input' => sub
 {
     my $orig = shift;
