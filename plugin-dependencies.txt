@@ -4,17 +4,17 @@
 # hard dependencies: one plugin literally depends on another
 
 ConfirmDirection: Util
-DGameLaunch: Telnet Util
-DGL_LocalConfig: DGameLaunch Util
+DGameLaunch: Debug Telnet
+DGL_LocalConfig: Debug DGameLaunch Telnet
 DGL_Fortune: DGameLaunch
 Eidocolors: Recolor
-Foodless: Util
-Illiterate: Util
-NewGame: Util
+Foodless: Debug Util
+Illiterate: Debug Util
+NewGame: Debug
 PasteDetection: Util
 QuakeConsole: Util
-Satiated: Util
-Telnet: Util
+Satiated: Debug Util
 TriggerReload: Util
-Weaponless: Util
+Util: NewGame
+Weaponless: Debug Util
 

@@ -2,7 +2,6 @@
 package Interhack::Plugin::Util;
 use Moose::Role;
 use Term::ReadKey;
-use Log::Log4perl;
 
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
@@ -14,18 +13,6 @@ has extended_commands => (
     isa => 'HashRef',
     lazy => 1,
     default => sub { {} },
-);
-
-has logger => (
-    metaclass => 'DoNotSerialize',
-    is => 'rw',
-    lazy => 1,
-    default => sub
-    {
-        my $self = shift;
-        Log::Log4perl->init($self->config_dir . "/log4perl.conf");
-        Log::Log4perl->get_logger("Interhack");
-    }
 );
 # }}}
 # method modifiers {{{
@@ -238,43 +225,6 @@ sub extended_command
 
     $self->extended_commands->{$name} = $code;
 } # }}}
-# logging {{{
-sub debug
-{
-    my $self = shift;
-    unshift @_, $self->logger;
-    my $coderef = $self->logger->can('debug');
-    goto &$coderef;
-}
-sub info
-{
-    my $self = shift;
-    unshift @_, $self->logger;
-    my $coderef = $self->logger->can('info');
-    goto &$coderef;
-}
-sub warn
-{
-    my $self = shift;
-    unshift @_, $self->logger;
-    my $coderef = $self->logger->can('warn');
-    goto &$coderef;
-}
-sub error
-{
-    my $self = shift;
-    unshift @_, $self->logger;
-    my $coderef = $self->logger->can('error');
-    goto &$coderef;
-}
-sub fatal
-{
-    my $self = shift;
-    unshift @_, $self->logger;
-    my $coderef = $self->logger->can('fatal');
-    goto &$coderef;
-}
-# }}}
 sub attr_to_ansi # {{{
 {
     my $self = shift;
