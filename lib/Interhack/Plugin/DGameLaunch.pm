@@ -52,7 +52,7 @@ after 'initialize' => sub {
     $self->autologin;
     $self->clear_buffers;
     my $keep_looping = 1;
-    $keep_looping = $self->dgl_iterate until !$keep_looping;
+    1 while $keep_looping = $self->dgl_iterate;
     $self->debug("Leaving DGL, starting the game");
 };
 # }}}
