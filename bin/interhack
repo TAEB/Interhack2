@@ -6,15 +6,19 @@ use Interhack;
 use Term::ReadKey;
 
 $| = 1;
+my $interhack = Interhack->new;
+
 sub cont {
     ReadMode 0;
     ReadMode 3;
-    # XXX: redraw the screen here...
+    # redraw the screen
+    $interhack->restore_row($_) for (1..24);
+    $interhack->goto($interhack->vt->x, $interhack->vt->y);
     $SIG{CONT} = \&cont;
 }
 $SIG{CONT} = \&cont;
 ReadMode 3;
 END { ReadMode 0 }
 
-Interhack->new->run;
+$interhack->run;
 
