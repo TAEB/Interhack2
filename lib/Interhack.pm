@@ -117,12 +117,17 @@ sub iterate # {{{
         $self->parse($gameoutput);
     }
 } # }}}
-sub from_user # {{{
+sub from_user_raw # {{{
 {
     my $self = shift;
     ReadKey 0.05;
 } # }}}
-sub from_nethack # {{{
+sub from_user # {{{
+{
+    my $self = shift;
+    $self->from_user_raw;
+} # }}}
+sub from_nethack_raw # {{{
 {
     my $self = shift;
 
@@ -134,6 +139,11 @@ sub from_nethack # {{{
         return;
     }
     return $buf;
+} # }}}
+sub from_nethack # {{{
+{
+    my $self = shift;
+    $self->from_nethack_raw;
 } # }}}
 sub parse # {{{
 {
@@ -148,18 +158,24 @@ sub mangle_output # {{{
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub to_user # {{{
+sub to_user_raw # {{{
 {
     my ($self, $text) = @_;
 
     print $text;
+} # }}}
+sub to_user # {{{
+{
+    my $self = shift;
+    my ($text) = @_;
+    $self->to_user_raw($text);
 } # }}}
 sub check_input # {{{
 {
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub to_nethack # {{{
+sub to_nethack_raw # {{{
 {
     my $self = shift;
     my ($text) = @_;
@@ -169,6 +185,12 @@ sub to_nethack # {{{
         $self->running(0);
         return;
     }
+} # }}}
+sub to_nethack # {{{
+{
+    my $self = shift;
+    my ($text) = @_;
+    $self->to_nethack_raw($text);
 } # }}}
 sub cleanup # {{{
 {
