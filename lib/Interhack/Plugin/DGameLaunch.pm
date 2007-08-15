@@ -174,7 +174,7 @@ sub clear_buffers {
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
-        next unless defined($self->telnet_read($_, 4096));
+        next unless defined($_ = $self->from_nethack_raw);
         $self->debug("Clearing out socket buffer...");
         last if /There was a problem with your last entry\./;
         if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
@@ -186,10 +186,6 @@ sub clear_buffers {
     $self->debug("Done clearing out socket buffer");
     $self->dgl_to_user($_);
 } # }}}
-# XXX: these are just a copy of the interhack main loop... we should abstract
-# this out into a helper lib at some point... or maybe just have a way to do
-# the Interhack.pm main loop in phases that modules can hook into... in any
-# case, anyone who wants to should feel free to rewrite this
 # dgl_iterate {{{
 sub dgl_iterate
 {
@@ -215,51 +211,19 @@ sub from_dgl
 {
     my $self = shift;
 
-    # the reason this is so complicated is because packets can be broken up
-    # we can't detect this perfectly, but it's only an issue if an escape code
-    # is broken into two parts, and we can check for that
-
-    my $from_server;
-
-    ITER: for (1..100)
-    {
-        # would block
-        next ITER
-            unless defined($self->telnet_read($_, 4096));
-
-        # 0 = error
-        if (length == 0)
-        {
-            $self->running(0);
-            return;
-        }
-
-        # need to store what we read
-        $from_server .= $_;
-
-        # check for broken escape code or DEC string
-        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
-        {
-            next ITER;
-        }
-
-        # cut it and release
-        last ITER;
-    }
-
-    return ($from_server, 1);
+    return $self->from_nethack_raw;
 } # }}}
 # dgl_from_user {{{
 sub dgl_from_user
 {
     my $self = shift;
-    ReadKey 0.05;
+    return $self->from_user_raw;
 } # }}}
 # to_dgl {{{
 sub to_dgl {
     my ($self, $text) = @_;
 
-    $self->telnet_write($text);
+    $self->to_nethack_raw($text);
 } # }}}
 # dgl_to_user {{{
 sub dgl_to_user {
@@ -271,7 +235,7 @@ sub dgl_to_user {
         $self->logged_in(1);
     }
 
-    print $text;
+    $self->to_user_raw($text);
 } # }}}
 # }}}
 

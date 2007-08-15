@@ -53,7 +53,7 @@ around 'to_dgl' => sub
             my $last_buf = '';
             my $buf = '';
             while (1) {
-                next unless defined($self->telnet_read($buf, 1024));
+                next unless defined($buf = $self->from_nethack_raw);
                 $_ = $last_buf . $buf;
                 last if /\e\[.*?'g' is not implemented/;
                 $last_buf = $buf;

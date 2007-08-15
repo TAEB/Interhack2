@@ -69,28 +69,28 @@ around 'initialize' => sub {
 
     if ($self->server_name =~ /termcast/)
     {
-        $self->telnet_write("$IAC$DO$ECHO"
-                           ."$IAC$DO$GOAHEAD")
+        $self->to_nethack_raw("$IAC$DO$ECHO"
+                             ."$IAC$DO$GOAHEAD")
     }
     else
     {
-        $self->telnet_write("$IAC$WILL$TTYPE"
-                           ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
-                           ."$IAC$WONT$TSPEED"
-                           ."$IAC$WONT$XDISPLOC"
-                           ."$IAC$WONT$NEWENVIRON"
-                           ."$IAC$DONT$GOAHEAD"
-                           ."$IAC$WILL$ECHO"
-                           ."$IAC$DO$STATUS"
-                           ."$IAC$WILL$LFLOW"
-                           ."$IAC$WILL$NAWS"
-                           ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE");
+        $self->to_nethack_raw("$IAC$WILL$TTYPE"
+                             ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
+                             ."$IAC$WONT$TSPEED"
+                             ."$IAC$WONT$XDISPLOC"
+                             ."$IAC$WONT$NEWENVIRON"
+                             ."$IAC$DONT$GOAHEAD"
+                             ."$IAC$WILL$ECHO"
+                             ."$IAC$DO$STATUS"
+                             ."$IAC$WILL$LFLOW"
+                             ."$IAC$WILL$NAWS"
+                             ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE");
     }
 
     $self->running(1);
 };
 
-around 'from_nethack' => sub {
+around 'from_nethack_raw' => sub {
     my $orig = shift;
     my $self = shift;
 
@@ -104,7 +104,7 @@ around 'from_nethack' => sub {
     {
         # would block
         next ITER
-            unless defined($self->telnet_read($_, 4096));
+            unless defined(recv($self->socket, $_, 4096, 0));
 
         # 0 = error
         if (length == 0)
@@ -129,32 +129,12 @@ around 'from_nethack' => sub {
     return $from_server;
 };
 
-around 'to_nethack' => sub {
+around 'to_nethack_raw' => sub {
     my $orig = shift;
     my ($self, $text) = @_;
 
-    $self->telnet_write($text);
-};
-# }}}
-# methods {{{
-# XXX: these still aren't ideal... we really should just have higher level
-# read/write functions that these just override, so that we can abstract out
-# the dgl code to work with both ssh and telnet connections. i'm not quite sure
-# how to handle that though, since i don't think that 'around' does exactly
-# what i want. leaving it this way for now, since it's at least better than
-# direct socket manipulation.
-sub telnet_read { # {{{
-    my $self = shift;
-    my ($buf, $nbytes) = @_;
-
-    return recv($self->socket, $_[0], $nbytes, 0);
-} # }}}
-sub telnet_write { # {{{
-    my $self = shift;
-    my ($text) = @_;
-
     print {$self->socket} $text;
-} # }}}
+};
 # }}}
 
 1;
