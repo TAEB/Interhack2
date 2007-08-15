@@ -90,7 +90,7 @@ around 'initialize' => sub {
     $self->running(1);
 };
 
-around 'read_game_output' => sub {
+around 'from_nethack' => sub {
     my $orig = shift;
     my $self = shift;
 
@@ -129,7 +129,7 @@ around 'read_game_output' => sub {
     return $from_server;
 };
 
-around 'write_game_input' => sub {
+around 'to_nethack' => sub {
     my $orig = shift;
     my ($self, $text) = @_;
 

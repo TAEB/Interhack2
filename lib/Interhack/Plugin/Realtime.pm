@@ -21,7 +21,7 @@ has previous_time => (
 );
 # }}}
 # method modifiers {{{
-after 'write_game_input' => sub
+after 'to_nethack' => sub
 {
     my ($self) = @_;
 

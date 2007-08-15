@@ -104,25 +104,25 @@ sub iterate # {{{
 {
     my $self = shift;
 
-    my $userinput = $self->read_user_input();
+    my $userinput = $self->from_user();
     $userinput = $self->check_input($userinput);
     if (defined($userinput))
     {
-        $self->write_game_input($userinput);
+        $self->to_nethack($userinput);
     }
 
-    my $gameoutput = $self->read_game_output();
+    my $gameoutput = $self->from_nethack();
     if (defined($gameoutput))
     {
         $self->parse($gameoutput);
     }
 } # }}}
-sub read_user_input # {{{
+sub from_user # {{{
 {
     my $self = shift;
     ReadKey 0.05;
 } # }}}
-sub read_game_output # {{{
+sub from_nethack # {{{
 {
     my $self = shift;
 
@@ -141,14 +141,14 @@ sub parse # {{{
 
     $self->vt->process($text);
     $self->topline( $self->vt->row_plaintext(1) );
-    $self->write_user_output($self->mangle_output($text));
+    $self->to_user($self->mangle_output($text));
 } # }}}
 sub mangle_output # {{{
 {
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub write_user_output # {{{
+sub to_user # {{{
 {
     my ($self, $text) = @_;
 
@@ -159,7 +159,7 @@ sub check_input # {{{
     my ($self, $text) = @_;
     return $text;
 } # }}}
-sub write_game_input # {{{
+sub to_nethack # {{{
 {
     my $self = shift;
     my ($text) = @_;

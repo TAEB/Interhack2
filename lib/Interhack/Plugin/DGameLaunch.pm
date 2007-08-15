@@ -162,9 +162,9 @@ sub autologin {
         $self->debug("Doing autologin");
         # meh, i thought to keep these as prints for security reasons, but
         # really, any of the helper function here can be wrapped, not just
-        # dgl_write_server_input, so it's really not worth it.
-        $self->dgl_write_server_input("l" . $self->nick . "\n");
-        $self->dgl_write_server_input($pass . "\n") if $pass ne '';
+        # to_dgl, so it's really not worth it.
+        $self->to_dgl("l" . $self->nick . "\n");
+        $self->to_dgl($pass . "\n") if $pass ne '';
         $pass = '';
     }
 } # }}}
@@ -185,7 +185,7 @@ sub clear_buffers {
         }
     }
     $self->debug("Done clearing out socket buffer");
-    $self->dgl_write_user_output($_);
+    $self->dgl_to_user($_);
 } # }}}
 # XXX: these are just a copy of the interhack main loop... we should abstract
 # this out into a helper lib at some point... or maybe just have a way to do
@@ -196,23 +196,23 @@ sub dgl_iterate
 {
     my $self = shift;
 
-    my $userinput = $self->dgl_read_user_input();
+    my $userinput = $self->dgl_from_user();
     if (defined($userinput))
     {
-        $self->dgl_write_server_input($userinput);
+        $self->to_dgl($userinput);
         return 0 if $self->logged_in && $userinput eq 'p';
     }
 
-    my ($serveroutput, $conn) = $self->dgl_read_server_output();
+    my ($serveroutput, $conn) = $self->from_dgl();
     return 0 unless $conn;
     if (defined($serveroutput))
     {
-        $self->dgl_write_user_output($serveroutput);
+        $self->dgl_to_user($serveroutput);
     }
     return $self->running;
 } # }}}
-# dgl_read_server_output {{{
-sub dgl_read_server_output
+# from_dgl {{{
+sub from_dgl
 {
     my $self = shift;
 
@@ -250,20 +250,20 @@ sub dgl_read_server_output
 
     return ($from_server, 1);
 } # }}}
-# dgl_read_user_input {{{
-sub dgl_read_user_input
+# dgl_from_user {{{
+sub dgl_from_user
 {
     my $self = shift;
     ReadKey 0.05;
 } # }}}
-# dgl_write_server_input {{{
-sub dgl_write_server_input {
+# to_dgl {{{
+sub to_dgl {
     my ($self, $text) = @_;
 
     $self->telnet_write($text);
 } # }}}
-# dgl_write_user_output {{{
-sub dgl_write_user_output {
+# dgl_to_user {{{
+sub dgl_to_user {
     my ($self, $text) = @_;
 
     my $nick = $self->nick;

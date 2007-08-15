@@ -8,7 +8,7 @@ our $SUMMARY = 'Disallows any invalid direction at a "In what direction?" prompt
 # attributes {{{
 # }}}
 # method modifiers {{{
-around 'write_game_input' => sub
+around 'to_nethack' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;

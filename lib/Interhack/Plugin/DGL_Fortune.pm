@@ -14,7 +14,7 @@ has fortune => (
 );
 # }}}
 # method modifiers {{{
-around 'dgl_write_user_output' => sub
+around 'dgl_to_user' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;

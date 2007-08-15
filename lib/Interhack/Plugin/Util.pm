@@ -29,7 +29,7 @@ with the screen, use 1-based coordinates.
 sub goto
 {
     my ($self, $x, $y) = @_;
-    $self->write_user_output("\e[$y;${x}H");
+    $self->to_user("\e[$y;${x}H");
 }
 # }}}
 # vt_like {{{
@@ -72,9 +72,9 @@ sub print_row
     my $text = shift;
     my $leave_cursor = shift;
 
-    $self->write_user_output("\e[s") unless $leave_cursor;
-    $self->write_user_output("\e[${row}H$text");
-    $self->write_user_output("\e[u") unless $leave_cursor;
+    $self->to_user("\e[s") unless $leave_cursor;
+    $self->to_user("\e[${row}H$text");
+    $self->to_user("\e[u") unless $leave_cursor;
     return;
 } # }}}
 # restore_row {{{
@@ -200,7 +200,7 @@ case.
 
 =cut
 
-after write_user_output => sub
+after to_user => sub
 {
     my $self = shift;
 
