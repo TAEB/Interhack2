@@ -198,8 +198,7 @@ sub dgl_iterate
         return 0 if $self->logged_in && $userinput eq 'p';
     }
 
-    my ($serveroutput, $conn) = $self->from_dgl();
-    return 0 unless $conn;
+    my $serveroutput = $self->from_dgl();
     if (defined($serveroutput))
     {
         $self->dgl_to_user($serveroutput);
