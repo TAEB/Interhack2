@@ -103,6 +103,9 @@ around 'from_nethack_raw' => sub {
     ITER: for (1..100)
     {
         # would block
+        # XXX: is this what we want here? doing this means that this loop
+        # runs all 100 times whenever there is nothing to read, which strikes
+        # me as unnecessary
         next ITER
             unless defined(recv($self->socket, $_, 4096, 0));
 
