@@ -5,18 +5,34 @@ use lib 'lib';
 use Interhack;
 use Term::ReadKey;
 
-$| = 1;
 my $interhack = Interhack->new;
 
 sub cont {
-    ReadMode 0;
+    # put terminal back into raw mode on resume and store a new terminal state
+    # to restore to at END
     ReadMode 3;
     # redraw the screen
     $interhack->restore_row($_) for (1..24);
     $interhack->goto($interhack->vt->x, $interhack->vt->y);
+    # restore the signal handler
     $SIG{CONT} = \&cont;
+    # and restore the signal handler for future SIGTSTPs
+    $SIG{TSTP} = \&tstp;
 }
 $SIG{CONT} = \&cont;
+sub tstp {
+    # restore the terminal mode when the process is suspended (SIGCONT will
+    # then store a new set of values to restore to with its ReadMode 3 call)
+    ReadMode 0;
+    # if we don't call the default signal handler for SIGTSTP, it won't
+    # actually suspend
+    $SIG{TSTP} = 'DEFAULT';
+    kill TSTP => $$;
+    # we will restore this function as the signal handler during SIGCONT
+}
+$SIG{TSTP} = \&tstp;
+
+$| = 1;
 ReadMode 3;
 END { ReadMode 0 }
 
