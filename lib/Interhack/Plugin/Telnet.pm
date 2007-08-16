@@ -74,6 +74,12 @@ around 'initialize' => sub {
     }
     else
     {
+        # XXX: this hardcoding of xterm-color is actually necessary, since we
+        # do lots of manipulation of raw terminal escape codes, and changing
+        # the term type will change the escape codes that the telnet server
+        # sends back to us. ideally, we should be using ncurses (or
+        # termcap/terminfo at the very least) to abstract this stuff out, but
+        # that's a lot of effort for not much gain at the moment.
         $self->to_nethack_raw("$IAC$WILL$TTYPE"
                              ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
                              ."$IAC$WONT$TSPEED"
