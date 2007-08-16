@@ -106,14 +106,12 @@ around 'from_nethack_raw' => sub {
 
     my $from_server;
 
-    ITER: for (1..100)
+    for (1..100)
     {
         # would block
-        # XXX: is this what we want here? doing this means that this loop
-        # runs all 100 times whenever there is nothing to read, which strikes
-        # me as unnecessary
-        next ITER
-            unless defined(recv($self->socket, $_, 4096, 0));
+        my $bytes = recv($self->socket, $_, 4096, 0);
+        last unless defined($from_server) ||  defined($bytes);
+        next if     defined($from_server) && !defined($bytes);
 
         # 0 = error
         if (length == 0)
@@ -128,11 +126,11 @@ around 'from_nethack_raw' => sub {
         # check for broken escape code or DEC string
         if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
         {
-            next ITER;
+            next;
         }
 
         # cut it and release
-        last ITER;
+        last;
     }
 
     return $from_server;
