@@ -16,18 +16,6 @@ has extended_commands => (
     lazy => 1,
     default => sub { {} },
 );
-
-has logger => (
-    metaclass => 'DoNotSerialize',
-    is => 'rw',
-    lazy => 1,
-    default => sub
-    {
-        my $self = shift;
-        Log::Log4perl->init($self->config_dir . "/log4perl.conf");
-        Log::Log4perl->get_logger("Interhack");
-    }
-);
 # }}}
 # method modifiers {{{
 # }}}
