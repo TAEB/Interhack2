@@ -15,7 +15,7 @@ around 'check_input' => sub
 
     $input = $orig->($self, $input);
     return unless defined $input;
-    return $input unless $self->expecting_command && $input =~ /^~/;
+    return $input unless $input =~ /^~/ && $self->expecting_command;
 
     ReadMode 0;
     my ($x, $y) = ($self->vt->x, $self->vt->y);

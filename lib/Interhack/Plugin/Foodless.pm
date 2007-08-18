@@ -21,7 +21,7 @@ around 'check_input' => sub
     $input = $orig->($self, $input);
     return unless defined $input;
 
-    if ($self->confirm_eat && $self->expecting_command && $input =~ /^e/)
+    if ($self->confirm_eat && $input =~ /^e/ && $self->expecting_command)
     {
         my $ynq = $self->force_tab_ynq("Press tab or q to eat, q to stop asking, any other key to cancel.");
         if ($ynq == 0) { return }

@@ -17,7 +17,7 @@ around 'check_input' => sub
 
     #XXX: this needs to be a utility function
     if ($self->vt->row_plaintext(24) =~ /Satiated/ &&
-        $self->expecting_command && $input =~ /^e/)
+        $input =~ /^e/ && $self->expecting_command)
     {
         my $ynq = $self->force_tab_ynq("You're satiated! Press tab to eat, any other key to cancel.");
         if (!$ynq) { return }

@@ -21,18 +21,15 @@ around 'check_input' => sub
     $input = $orig->($self, $input);
     return unless defined $input;
 
-    if ($self->confirm_literacy && $self->expecting_command)
+    if ($self->confirm_literacy && $input =~ /^([rE])/ && $self->expecting_command)
     {
-        if ($input =~ /^([rE])/)
+        my $command = $1 eq 'r' ? 'read' : 'engrave';
+        my $ynq = $self->force_tab_ynq("Press tab or q to $command, q to stop asking, any other key to cancel.");
+        if ($ynq == 0) { return }
+        if ($ynq == -1)
         {
-            my $command = $1 eq 'r' ? 'read' : 'engrave';
-            my $ynq = $self->force_tab_ynq("Press tab or q to $command, q to stop asking, any other key to cancel.");
-            if ($ynq == 0) { return }
-            if ($ynq == -1)
-            {
-                $self->debug("Disabled 'read' and 'engrave' confirmations.");
-                $self->confirm_literacy(0)
-            }
+            $self->debug("Disabled 'read' and 'engrave' confirmations.");
+            $self->confirm_literacy(0)
         }
     }
 
