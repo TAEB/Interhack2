@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::Telnet;
-use Moose::Role;
+use Calf::Role;
 use IO::Socket::INET;
 
 our $VERSION = '1.99_01';

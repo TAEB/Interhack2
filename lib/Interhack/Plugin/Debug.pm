@@ -1,5 +1,5 @@
 package Interhack::Plugin::Debug;
-use Moose::Role;
+use Calf::Role;
 use Log::Log4perl;
 
 our $VERSION = '1.99_01';

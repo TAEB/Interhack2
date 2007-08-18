@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::DGL_LocalConfig;
-use Moose::Role;
+use Calf::Role;
 use Term::ReadKey;
 use LWP::Simple;
 use File::Temp qw/tempfile/;
