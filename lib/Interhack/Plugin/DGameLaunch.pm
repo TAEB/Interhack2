@@ -195,9 +195,13 @@ sub get_pass {
     my $self = shift;
 
     my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
-    $self->debug("Getting password from the password file");
-    $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> };
-    chomp $pass if $pass;
+    if ($self->pass eq '')
+    {
+        $self->debug("Getting password from the password file");
+        my $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> };
+        chomp $pass;
+        $self->pass($pass);
+    }
 } # }}}
 # autologin {{{
 sub autologin {
