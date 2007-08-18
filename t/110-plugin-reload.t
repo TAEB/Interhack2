@@ -2,10 +2,10 @@
 sub update_plugin # {{{
 {
     my $op = shift;
-    open my $handle, '>', 't/Interhack/Plugin/TestReload.pm'
-        or die "Unable to open t/Interhack/Plugin/TestReload.pm for writing: $!";
+    open my $handle, '>', 't/TestReload.pm'
+        or die "Unable to open t/TestReload.pm for writing: $!";
     my $plugin = << 'EOP';
-package Interhack::Plugin::TestReload;
+package TestReload;
 use Calf::Role;
 
 around 'recv' => sub
@@ -32,7 +32,6 @@ BEGIN
     update_plugin('uc');
 }
 
-use Interhack::Plugin::TestReload;
 use Interhack::Test tests => 4;
 
 # test that plugins can have code changes without restarting Interhack or even
@@ -43,7 +42,7 @@ $interhack->recv('Foo');
 $interhack->iterate();
 is($interhack->recvd, "Foo", "no plugin loaded yet");
 
-ok($interhack->load_plugin_or_skip('TestReload', 0), "plugin loaded");
+ok($interhack->load_plugin_or_skip('+TestReload', 0), "plugin loaded");
 $interhack->recv('Bar');
 $interhack->iterate();
 is($interhack->recvd, "ucBAR", "plugin loaded initially");
