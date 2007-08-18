@@ -204,15 +204,14 @@ sub load_plugin_or_skip # {{{
 {
     my ($self, $plugin, $howmany) = @_;
     $plugin = "+Interhack::Plugin::$plugin" unless $plugin =~ /^\+/;
-    my $loaded = eval { $self->load_plugin($plugin) };
+    my @loaded = $self->load_plugin($plugin);
 
-    if (!$loaded)
+    if (!@loaded)
     {
         Test::More::skip("plugin $plugin unavailable", $howmany);
-        #last SKIP;
     }
 
-    return $loaded;
+    return @loaded;
 } # }}}
 # }}}
 

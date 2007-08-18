@@ -7,7 +7,7 @@ our $VERSION = '1.99_01';
 # attributes {{{
 # }}}
 # method modifiers {{{
-sub SETUP
+sub BUILD
 {
     my $self = shift;
     $self->extended_command(reload => \&reload);
