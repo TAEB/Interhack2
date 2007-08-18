@@ -83,7 +83,7 @@ sub connect # {{{
 
     $self->connected(1);
 }; # }}}
-sub read_keyboard # {{{
+sub from_user_raw # {{{
 {
     my $self = shift;
 
@@ -96,7 +96,7 @@ sub read_keyboard # {{{
 
     return;
 }; # }}}
-sub read_socket # {{{
+sub from_nethack_raw # {{{
 {
     my $self = shift;
 
@@ -109,7 +109,7 @@ sub read_socket # {{{
 
     return;
 }; # }}}
-sub toscreen # {{{
+sub to_user_raw # {{{
 {
     my $self = shift;
     my $text = shift;
@@ -117,7 +117,7 @@ sub toscreen # {{{
     $self->monitor->process($text);
     $self->screen_out($self->screen_out . $text);
 }; # }}}
-sub toserver # {{{
+sub to_nethack_raw # {{{
 {
     my $self = shift;
     my $text = shift;
