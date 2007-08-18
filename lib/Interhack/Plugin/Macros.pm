@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::Macros;
-use Moose::Role;
+use Calf::Role 'add_macro';
 
 our $VERSION = '1.99_01';
 

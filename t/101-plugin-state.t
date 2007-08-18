@@ -2,7 +2,7 @@
 
 { # dummy plugin {{{
     package Interhack::Plugin::Test;
-    use Moose::Role;
+    use Calf::Role 'loaded';
 
     has saved => (
         is => 'rw',
@@ -12,7 +12,7 @@
     );
 
     has notsaved => (
-        metaclass => 'DoNotSerialize',
+        per_load => 1,
         is => 'rw',
         isa => 'Int',
         lazy => 1,

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::Realtime;
-use Moose::Role;
+use Calf::Role 'serialize_time';
 
 our $VERSION = '1.99_01';
 
@@ -13,7 +13,7 @@ has realtime => (
 );
 
 has previous_time => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Int',
     is => 'rw',
     lazy => 1,

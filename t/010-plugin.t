@@ -2,7 +2,7 @@
 
 { # dummy plugins {{{
     package Interhack::Plugin::Test;
-    use Moose::Role;
+    use Calf::Role 'loaded';
 
     sub loaded { 1 }
     around 'recvd' => sub { my ($orig, $self) = @_; '1' . $orig->($self ) };
@@ -10,7 +10,7 @@
 
 {
     package Interhack::Plugin::Test2;
-    use Moose::Role;
+    use Calf::Role 'loaded2';
 
     sub loaded2 { 1 }
     around 'recvd' => sub { my ($orig, $self) = @_; '2' . $orig->($self ) };

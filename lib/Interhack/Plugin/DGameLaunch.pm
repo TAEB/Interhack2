@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::DGameLaunch;
 use Moose::Role;
-use Term::ReadKey;
 
 our $VERSION = '1.99_01';
 
@@ -11,15 +10,63 @@ my $line2 = ' version 1.4.6';
 my $pass = '';
 # }}}
 # attributes {{{
-has rc_dir => (
+has server_name => (
     metaclass => 'DoNotSerialize',
+    isa => 'Str',
+    is => 'rw',
+    lazy => 1,
+    default => 'nao',
+);
+
+has server_address => (
+    metaclass => 'DoNotSerialize',
+    isa => 'Str',
+    is => 'rw',
+    lazy => 1,
+    default => 'nethack.alt.org',
+);
+
+has server_port => (
+    metaclass => 'DoNotSerialize',
+    isa => 'Int',
+    is => 'rw',
+    lazy => 1,
+    default => 23,
+);
+
+has rc_dir => (
+    per_load => 1,
     isa => 'Str',
     is => 'rw',
     lazy => 1,
     default => 'http://alt.org/nethack/rcfiles',
 );
 
+has dgl_line1 => (
+    metaclass => 'DoNotSerialize',
+    isa => 'Str',
+    is => 'rw',
+    lazy => 1,
+    default => ' dgamelaunch - network console game launcher',
+);
+
+has dgl_line2 => (
+    metaclass => 'DoNotSerialize',
+    isa => 'Str',
+    is => 'rw',
+    lazy => 1,
+    default => ' version 1.4.6',
+);
+
 has nick => (
+    per_load => 1,
+    isa => 'Str',
+    is => 'rw',
+    lazy => 1,
+    default => '',
+);
+
+has pass => (
     metaclass => 'DoNotSerialize',
     isa => 'Str',
     is => 'rw',
@@ -28,7 +75,7 @@ has nick => (
 );
 
 has do_autologin => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Bool',
     is => 'rw',
     lazy => 1,
@@ -36,7 +83,7 @@ has do_autologin => (
 );
 
 has logged_in => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Bool',
     is => 'rw',
     lazy => 1,

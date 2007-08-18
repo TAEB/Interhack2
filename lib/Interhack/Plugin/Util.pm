@@ -1,6 +1,8 @@
 #!perl
 package Interhack::Plugin::Util;
-use Moose::Role;
+use Calf::Role qw/goto vt_like print_row restore_row force_tab_yn force_tab_ynq 
+                  expecting_command extended_command debug info warn error
+                  fatal attr_to_ansi/
 use Term::ReadKey;
 
 our $VERSION = '1.99_01';
@@ -8,11 +10,23 @@ our $SUMMARY = 'Utility functions for other plugins';
 
 # attributes {{{
 has extended_commands => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'HashRef',
     lazy => 1,
     default => sub { {} },
+);
+
+has logger => (
+    metaclass => 'DoNotSerialize',
+    is => 'rw',
+    lazy => 1,
+    default => sub
+    {
+        my $self = shift;
+        Log::Log4perl->init($self->config_dir . "/log4perl.conf");
+        Log::Log4perl->get_logger("Interhack");
+    }
 );
 # }}}
 # method modifiers {{{

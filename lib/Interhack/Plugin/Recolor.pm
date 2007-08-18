@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::Recolor;
-use Moose::Role;
+use Calf::Role 'recolor', 'color_to_escape';
 
 our $VERSION = '1.99_01';
 
@@ -65,7 +65,7 @@ our %colormap = # {{{
 
 # attributes {{{
 has recolors => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'ArrayRef',
     is => 'rw',
     lazy => 1,

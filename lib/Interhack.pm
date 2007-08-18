@@ -1,46 +1,42 @@
 #!/usr/bin/perl
 package Interhack;
-use Moose;
+use Calf;
 use IO::Pty::Easy;
 use Term::ReadKey;
 use Term::VT102;
-use Module::Refresh;
-use MooseX::Storage;
 
 use Interhack::Config;
 
 our $VERSION = '1.99_01';
 
-with Storage('format' => 'YAML', 'io' => 'File');
-
 # attributes {{{
 has 'running' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Bool',
 );
 
 has 'pty' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'IO::Pty::Easy',
 );
 
 has 'config' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Interhack::Config',
 );
 
 has 'vt' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Term::VT102',
     default => sub { Term::VT102->new(rows => 24, cols => 80) },
 );
 
 has 'topline' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     default => '',
@@ -48,7 +44,7 @@ has 'topline' => (
 );
 
 has 'statefile' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     required => 1,
@@ -57,7 +53,7 @@ has 'statefile' => (
 
 # XXX: this should go into the Config role once it is written
 has 'config_dir' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     required => 1,
@@ -69,10 +65,12 @@ sub BUILD # {{{
 {
     my $self = shift;
 
+    $self->apply("Calf::Storage");
+    $self->apply("Calf::Pluggable");
+    $self->apply("Calf::Refresh");
+
     $self->load_config();
     $self->load_state();
-
-    Module::Refresh->new();
 } # }}}
 sub SETUP # {{{
 {
@@ -196,14 +194,6 @@ sub cleanup # {{{
     my $self = shift;
     $self->save_state();
 } # }}}
-sub reload # {{{
-{
-    my $self = shift;
-
-    $self->save_state();
-    Module::Refresh->refresh();
-    $self->load_state();
-} # }}}
 sub save_state # {{{
 {
     my $self = shift;
@@ -212,74 +202,12 @@ sub save_state # {{{
 sub load_state # {{{
 {
     my $self = shift;
-    my $file = shift || $self->statefile;
-
-    # first let's make sure we're not recursing due to BUILD
-    do
-    {
-        my $level = 1;
-        while (my @caller = caller($level++))
-        {
-            return if $caller[3] =~ /::load_state$/;
-        }
-    };
-
-    my $newself = blessed($self)->load(shift || $file)
-        if -r $file;
-
-    return unless $newself;
-
-    $self->steal_state_from($newself);
-} # }}}
-sub steal_state_from # {{{
-{
-    my $self = shift;
-    my $newself = shift;
-
-    # load is a class method. I need it to be an instance method
-    # there's no sane way to replace $self so what we do is
-    # we take all the attributes that were serialized and stuff their values
-    # into $self. it's totally not pretty. but this is what meta-object
-    # programming is about! :)
-
-    for my $k ($newself->meta->get_attribute_list)
-    {
-        my $metaclass = $newself->meta->get_attribute($k);
-        next if blessed($metaclass) =~ /DoNotSerialize/;
-
-        if (defined(my $selfmeta = $self->meta->get_attribute($k)))
-        {
-            my $value = $metaclass->get_value($newself);
-            $selfmeta->set_value($self, $value);
-        }
-        else
-        {
-            $self->meta->add_attribute($metaclass);
-        }
-    }
-} # }}}
-sub new_state # {{{
-{
-    my $self = shift;
-    unlink shift || $self->statefile;
-    my $newself = blessed($self)->new();
-
-    $self->steal_state_from($newself);
+    $self->load(shift || $self->statefile);
 } # }}}
 sub load_config # {{{
 {
     my $self = shift;
     Interhack::Config::load_all_config($self);
-} # }}}
-sub load_plugin # {{{
-{
-    my ($self, $plugin) = @_;
-    my $loaded = eval
-    {
-        Interhack::Config::load_plugin($self, $plugin);
-    };
-    warn $@ if $@ && blessed($self) ne 'Interhack::Test';
-    return !$@;
 } # }}}
 # }}}
 

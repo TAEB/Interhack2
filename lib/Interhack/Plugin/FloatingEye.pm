@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::FloatingEye;
-use Moose::Role;
+use Calf::Role;
 
 our $VERSION = '1.99_01';
 

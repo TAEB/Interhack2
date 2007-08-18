@@ -1,12 +1,12 @@
 #!/usr/bin/perl
 package Interhack::Plugin::NewGame;
-use Moose::Role;
+use Calf::Role;
 
 our $VERSION = '1.99_01';
 
 # attributes {{{
 has in_game => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Bool',
     is => 'rw',
     lazy => 1,

@@ -1,12 +1,12 @@
 #!perl
 package Interhack::Plugin::Eidocolors;
-use Moose::Role;
+use Calf::Role;
 
 our $VERSION = '1.99_01';
 our (%ece, %eci, %ec);
 
 # methods {{{
-sub SETUP # {{{
+sub BUILD # {{{
 {
     my $self = shift;
 

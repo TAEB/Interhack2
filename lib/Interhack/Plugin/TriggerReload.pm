@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Plugin::TriggerReload;
-use Moose::Role;
+use Calf::Role 'reload';
 
 our $VERSION = '1.99_01';
 
@@ -18,7 +18,7 @@ sub reload
 {
     my $self = shift;
     $self->topline(''); # avoid infinite recursion :)
-    $self->reload;
+    $self->refresh;
 }
 # }}}
 

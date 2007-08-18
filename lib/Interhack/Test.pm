@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 package Interhack::Test;
-use Moose;
+use Calf;
 use Test::Builder;
 use Term::VT102;
 use Interhack;
@@ -18,35 +18,35 @@ sub import_extra
 # }}}
 # attributes {{{
 has keyboard_in => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has socket_in => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has screen_out => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has socket_out => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has test => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Test::Builder',
     lazy => 1,
@@ -54,7 +54,7 @@ has test => (
 );
 
 has monitor => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Term::VT102',
     lazy => 1,
@@ -69,7 +69,7 @@ has test_attribute => (
 );
 
 has unsaved_attribute => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'Int',
     lazy => 1,
@@ -81,13 +81,13 @@ has '+statefile' => (
 );
 # }}}
 # method overrides (for Interhack-side things) {{{
-override 'connect' => sub # {{{
+sub connect # {{{
 {
     my $self = shift;
 
     $self->connected(1);
 }; # }}}
-override 'read_keyboard' => sub # {{{
+sub read_keyboard # {{{
 {
     my $self = shift;
 
@@ -100,7 +100,7 @@ override 'read_keyboard' => sub # {{{
 
     return;
 }; # }}}
-override 'read_socket' => sub # {{{
+sub read_socket # {{{
 {
     my $self = shift;
 
@@ -113,7 +113,7 @@ override 'read_socket' => sub # {{{
 
     return;
 }; # }}}
-override 'toscreen' => sub # {{{
+sub toscreen # {{{
 {
     my $self = shift;
     my $text = shift;
@@ -121,14 +121,14 @@ override 'toscreen' => sub # {{{
     $self->monitor->process($text);
     $self->screen_out($self->screen_out . $text);
 }; # }}}
-override 'toserver' => sub # {{{
+sub toserver # {{{
 {
     my $self = shift;
     my $text = shift;
 
     $self->socket_out($self->socket_out . $text);
 }; # }}}
-override 'load_config' => sub # {{{
+sub load_config # {{{
 {
 }; # }}}
 # }}}
@@ -203,6 +203,7 @@ sub top_unlike # {{{
 sub load_plugin_or_skip # {{{
 {
     my ($self, $plugin, $howmany) = @_;
+    $plugin = "+Interhack::Plugin::$plugin" unless $plugin =~ /^\+/;
     my $loaded = eval { $self->load_plugin($plugin) };
 
     if (!$loaded)
