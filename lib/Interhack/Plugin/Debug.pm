@@ -6,7 +6,7 @@ our $VERSION = '1.99_01';
 
 # attributes {{{
 has logger => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     lazy => 1,
     default => sub

@@ -6,7 +6,7 @@ our $VERSION = '1.99_01';
 
 # attributes {{{
 has fortune => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Str',
     is => 'rw',
     lazy => 1,

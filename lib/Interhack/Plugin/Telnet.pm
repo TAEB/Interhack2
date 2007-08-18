@@ -7,7 +7,7 @@ our $VERSION = '1.99_01';
 
 # attributes {{{
 has server_name => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -15,7 +15,7 @@ has server_name => (
 );
 
 has telnet_server => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Str',
     is => 'rw',
     lazy => 1,
@@ -23,7 +23,7 @@ has telnet_server => (
 );
 
 has telnet_port => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     isa => 'Int',
     is => 'rw',
     lazy => 1,
@@ -31,7 +31,7 @@ has telnet_port => (
 );
 
 has 'socket' => (
-    metaclass => 'DoNotSerialize',
+    per_load => 1,
     is => 'rw',
     isa => 'IO::Socket::INET',
     lazy => 1,
