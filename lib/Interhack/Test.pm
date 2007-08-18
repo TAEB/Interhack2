@@ -75,10 +75,6 @@ has unsaved_attribute => (
     lazy => 1,
     default => sub { 12321 },
 );
-
-has '+statefile' => (
-    default => 'interhack-test.yaml',
-);
 # }}}
 # method overrides (for Interhack-side things) {{{
 sub connect # {{{
@@ -131,6 +127,16 @@ sub toserver # {{{
 sub load_config # {{{
 {
 }; # }}}
+sub load_state # {{{
+{
+    my $self = shift;
+    eval { $self->load('interhack-test.yaml') };
+} # }}}
+sub save_state # {{{
+{
+    my $self = shift;
+    $self->store('interhack-test.yaml');
+} # }}}
 # }}}
 # methods (for test-side things) {{{
 sub typing # {{{

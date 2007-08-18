@@ -64,13 +64,14 @@ has 'config_dir' => (
 sub BUILD # {{{
 {
     my $self = shift;
+    my %args = @_;
 
     $self->apply("Calf::Storage");
     $self->apply("Calf::Pluggable");
     $self->apply("Calf::Refresh");
 
     $self->load_config();
-    $self->load_state();
+    $self->load_state() unless $args{no_state};
 } # }}}
 sub SETUP # {{{
 {
@@ -202,7 +203,7 @@ sub save_state # {{{
 sub load_state # {{{
 {
     my $self = shift;
-    $self->load(shift || $self->statefile);
+    eval { $self->load(shift || $self->statefile) };
 } # }}}
 sub load_config # {{{
 {

@@ -34,7 +34,7 @@ use Interhack::Test tests => 5;
 
 {
     my $interhack = Interhack::Test->new();
-    $interhack->load_plugin("Test");
+    $interhack->load_plugin_or_skip("Test", 1);
     ok($interhack->loaded, "plugin loaded");
 
     $interhack->saved(9999);
@@ -45,7 +45,7 @@ use Interhack::Test tests => 5;
 
 {
     my $interhack = Interhack::Test->new();
-    $interhack->load_plugin("Test");
+    $interhack->load_plugin_or_skip("Test", 1);
     ok($interhack->loaded, "plugin loaded");
 
     is($interhack->saved, 9999);

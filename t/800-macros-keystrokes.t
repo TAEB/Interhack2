@@ -6,28 +6,28 @@ use Interhack::Test tests => 4;
 
 SKIP:
 {
-    my $interhack = Interhack::Test->new();
+    my $interhack = Interhack::Test->new(no_state => 1);
     $interhack->load_plugin_or_skip("Keystrokes", 2);
     $interhack->load_plugin_or_skip("Macros", 2);
 
     $interhack->add_macro("\ce", "E-  Elbereth\n");
 
     $interhack->typing("\ce");
-    $interhack->iterate for 1..10;
+    $interhack->iterate for 1..20;
     is($interhack->sent, "E-  Elbereth\n");
     is($interhack->keystrokes, 13);
 }
 
 SKIP:
 {
-    my $interhack = Interhack::Test->new();
+    my $interhack = Interhack::Test->new(no_state => 1);
     $interhack->load_plugin_or_skip("Macros", 2);
     $interhack->load_plugin_or_skip("Keystrokes", 2);
 
     $interhack->add_macro("\ce", "E-  Elbereth\n");
 
     $interhack->typing("\ce");
-    $interhack->iterate for 1..10;
+    $interhack->iterate for 1..20;
     is($interhack->sent, "E-  Elbereth\n");
     is($interhack->keystrokes, 13);
 }
