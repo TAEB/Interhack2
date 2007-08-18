@@ -20,6 +20,12 @@ has 'pty' => (
     per_load => 1,
     is => 'rw',
     isa => 'IO::Pty::Easy',
+    default => sub
+    {
+        my $pty = IO::Pty::Easy->new();
+        $pty->spawn("nethack");
+        return $pty;
+    },
 );
 
 has 'config' => (
@@ -93,9 +99,6 @@ sub run # {{{
 sub initialize # {{{
 {
     my $self = shift;
-
-    $self->pty(new IO::Pty::Easy(handle_pty_size => 0));
-    $self->pty->spawn("nethack");
 
     $self->running(1);
 } # }}}
