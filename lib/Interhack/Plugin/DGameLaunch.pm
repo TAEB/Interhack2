@@ -120,7 +120,13 @@ sub get_pass {
     if ($self->pass eq '')
     {
         $self->debug("Getting password from the password file");
-        my $pass = do { local @ARGV = "$pass_dir/" . $self->nick; <> } || '';
+        open my $handle, '<', "$pass_dir/" . $self->nick or do
+        {
+            $self->info("No password found in $pass_dir/" . $self->nick);
+            return;
+        };
+
+        my $pass = <$handle>;
         chomp $pass;
         $self->pass($pass);
     }
