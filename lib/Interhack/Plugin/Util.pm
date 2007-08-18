@@ -2,7 +2,7 @@
 package Interhack::Plugin::Util;
 use Calf::Role qw/goto vt_like print_row restore_row force_tab_yn force_tab_ynq 
                   expecting_command extended_command debug info warn error
-                  fatal attr_to_ansi/
+                  fatal attr_to_ansi/;
 use Term::ReadKey;
 
 our $VERSION = '1.99_01';
