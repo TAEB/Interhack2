@@ -131,14 +131,13 @@ sub from_nethack_raw # {{{
 {
     my $self = shift;
 
-    my $buf;
-    # 0 == undef? perl is ridiculous
-    my $ret = $self->pty->read($buf, 0);
-    if (defined($ret) && $ret == 0) {
+    my $output = $self->pty->read(0);
+    if (defined($output) && $output eq '') {
         $self->running(0);
         return;
     }
-    return $buf;
+
+    return $output;
 } # }}}
 sub from_nethack # {{{
 {

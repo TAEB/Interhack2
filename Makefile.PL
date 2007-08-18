@@ -17,6 +17,7 @@ requires 'Log::Log4perl';
 requires 'Sort::Topological';
 requires 'LWP::Simple';
 requires 'File::Temp';
+requires 'IO::Pty::Easy';
 
 build_requires 'Test::More';
 build_requires 'Test::Builder';
