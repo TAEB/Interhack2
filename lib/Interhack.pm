@@ -247,8 +247,8 @@ be using this module. Unless you know what you're doing. . .
 =head1 BUGS
 
 On the offchance a bug is discovered (yeah right), please report it via RT,
-either C<bug-carp-repl at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Carp-REPL>.  I will be
+either C<bug-interhack at rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Interhack>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as
 I make changes.
 
