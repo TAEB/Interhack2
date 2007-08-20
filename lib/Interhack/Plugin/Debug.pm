@@ -1,5 +1,5 @@
 package Interhack::Plugin::Debug;
-use Calf::Role;
+use Calf::Role qw/debug info warn error fatal/;
 use Log::Log4perl;
 
 our $VERSION = '1.99_01';
