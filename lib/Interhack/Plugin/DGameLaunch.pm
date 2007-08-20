@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 package Interhack::Plugin::DGameLaunch;
-use Calf::Role qw/server get_nick get_pass autologin clear_buffers/;
+use Calf::Role qw/server get_nick get_pass autologin clear_buffers
+                  dgl_iterate from_dgl dgl_from_user to_dgl dgl_to_user/;
 use Term::ReadKey;
 
 our $VERSION = '1.99_01';
@@ -11,6 +12,26 @@ my $line2 = ' version 1.4.6';
 my $pass = '';
 # }}}
 # attributes {{{
+has nick => (
+    per_load => 1,
+    is => 'rw',
+    isa => 'Str',
+    default => '',
+);
+
+has do_autologin => (
+    per_load => 1,
+    is => 'rw',
+    isa => 'Bool',
+    default => 0,
+);
+
+has logged_in => (
+    per_load => 1,
+    is => 'rw',
+    isa => 'Bool',
+    default => 0,
+);
 # }}}
 # method modifiers {{{
 after 'initialize' => sub {
@@ -117,7 +138,7 @@ sub get_pass {
     my $self = shift;
 
     my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
-    if ($self->pass eq '')
+    if ($pass eq '')
     {
         $self->debug("Getting password from the password file");
         open my $handle, '<', "$pass_dir/" . $self->nick or do
@@ -127,8 +148,7 @@ sub get_pass {
         };
 
         my $pass = <$handle>;
-        chomp $pass;
-        $self->pass($pass);
+        chomp $pass if $pass;
     }
 } # }}}
 # autologin {{{
