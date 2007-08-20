@@ -12,6 +12,7 @@ sub cont {
     # to restore to at END
     ReadMode 3;
     # redraw the screen
+    # XXX: this requires the Util plugin
     $interhack->restore_row($_) for (1..24);
     $interhack->goto($interhack->vt->x, $interhack->vt->y);
     # restore the signal handler
