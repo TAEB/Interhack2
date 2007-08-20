@@ -47,7 +47,12 @@ sub calc_deps
 sub load_all_config
 {
     my $interhack = shift;
-    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole DGameLaunch DGL_LocalConfig DGL_Fortune Telnet/;
+    # XXX: DGL_LocalConfig and DGL_Fortune are broken at the moment until
+    # Eidolos gets around to implementing wrapping subs in the same package
+    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole DGameLaunch Telnet/;
+    #my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole DGameLaunch DGL_LocalConfig DGL_Fortune Telnet/;
+
+    # use this plugin list to run a local copy of nethack
     #my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole/;
     $interhack->load_plugins(calc_deps(@plugins));
 }
