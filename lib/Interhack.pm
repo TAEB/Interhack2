@@ -77,7 +77,7 @@ sub BUILD # {{{
     $self->apply("Calf::Refresh");
 
     $self->load_config();
-    $self->load_state() unless $args{no_state};
+    #$self->load_state() unless $args{no_state};
 } # }}}
 sub SETUP # {{{
 {
@@ -202,6 +202,11 @@ sub save_state # {{{
 {
     my $self = shift;
     $self->store(shift || $self->statefile);
+} # }}}
+sub new_state # {{{
+{
+    my $self = shift;
+    unlink shift || $self->statefile;
 } # }}}
 sub load_state # {{{
 {

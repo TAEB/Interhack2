@@ -29,6 +29,7 @@ before 'mangle_output' => sub
         elsif ($self->topline =~ /^\w+ \w+(?: \w+)?, the.*?, welcome back to NetHack!/)
         {
             $self->debug("Existing game detected!");
+            $self->load_state();
             $self->in_game(1);
         }
     }

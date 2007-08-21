@@ -45,6 +45,8 @@ use Interhack::Test tests => 5;
 
 {
     my $interhack = Interhack::Test->new();
+    $interhack->load_state();
+
     $interhack->load_plugin_or_skip("Test", 1);
     ok($interhack->loaded, "plugin loaded");
 
