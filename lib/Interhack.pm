@@ -65,6 +65,32 @@ has 'config_dir' => (
     required => 1,
     default => "$ENV{HOME}/.interhack2",
 );
+
+has 'connection_info' => (
+    per_load => 1,
+    is => 'rw',
+    isa => 'HashRef',
+    required => 1,
+    default => sub
+    {
+        { `hostname` => { type   => "local",
+                          name   => `hostname`,
+                          binary => "nethack",
+                          # XXX: is it too early to do this?
+                          # will we want interhack-specific args?
+                          args   => "@ARGV",
+                        },
+        }
+    },
+);
+
+has 'connection' => (
+    per_load => 1,
+    is => 'rw',
+    isa => 'Str',
+    required => 1,
+    default => `hostname`,
+);
 # }}}
 # methods {{{
 sub BUILD # {{{
@@ -95,6 +121,52 @@ sub run # {{{
     }
 
     $self->cleanup();
+} # }}}
+sub set_connection # {{{
+{
+    my $self = shift;
+
+    if (@_ == 0)
+    {
+        $self->warn("set_connection called with no parameters");
+        return;
+    }
+    elsif (@_ == 1)
+    {
+        if (ref($_[0]) eq 'HASH')
+        {
+            my $new_conn = $_[0];
+
+            unless ($new_conn->{name}) {
+                $self->warn("Connections must have a name");
+                return;
+            }
+            # XXX: this works since connection_info is a hashref, right?
+            $self->connection_info->{$new_conn->{name}} = $new_conn;
+            $self->connection($new_conn->{name});
+        }
+        else
+        {
+            # XXX: can this be a trigger? can triggers be used like that?
+            unless ($self->connection_info->{$_[0]}) {
+                $self->warn("Unknown server '$_[0]'");
+                return;
+            }
+            $self->connection($_[0]);
+        }
+    }
+    else
+    {
+        my $new_conn = \do {my %args = @_};
+
+        unless ($new_conn->{name}) {
+            $self->warn("Connections must have a name");
+            return;
+        }
+        # XXX: this works since connection_info is a hashref, right?
+        $self->connection_info->{$new_conn->{name}} = $new_conn;
+        $self->connection($new_conn->{name});
+    }
 } # }}}
 sub initialize # {{{
 {
