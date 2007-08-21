@@ -72,7 +72,7 @@ plugin_options:
         whistle: z
         lamp: j
         instrument: q
-        trice: ^y
+        trice: '^y'
 
     Statusline:
         # this just becomes a local plugin        
@@ -138,9 +138,9 @@ plugin_options:
             N: polymorph
             O: cancellation
 
-    Macros: # XXX: needs work!
-        ^B: "ainy?!$\n\e" # ^B to bag non-dangerous stuff
-        ^E: "E-  Elbereth\n" # ^E to engrave Elbereth
-        ^V: "E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      " # ^V to DfV
-        ^W: "aqny " # ^W to work the castle drawbridge
+    Macros:
+        '^B': 'ainy?!$\n\e'
+        '^E': 'E-  Elbereth\n'
+        '^V': 'E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      '
+        '^W': 'aqny '
 
