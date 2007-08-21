@@ -1,5 +1,5 @@
 ---
-nick: Eidolos
+nick: doy
 server: local    # default is NAO
 nhoptions:
     vikeys: 1
@@ -24,7 +24,7 @@ plugins:
         - MonsterRename
         - UnnamedScrolls
 
-plugin:
+plugin_options:
     Eidocolors:
         exclude:
             - shortbuc
