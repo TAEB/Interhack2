@@ -10,13 +10,6 @@ our $VERSION = '1.99_01';
 my $pass = '';
 # }}}
 # attributes {{{
-has nick => (
-    per_load => 1,
-    is => 'rw',
-    isa => 'Str',
-    default => '',
-);
-
 has do_autologin => (
     per_load => 1,
     is => 'rw',
@@ -48,39 +41,43 @@ after 'initialize' => sub {
 sub get_nick {
     my $self = shift;
 
-    my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
+    my $conn_info = $self->connection_info->{$self->connection};
+    my $pass_dir = $self->config_dir . "/servers/" . $conn_info->{name} . "/passwords";
     if (@ARGV)
     {
+        my $found_nick = '';
         for (glob("$pass_dir/*"))
         {
             local ($_) = m{.*/(\w+)};
             if (index($_, $ARGV[0]) > -1)
             {
-                if ($self->nick ne '')
+                if ($found_nick ne '')
                 {
-                    $self->fatal("Ambiguous login name given: $self->nick, $_");
+                    $self->fatal("Ambiguous login name given: $found_nick, $_");
                 }
                 else
                 {
                     $self->debug("Using login name $_");
-                    $self->nick($_);
+                    $found_nick = $_;
                 }
             }
         }
-        $self->do_autologin(1) unless $self->nick eq '';
+        $conn_info->{nick} = $found_nick if $found_nick;
     }
+    $self->do_autologin(1) if $conn_info->{nick};
 } # }}}
 # get_pass {{{
 sub get_pass {
     my $self = shift;
 
-    my $pass_dir = $self->config_dir . "/servers/" . $self->server_name . "/passwords";
+    my $conn_info = $self->connection_info->{$self->connection};
+    my $pass_dir = $self->config_dir . "/servers/" . $conn_info->{name} . "/passwords";
     if ($pass eq '')
     {
         $self->debug("Getting password from the password file");
-        open my $handle, '<', "$pass_dir/" . $self->nick or do
+        open my $handle, '<', "$pass_dir/" . $conn_info->{nick} or do
         {
-            $self->info("No password found in $pass_dir/" . $self->nick);
+            $self->info("No password found in $pass_dir/" . $conn_info->{nick});
             return;
         };
 
