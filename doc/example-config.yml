@@ -82,25 +82,25 @@ plugin_options:
         armor: blessed greased fixed +N
         A: wish_quantity blessed scrolls of charging
         B: magic marker
-        C: armor helm of brilliance
-        D: armor gray dragon scale mail
-        E: armor silver dragon scale mail
+        C: $armor helm of brilliance
+        D: $armor gray dragon scale mail
+        E: $armor silver dragon scale mail
         F: blessed ring of levitation
         G: blessed greased fixed bag of holding
         H: wish_quantity cursed potions of gain level
         I: blessed ring of conflict
         J: 7 candles
         K: blessed Eye of the Aethiopica
-        L: armor jumping boots
-        M: armor helm of telepathy
+        L: $armor jumping boots
+        M: $armor helm of telepathy
         N: blessed Orb of Fate
         O: blessed ring of free action
         P: blessed spellbook of identify
-        Q: armor gauntlets of power
+        Q: $armor gauntlets of power
         R: blessed ring of teleport control
-        S: armor speed boots
+        S: $armor speed boots
         T: blessed amulet of life saving
-        U: armor helm of opposite alignment
+        U: $armor helm of opposite alignment
         V: blessed Master Key of Thievery
         W: nothing
         Law: []
