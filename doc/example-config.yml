@@ -80,14 +80,14 @@ plugin_options:
     WishMenu:
         enchantment: 2
         armor: blessed greased fixed +N
-        A: wish_quantity blessed scrolls of charging
+        A: N blessed scrolls of charging
         B: magic marker
         C: $armor helm of brilliance
         D: $armor gray dragon scale mail
         E: $armor silver dragon scale mail
         F: blessed ring of levitation
         G: blessed greased fixed bag of holding
-        H: wish_quantity cursed potions of gain level
+        H: N cursed potions of gain level
         I: blessed ring of conflict
         J: 7 candles
         K: blessed Eye of the Aethiopica
