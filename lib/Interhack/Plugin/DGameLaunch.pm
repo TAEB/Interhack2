@@ -164,8 +164,7 @@ sub to_dgl {
 sub dgl_to_user {
     my ($self, $text) = @_;
 
-    my $nick = $self->nick;
-    if ($text =~ /Logged in as: $nick/) {
+    if ($text =~ /Logged in as: /) {
         $self->debug("Login detected");
         $self->logged_in(1);
     }
