@@ -20,12 +20,7 @@ has 'pty' => (
     per_load => 1,
     is => 'rw',
     isa => 'IO::Pty::Easy',
-    default => sub
-    {
-        my $pty = IO::Pty::Easy->new();
-        $pty->spawn("nethack");
-        return $pty;
-    },
+    default => sub { IO::Pty::Easy->new() },
 );
 
 has 'config' => (
@@ -172,6 +167,14 @@ sub initialize # {{{
 {
     my $self = shift;
 
+    my $conn_info = $self->connection_info->{$self->connection};
+    unless ($conn_info->{type} eq "local") {
+        $self->warn("Unknown connection type $conn_info->{type}");
+        return;
+    }
+    my $cmd = $conn_info->{binary};
+    $cmd .= " $conn_info->{args}" if $conn_info->{args};
+    $self->pty->spawn($cmd);
     $self->running(1);
 } # }}}
 sub iterate # {{{
