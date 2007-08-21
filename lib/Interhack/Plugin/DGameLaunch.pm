@@ -7,8 +7,6 @@ use Term::ReadKey;
 our $VERSION = '1.99_01';
 
 # private variables {{{
-my $line1 = ' dgamelaunch - network console game launcher';
-my $line2 = ' version 1.4.6';
 my $pass = '';
 # }}}
 # attributes {{{
@@ -46,67 +44,6 @@ after 'initialize' => sub {
 };
 # }}}
 # methods {{{
-# server {{{
-my %servers = (
-    nao       => { server => 'nethack.alt.org',
-                   port   => 23,
-                   name   => 'nao',
-                   rc_dir => 'http://alt.org/nethack/rcfiles',
-                   line1 => ' dgamelaunch - network console game launcher',
-                   line2 => ' version 1.4.6',
-                 },
-    sporkhack => { server => 'sporkhack.nineball.org',
-                   port   => 23,
-                   name   => 'sporkhack',
-                   rc_dir => 'http://nethack.nineball.org/rcfiles',
-                   line1 => ' ** Games on this server are recorded for in-  progress viewing and playback!',
-                   line2 => '',
-                 },
-);
-
-# XXX: this is almost certainly the wrong place for this method, and it should
-# likely be split up into multiple parts (i.e. one that initializes things like
-# hostname and port, and another that initializes things like dgl nick). It's
-# fine now since dgl is the only thing using the telnet code.
-sub server {
-    my $self = shift;
-    my $new_server;
-
-    if (@_ == 0)
-    {
-        $self->warn("server called with no parameters");
-        return;
-    }
-    elsif (@_ == 1)
-    {
-        if (ref($_[0]) eq 'HASH')
-        {
-            $new_server = $_[0];
-        }
-        else
-        {
-            $new_server = $servers{$_[0]} or do {
-                $self->warn("Unknown server '$_[0]'");
-                return;
-            }
-        }
-    }
-    else
-    {
-        $new_server = \do {my %args = @_};
-    }
-
-    $self->server_name($new_server->{name})
-        or $self->warn("Server name not set");
-    $self->telnet_server($new_server->{server})
-        or $self->warn("Server address not set");
-    $self->telnet_port($new_server->{port})
-        or $self->warn("Server port not set");
-    $self->rc_dir($new_server->{rc_dir})
-        or $self->warn("Server RC path URL not set");
-    $line1 = $new_server->{line1};
-    $line2 = $new_server->{line2};
-} # }}}
 # get_nick {{{
 sub get_nick {
     my $self = shift;
@@ -170,12 +107,15 @@ sub autologin {
 sub clear_buffers {
     my $self = shift;
 
+    my $conn_info = $self->connection_info->{$self->connection};
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
         next unless defined($_ = $self->from_nethack_raw);
         $self->debug("Clearing out socket buffer...");
         last if /There was a problem with your last entry\./;
+        my $line1 = $conn_info->{line1};
+        my $line2 = $conn_info->{line2};
         if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
         {
             $found++;
