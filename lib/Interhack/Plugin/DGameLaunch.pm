@@ -29,8 +29,10 @@ after 'initialize' => sub {
     my ($self) = @_;
 
     $self->get_nick;
-    $self->get_pass;
-    $self->autologin;
+    if ($self->do_autologin) {
+        $self->get_pass;
+        $self->autologin;
+    }
     $self->clear_buffers;
     1 while $self->dgl_iterate;
     $self->debug("Leaving DGL, starting the game");
@@ -89,16 +91,14 @@ sub get_pass {
 sub autologin {
     my $self = shift;
 
-    if ($self->do_autologin)
-    {
-        $self->debug("Doing autologin");
-        # meh, i thought to keep these as prints for security reasons, but
-        # really, any of the helper function here can be wrapped, not just
-        # to_dgl, so it's really not worth it.
-        $self->to_dgl("l" . $self->nick . "\n");
-        $self->to_dgl($pass . "\n") if $pass ne '';
-        $pass = '';
-    }
+    my $conn_info = $self->connection_info->{$self->connection};
+    $self->debug("Doing autologin");
+    # meh, i thought to keep these as prints for security reasons, but
+    # really, any of the helper function here can be wrapped, not just
+    # to_dgl, so it's really not worth it.
+    $self->to_dgl("l" . $conn_info->{nick} . "\n");
+    $self->to_dgl($pass . "\n") if $pass;
+    $pass = '';
 } # }}}
 # clear_buffers {{{
 sub clear_buffers {
