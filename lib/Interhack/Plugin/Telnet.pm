@@ -6,30 +6,6 @@ use IO::Socket::INET;
 our $VERSION = '1.99_01';
 
 # attributes {{{
-has server_name => (
-    per_load => 1,
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => 'nao',
-);
-
-has telnet_server => (
-    per_load => 1,
-    isa => 'Str',
-    is => 'rw',
-    lazy => 1,
-    default => 'nethack.alt.org',
-);
-
-has telnet_port => (
-    per_load => 1,
-    isa => 'Int',
-    is => 'rw',
-    lazy => 1,
-    default => 23,
-);
-
 has 'socket' => (
     per_load => 1,
     is => 'rw',
@@ -39,12 +15,46 @@ has 'socket' => (
 );
 # }}}
 # method modifiers {{{
+sub BUILD
+{
+    my $self = shift;
+
+    # XXX: how do we want to separate out the telnet stuff from the dgl stuff?
+    # is this sufficient?
+    my %servers = (
+        nao       => { type   => 'telnet',
+                       server => 'nethack.alt.org',
+                       port   => 23,
+                       name   => 'nao',
+                       rc_dir => 'http://alt.org/nethack/rcfiles',
+                       line1  => ' dgamelaunch - network console game launcher',
+                       line2  => ' version 1.4.6',
+                     },
+        sporkhack => { type   => 'telnet',
+                       server => 'sporkhack.nineball.org',
+                       port   => 23,
+                       name   => 'sporkhack',
+                       rc_dir => 'http://nethack.nineball.org/rcfiles',
+                       line1  => ' ** Games on this server are recorded for in-progress viewing and playback!',
+                       line2  => '',
+                     },
+    );
+
+    for (values %servers) {
+        $self->set_connection($_);
+    }
+    $self->connection("sporkhack");
+}
+
 around 'initialize' => sub {
     my $orig = shift;
     my $self = shift;
 
-    $self->socket(new IO::Socket::INET(PeerAddr => $self->telnet_server,
-                                       PeerPort => $self->telnet_port,
+    my $conn_info = $self->connection_info->{$self->connection};
+    return $orig->($self, @_) unless ($conn_info->{type} eq "telnet");
+
+    $self->socket(new IO::Socket::INET(PeerAddr => $conn_info->{server},
+                                       PeerPort => $conn_info->{port},
                                        Proto => 'tcp'));
     die "Could not create socket: $!\n" unless $self->socket;
     $self->socket->blocking(0);
@@ -67,7 +77,7 @@ around 'initialize' => sub {
     my $STATUS = chr(5);
     my $LFLOW = chr(33);
 
-    if ($self->server_name =~ /termcast/)
+    if ($conn_info->{name} =~ /termcast/)
     {
         $self->to_nethack_raw("$IAC$DO$ECHO"
                              ."$IAC$DO$GOAHEAD")
