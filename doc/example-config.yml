@@ -1,0 +1,146 @@
+---
+nick: Eidolos
+server: local    # default is NAO
+nhoptions:
+    vikeys: 1
+
+write_keys: 0
+write_normal_ttyrec: 1
+write_interhack_ttyrec: 1
+no_evalcontext: 1
+
+plugins:
+    exclude:
+        - ApplyOil
+        - ColorsMonsters
+        - DualSlowDigestion
+        - Elbereth
+        - Eval
+        - GemName
+        - GenoList
+        - Hiveminder
+        - IntrinsicsMatcher
+        - IntrinsicsTracker
+        - MonsterRename
+        - UnnamedScrolls
+
+plugin:
+    Eidocolors:
+        exclude:
+            - shortbuc
+            - scope
+            - instrument
+            - gem
+            - charges_individual
+            - holywater
+            - unholywater
+            - goodies_other
+        include:
+            - splitwater
+            - erosion
+
+        blessed: green
+        uncursed: brown
+        cursed: red
+        holywater: blue
+        unholywater: red
+        trice: bred
+        bohboom: bred
+
+    PriceID:
+        lc_scrolls: 1
+        short_names:
+            scroll:
+                60: [ew]
+                80: [ea, rc]
+            potion:
+                300: [ga, gl, para]
+        empty: e
+
+    Fortune:
+        fortunes:
+            - ~/.fortune/yasd-fortune
+            - ~/.fortune/ideas
+
+    Autoadjust:
+        key: o
+        unihorn: a
+        athame: e
+        stethoscope: y
+        bag: i
+        blindfold: n
+        whistle: z
+        lamp: j
+        instrument: q
+        trice: ^y
+
+    Statusline:
+        # this just becomes a local plugin        
+
+    WishMenu:
+        enchantment: 2
+        armor: blessed greased fixed +N
+        A: wish_quantity blessed scrolls of charging
+        B: magic marker
+        C: armor helm of brilliance
+        D: armor gray dragon scale mail
+        E: armor silver dragon scale mail
+        F: blessed ring of levitation
+        G: blessed greased fixed bag of holding
+        H: wish_quantity cursed potions of gain level
+        I: blessed ring of conflict
+        J: 7 candles
+        K: blessed Eye of the Aethiopica
+        L: armor jumping boots
+        M: armor helm of telepathy
+        N: blessed Orb of Fate
+        O: blessed ring of free action
+        P: blessed spellbook of identify
+        Q: armor gauntlets of power
+        R: blessed ring of teleport control
+        S: armor speed boots
+        T: blessed amulet of life saving
+        U: armor helm of opposite alignment
+        V: blessed Master Key of Thievery
+        W: nothing
+        Law: []
+        Neu: []
+        Cha: []
+
+    MarkerMenu:
+        scrolls:
+            A: charging
+            B: enchant armor
+            C: enchant weapon
+            D: identify
+            E: remove curse
+            F: magic mapping
+            G: gold detection
+            H: scare monster
+            I: teleportation
+            J: earth
+            K: taming
+            L: genocide
+        spellbooks:
+            A: magic mapping
+            B: identify
+            C: jumping
+            D: haste self
+            E: magic missile
+            F: drain life
+            G: charm monster
+            H: finger of death
+            I: cure sickness
+            J: extra healing
+            K: detect treasure
+            L: create monster
+            M: remove curse
+            N: polymorph
+            O: cancellation
+
+    Macros: # XXX: needs work!
+        ^B: "ainy?!$\n\e" # ^B to bag non-dangerous stuff
+        ^E: "E-  Elbereth\n" # ^E to engrave Elbereth
+        ^V: "E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      " # ^V to DfV
+        ^W: "aqny " # ^W to work the castle drawbridge
+
