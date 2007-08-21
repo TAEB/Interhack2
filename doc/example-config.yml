@@ -139,8 +139,8 @@ plugin_options:
             O: cancellation
 
     Macros:
-        '^B': 'ainy?!$\n\e'
-        '^E': 'E-  Elbereth\n'
-        '^V': 'E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      '
-        '^W': 'aqny '
+        '^B': "ainy?!$\n\e"
+        '^E': "E-  Elbereth\n"
+        '^V': "E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      "
+        '^W': "aqny "
 
