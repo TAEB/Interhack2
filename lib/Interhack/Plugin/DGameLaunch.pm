@@ -83,7 +83,7 @@ sub get_pass {
             return;
         };
 
-        my $pass = <$handle>;
+        $pass = <$handle>;
         chomp $pass if $pass;
     }
 } # }}}
