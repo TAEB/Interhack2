@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package Interhack::Plugin::DGameLaunch;
 use Calf::Role qw/server get_nick get_pass autologin clear_buffers
                   dgl_iterate from_dgl dgl_from_user to_dgl dgl_to_user/;

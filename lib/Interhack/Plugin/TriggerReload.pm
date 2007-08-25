@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package Interhack::Plugin::TriggerReload;
 use Calf::Role 'reload';
 

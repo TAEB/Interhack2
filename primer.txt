@@ -80,7 +80,7 @@ Roles can also define method modifiers. Let's go quickly over how to define a
 new plugin using a new method, a method modifier, and an attribute. This one
 will be for counting keystrokes.
 
-    #!/usr/bin/perl
+    #!/usr/bin/env perl
     use Moose::Role;
     # no need to use strict and use warnings, Moose does that for us
 

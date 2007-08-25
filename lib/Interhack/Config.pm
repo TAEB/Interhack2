@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package Interhack::Config;
 use Sort::Topological 'toposort';
 

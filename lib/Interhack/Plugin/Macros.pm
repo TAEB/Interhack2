@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package Interhack::Plugin::Macros;
 use Calf::Role 'add_macro';
 

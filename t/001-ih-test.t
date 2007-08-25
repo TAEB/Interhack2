@@ -1,4 +1,4 @@
-#!perl
+#!/usr/bin/env perl
 use Interhack::Test tests => 16;
 
 # But who tests the testers?

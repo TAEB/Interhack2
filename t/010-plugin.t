@@ -1,4 +1,4 @@
-#!perl
+#!/usr/bin/env perl
 
 { # dummy plugins {{{
     package Interhack::Plugin::Test;

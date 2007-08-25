@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package Interhack::Plugin::Telnet;
 use Calf::Role;
 use IO::Socket::INET;

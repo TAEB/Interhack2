@@ -1,4 +1,4 @@
-#!perl
+#!/usr/bin/env perl
 use Interhack::Test tests => 4;
 
 # tests the interaction of Keystrokes and Macros to make sure that no matter

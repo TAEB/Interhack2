@@ -1,4 +1,4 @@
-#!perl
+#!/usr/bin/env perl
 package Interhack::Plugin::Eidocolors;
 use Calf::Role;
 

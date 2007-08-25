@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package Interhack::Plugin::Recolor;
 use Calf::Role 'recolor', 'color_to_escape';
 

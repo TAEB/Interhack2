@@ -1,4 +1,4 @@
-#!perl
+#!/usr/bin/env perl
 use Interhack::Test tests => 2;
 
 my $interhack = Interhack::Test->new();
