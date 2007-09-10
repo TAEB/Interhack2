@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 package Interhack::Plugin::Telnet;
-use Calf::Role;
+use Calf::Role qw/to_nethack from_nethack/;
 use IO::Socket::INET;
 
 our $VERSION = '1.99_01';
@@ -13,6 +13,54 @@ has 'socket' => (
     lazy => 1,
     default => sub { {} },
 );
+# }}}
+# method overrides {{{
+sub from_nethack {
+    my $orig = shift;
+    my $self = shift;
+
+    # the reason this is so complicated is because packets can be broken up
+    # we can't detect this perfectly, but it's only an issue if an escape code
+    # is broken into two parts, and we can check for that
+
+    my $from_server;
+
+    for (1..100)
+    {
+        # would block
+        my $bytes = recv($self->socket, $_, 4096, 0);
+        last unless defined($from_server) ||  defined($bytes);
+        next if     defined($from_server) && !defined($bytes);
+
+        # 0 = error
+        if (length == 0)
+        {
+            $self->running(0);
+            return;
+        }
+
+        # need to store what we read
+        $from_server .= $_;
+
+        # check for broken escape code or DEC string
+        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
+        {
+            next;
+        }
+
+        # cut it and release
+        last;
+    }
+
+    return $from_server;
+}
+
+sub to_nethack {
+    my $orig = shift;
+    my ($self, $text) = @_;
+
+    print {$self->socket} $text;
+}
 # }}}
 # method modifiers {{{
 sub BUILD
@@ -79,8 +127,8 @@ around 'initialize' => sub {
 
     if ($conn_info->{name} =~ /termcast/)
     {
-        $self->to_nethack_raw("$IAC$DO$ECHO"
-                             ."$IAC$DO$GOAHEAD")
+        $self->to_nethack("$IAC$DO$ECHO"
+                         ."$IAC$DO$GOAHEAD")
     }
     else
     {
@@ -90,67 +138,20 @@ around 'initialize' => sub {
         # sends back to us. ideally, we should be using ncurses (or
         # termcap/terminfo at the very least) to abstract this stuff out, but
         # that's a lot of effort for not much gain at the moment.
-        $self->to_nethack_raw("$IAC$WILL$TTYPE"
-                             ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
-                             ."$IAC$WONT$TSPEED"
-                             ."$IAC$WONT$XDISPLOC"
-                             ."$IAC$WONT$NEWENVIRON"
-                             ."$IAC$DONT$GOAHEAD"
-                             ."$IAC$WILL$ECHO"
-                             ."$IAC$DO$STATUS"
-                             ."$IAC$WILL$LFLOW"
-                             ."$IAC$WILL$NAWS"
-                             ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE");
+        $self->to_nethack("$IAC$WILL$TTYPE"
+                         ."$IAC$SB$TTYPE${IS}xterm-color$IAC$SE"
+                         ."$IAC$WONT$TSPEED"
+                         ."$IAC$WONT$XDISPLOC"
+                         ."$IAC$WONT$NEWENVIRON"
+                         ."$IAC$DONT$GOAHEAD"
+                         ."$IAC$WILL$ECHO"
+                         ."$IAC$DO$STATUS"
+                         ."$IAC$WILL$LFLOW"
+                         ."$IAC$WILL$NAWS"
+                         ."$IAC$SB$NAWS$IS".chr(80).$IS.chr(24)."$IAC$SE");
     }
 
     $self->running(1);
-};
-
-around 'from_nethack_raw' => sub {
-    my $orig = shift;
-    my $self = shift;
-
-    # the reason this is so complicated is because packets can be broken up
-    # we can't detect this perfectly, but it's only an issue if an escape code
-    # is broken into two parts, and we can check for that
-
-    my $from_server;
-
-    for (1..100)
-    {
-        # would block
-        my $bytes = recv($self->socket, $_, 4096, 0);
-        last unless defined($from_server) ||  defined($bytes);
-        next if     defined($from_server) && !defined($bytes);
-
-        # 0 = error
-        if (length == 0)
-        {
-            $self->running(0);
-            return;
-        }
-
-        # need to store what we read
-        $from_server .= $_;
-
-        # check for broken escape code or DEC string
-        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
-        {
-            next;
-        }
-
-        # cut it and release
-        last;
-    }
-
-    return $from_server;
-};
-
-around 'to_nethack_raw' => sub {
-    my $orig = shift;
-    my ($self, $text) = @_;
-
-    print {$self->socket} $text;
 };
 # }}}
 

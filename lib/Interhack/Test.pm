@@ -83,7 +83,7 @@ sub connect # {{{
 
     $self->connected(1);
 }; # }}}
-sub from_user_raw # {{{
+sub from_user # {{{
 {
     my $self = shift;
 
@@ -96,7 +96,7 @@ sub from_user_raw # {{{
 
     return;
 }; # }}}
-sub from_nethack_raw # {{{
+sub from_nethack # {{{
 {
     my $self = shift;
 
@@ -109,7 +109,7 @@ sub from_nethack_raw # {{{
 
     return;
 }; # }}}
-sub to_user_raw # {{{
+sub to_user # {{{
 {
     my $self = shift;
     my $text = shift;
@@ -117,7 +117,7 @@ sub to_user_raw # {{{
     $self->monitor->process($text);
     $self->screen_out($self->screen_out . $text);
 }; # }}}
-sub to_nethack_raw # {{{
+sub to_nethack # {{{
 {
     my $self = shift;
     my $text = shift;

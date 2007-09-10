@@ -108,7 +108,7 @@ sub clear_buffers {
     my $found = 0;
     while ($found < ($self->do_autologin ? 2 : 1))
     {
-        next unless defined($_ = $self->from_nethack_raw);
+        next unless defined($_ = $self->from_nethack);
         $self->debug("Clearing out socket buffer...");
         last if /There was a problem with your last entry\./;
         my $line1 = $conn_info->{line1};
@@ -146,19 +146,19 @@ sub from_dgl
 {
     my $self = shift;
 
-    return $self->from_nethack_raw;
+    return $self->from_nethack;
 } # }}}
 # dgl_from_user {{{
 sub dgl_from_user
 {
     my $self = shift;
-    return $self->from_user_raw;
+    return $self->from_user;
 } # }}}
 # to_dgl {{{
 sub to_dgl {
     my ($self, $text) = @_;
 
-    $self->to_nethack_raw($text);
+    $self->to_nethack($text);
 } # }}}
 # dgl_to_user {{{
 sub dgl_to_user {
@@ -169,7 +169,7 @@ sub dgl_to_user {
         $self->logged_in(1);
     }
 
-    $self->to_user_raw($text);
+    $self->to_user($text);
 } # }}}
 # }}}
 

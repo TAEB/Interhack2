@@ -53,7 +53,7 @@ around 'to_dgl' => sub
             my $last_buf = '';
             my $buf = '';
             while (1) {
-                next unless defined($buf = $self->from_nethack_raw);
+                next unless defined($buf = $self->from_nethack);
                 $_ = $last_buf . $buf;
                 last if /\e\[.*?'g' is not implemented/;
                 $last_buf = $buf;
