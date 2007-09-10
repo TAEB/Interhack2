@@ -91,7 +91,7 @@ sub BUILD
     for (values %servers) {
         $self->set_connection($_);
     }
-    $self->connection("sporkhack");
+    $self->connection("nao");
 }
 
 around 'initialize' => sub {
