@@ -11,7 +11,8 @@ nhoptions:
 
 plugins:
     exclude:
-        - Autologin
+        - Telnet
+        - DGameLaunch
 
     MonsterColors:
         chromatic_nemeses: 1
