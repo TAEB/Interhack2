@@ -1,0 +1,50 @@
+---
+nick: Eidolos
+server: NAO
+
+write_keys: 1
+write_normal_ttyrec: 1
+write_interhack_ttyrec: 1
+
+nhoptions:
+    vikeys: 1
+
+plugins:
+    exclude:
+        - Autologin
+
+    MonsterColors:
+        chromatic_nemeses: 1
+
+    PriceID:
+        short_names:
+            scroll:
+                60: [EW]
+                80: [EA, RC]
+            potion:
+                300: [GA, GL, paral]
+
+    Autoadjust:
+        key: k
+        unihorn: h
+        athame: E
+        stethoscope: s
+        pickaxe: x
+        bag: b
+        Amulet: d
+        blindfold: P
+        lizard: L
+        conflict: c
+        whistle: w
+        levitation: l
+        lamp: j
+        instrument: a
+        trice: '^ye'
+        '\bpotions?\b[^.]*?\b': "^q"
+        '\bwand\b[^.]*?': "^z"
+
+    Macros:
+        '^E': "E-  Elbereth\n"
+        '^V': "E-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      "
+        '^W': "aany\e"
+
