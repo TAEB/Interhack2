@@ -26,7 +26,7 @@ has 'pty' => (
 has 'config' => (
     per_load => 1,
     is => 'rw',
-    isa => 'Interhack::Config',
+    isa => 'HashRef',
 );
 
 has 'vt' => (

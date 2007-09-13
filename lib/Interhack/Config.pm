@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 package Interhack::Config;
 use Sort::Topological 'toposort';
+use YAML 'LoadFile';
 
 our $VERSION = '1.99_01';
 our %loaded_plugins;
@@ -47,14 +48,9 @@ sub calc_deps
 sub load_all_config
 {
     my $interhack = shift;
-    # XXX: DGL_LocalConfig and DGL_Fortune are broken at the moment until
-    # Eidolos gets around to implementing wrapping subs in the same package
-    my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole StripMenucolors DGameLaunch Telnet GuardEnter/;
-    #my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole StripMenucolors DGameLaunch DGL_LocalConfig DGL_Fortune Telnet/;
 
-    # use this plugin list to run a local copy of nethack
-    #my @plugins = qw/Realtime Keystrokes FloatingEye TriggerReload NewGame Macros ConfirmDirection Foodless Satiated Illiterate Eidocolors Weaponless PasteDetection QuakeConsole StripMenucolors/;
-    $interhack->load_plugins(calc_deps(@plugins));
+    my $config = LoadFile($interhack->config_dir . "/config.yaml");
+    $interhack->config($config);
 }
 
 1;
