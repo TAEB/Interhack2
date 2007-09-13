@@ -95,6 +95,7 @@ sub apply_config
     # sort @roles according to dependencies
 
     $interhack->apply('Interhack::Plugin::Util');
+    $interhack->apply('Interhack::Plugin::Recolor');
 
     for my $role (@roles)
     {
