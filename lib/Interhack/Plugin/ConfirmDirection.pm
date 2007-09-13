@@ -8,10 +8,10 @@ our $SUMMARY = 'Disallows any invalid direction at a "In what direction?" prompt
 # attributes {{{
 # }}}
 # method modifiers {{{
-around 'to_nethack' => sub
+guard 'to_nethack' => sub
 {
-    my $orig = shift;
     my ($self, $text) = @_;
+    return 1 if !defined($text);
 
     if ($self->vt->y == 1 && $self->topline =~ /^In what direction\?/)
     {
@@ -23,7 +23,7 @@ around 'to_nethack' => sub
         }
     }
 
-    return $orig->($self, $text);
+    return 1;
 };
 # }}}
 # methods {{{

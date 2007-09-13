@@ -7,13 +7,10 @@ our $VERSION = '1.99_01';
 # attributes {{{
 # }}}
 # method modifiers {{{
-around 'check_input' => sub
+guard 'check_input' => sub
 {
-    my $orig = shift;
     my ($self, $input) = @_;
-
-    $input = $orig->($self, $input);
-    return unless defined $input;
+    return 1 if !defined($input);
 
     #XXX: this needs to be a utility function
     if ($self->vt->row_plaintext(24) =~ /Satiated/ &&
@@ -23,7 +20,7 @@ around 'check_input' => sub
         if (!$ynq) { return }
     }
 
-    return $input;
+    return 1;
 };
 # }}}
 # methods {{{

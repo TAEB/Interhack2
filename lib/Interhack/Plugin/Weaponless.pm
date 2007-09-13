@@ -13,13 +13,10 @@ has confirm_wield => (
 );
 # }}}
 # method modifiers {{{
-around 'check_input' => sub
+guard 'check_input' => sub
 {
-    my $orig = shift;
     my ($self, $input) = @_;
-
-    $input = $orig->($self, $input);
-    return unless defined $input;
+    return 1 if !defined($input);
 
     if ($self->confirm_wield && $input =~ /^w/ && $self->expecting_command)
     {
@@ -32,7 +29,7 @@ around 'check_input' => sub
         }
     }
 
-    return $input;
+    return 1;
 };
 # }}}
 # methods {{{
