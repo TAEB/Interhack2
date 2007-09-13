@@ -16,7 +16,6 @@ has 'socket' => (
 # }}}
 # method overrides {{{
 sub from_nethack {
-    my $orig = shift;
     my $self = shift;
 
     # the reason this is so complicated is because packets can be broken up
@@ -56,7 +55,6 @@ sub from_nethack {
 }
 
 sub to_nethack {
-    my $orig = shift;
     my ($self, $text) = @_;
 
     print {$self->socket} $text;
