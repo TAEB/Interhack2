@@ -98,7 +98,7 @@ sub BUILD # {{{
     $self->apply("Calf::Refresh");
 
     $self->load_config();
-    #$self->load_state() unless $args{no_state};
+    $self->apply_config();
 } # }}}
 sub SETUP # {{{
 {
@@ -271,6 +271,11 @@ sub load_config # {{{
 {
     my $self = shift;
     Interhack::Config::load_all_config($self);
+} # }}}
+sub apply_config # {{{
+{
+    my $self = shift;
+    Interhack::Config::apply_config($self);
 } # }}}
 # }}}
 

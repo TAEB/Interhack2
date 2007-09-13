@@ -53,5 +53,54 @@ sub load_all_config
     $interhack->config($config);
 }
 
+sub apply_config
+{
+    my $interhack = shift;
+    my $config = $interhack->config;
+
+    my %all_plugins = $interhack->find_plugins($interhack->config_dir . "/plugins/");
+    my @plugins;
+
+    if (exists $config->{plugins}{include})
+    {
+        for (@{$config->{plugins}{include}})
+        {
+            if (!exists $all_plugins{$_})
+            {
+                warn "No plugin $_ found.";
+                next;
+            }
+
+            push @plugins, $all_plugins{$_};
+        }
+    }
+    elsif (exists $config->{plugins}{exclude})
+    {
+        delete $all_plugins{$_} for @{$config->{plugins}{exclude}};
+        @plugins = values %all_plugins;
+    }
+
+    local @INC = ($interhack->config_dir . "/plugins/", @INC);
+    for my $plugin (@plugins)
+    {
+        my $package = $plugin;
+        $package =~ s{::}{/}g;
+        $package .= '.pm';
+        require($package) or die "Unable to load plugin '$plugin': $@";
+
+        # look at $package::dependencies
+        push @roles, $plugin;
+    }
+
+    # sort @roles according to dependencies
+
+    $interhack->apply('Interhack::Plugin::Util');
+
+    for my $role (@roles)
+    {
+        $interhack->apply($role);
+    }
+}
+
 1;
 
