@@ -7,7 +7,7 @@ all_from 'lib/Interhack.pm';
 
 # Specific dependencies
 requires 'Calf';
-requires 'Class::Method::Modifiers';
+requires 'Class::Method::Modifiers' => '0.07';
 requires 'IO::Socket::INET';
 requires 'Term::ReadKey';
 requires 'Term::VT102';
