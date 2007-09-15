@@ -17,8 +17,7 @@ guard 'check_input' => sub
         my $dt = $self->turn - ($self->last_turn_killed->{$1}||0);
         return 1 if $dt < 50;
         return 1 if $1 =~ /lizard/ || $1 =~ /lichen/;
-        my $yn = $self->force_tab_yn("Warning! That monster type was killed $dt turns ago [tab to continue]");
-        return $yn;
+        return $self->force_tab_yn("Warning! That monster type was killed $dt turns ago [tab to continue]");
     }
 
     return 1;
