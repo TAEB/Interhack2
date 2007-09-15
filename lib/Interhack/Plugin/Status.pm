@@ -155,7 +155,7 @@ has show_bl => (
     default => 0,
 );
 
-has botl => (
+has botl_stats => (
     isa => 'HashRef',
     is => 'rw',
     default => sub { {} },
@@ -278,26 +278,26 @@ sub update_botl_hash
 {
     my $self = shift;
 
-    $self->botl->{char} = sprintf "%s: %s%s%s%s",
-                                  $self->name,
-                                  $self->role  ? $self->role . " "  : "",
-                                  $self->race  ? $self->race . " "  : "",
-                                  $self->sex   ? $self->sex  . " "  : "",
-                                  $self->align ? $self->align       : "";
-    $self->botl->{stats} = sprintf "St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
-                                   $self->st, $self->dx, $self->co,
-                                   $self->in, $self->wi, $self->ch;
-    $self->botl->{score} = defined($self->score) ?
-                               sprintf "S:%d", $self->score : "";
-    $self->botl->{dlvl} = $self->dlvl;
-    $self->botl->{au} = "\$:" . $self->au;
-    $self->botl->{hp} = "HP:" . $self->hp . "(" . $self->maxhp . ")";
-    $self->botl->{pw} = "Pw:" . $self->pw . "(" . $self->maxpw . ")";
-    $self->botl->{ac} = "AC:" . $self->ac;
-    $self->botl->{xp} = sprintf "Xp:%s%s",
+    $self->botl_stats->{char} = sprintf "%s: %s%s%s%s",
+                                        $self->name,
+                                        $self->role  ? $self->role . " "  : "",
+                                        $self->race  ? $self->race . " "  : "",
+                                        $self->sex   ? $self->sex  . " "  : "",
+                                        $self->align ? $self->align       : "";
+    $self->botl_stats->{stats} = sprintf "St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
+                                         $self->st, $self->dx, $self->co,
+                                         $self->in, $self->wi, $self->ch;
+    $self->botl_stats->{score} = defined($self->score) ?
+                                     sprintf "S:%d", $self->score : "";
+    $self->botl_stats->{dlvl} = $self->dlvl;
+    $self->botl_stats->{au} = "\$:" . $self->au;
+    $self->botl_stats->{hp} = "HP:" . $self->hp . "(" . $self->maxhp . ")";
+    $self->botl_stats->{pw} = "Pw:" . $self->pw . "(" . $self->maxpw . ")";
+    $self->botl_stats->{ac} = "AC:" . $self->ac;
+    $self->botl_stats->{xp} = sprintf "Xp:%s%s",
                                 $self->xlvl, $self->xp ? "/" . $self->xp : "";
-    $self->botl->{turn} = "T:" . $self->turn;
-    $self->botl->{status} = $self->status;
+    $self->botl_stats->{turn} = "T:" . $self->turn;
+    $self->botl_stats->{status} = $self->status;
 }
 # }}}
 # method modifiers {{{
