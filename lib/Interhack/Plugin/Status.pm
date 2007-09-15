@@ -9,145 +9,157 @@ has st => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has dx => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has co => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has in => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has wi => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
+
+has ch => (
+    isa => 'Int',
+    is => 'rw',
+    default => 0,
+);
 
 has name => (
     isa => 'Str',
     is => 'rw',
     default => '',
-),
+);
 
 has align => (
     isa => 'Str',
     is => 'rw',
     default => '',
-),
+);
 
 has sex => (
     isa => 'Str',
     is => 'rw',
     default => '',
-),
+);
 
 has role => (
     isa => 'Str',
     is => 'rw',
     default => '',
-),
+);
 
 has race => (
     isa => 'Str',
     is => 'rw',
     default => '',
-),
+);
 
 has dlvl => (
-    isa => 'Int',
+    isa => 'Str',
     is => 'rw',
-    default => 0,
-),
+    default => 'Dlvl:1',
+);
 
 has au => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has hp => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has maxhp => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has pw => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has maxpw => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has ac => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
-has xl => (
+has xlvl => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has xp => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has turn => (
     isa => 'Int',
     is => 'rw',
     default => 0,
-),
+);
 
 has status => (
     isa => 'Str',
     is => 'rw',
     default => '',
-),
+);
+
+has score => (
+    isa => 'Int',
+    is => 'rw',
+    default => 0,
+);
 
 has show_sl => (
     isa => 'Bool',
     is => 'rw',
     default => 0,
-),
+);
 
 has show_bl => (
     isa => 'Bool',
     is => 'rw',
     default => 0,
-),
+);
 
 has botl => (
     isa => 'HashRef',
     is => 'rw',
     default => sub { {} },
-)
+);
 # }}}
 # private variables {{{
 my %aligns = (lawful  => 'Law',
@@ -189,6 +201,8 @@ my $blocking = 0;
 # private methods {{{
 sub handle_new_login
 {
+    my $self = shift;
+
     return unless $self->topline =~ /^\w+ (?:\w+ )?(\w+), welcome to NetHack!  You are a (\w+) (\w+) (\w+)(?: (\w+))?\./;
 
     if (!defined($5)) {
@@ -196,7 +210,7 @@ sub handle_new_login
         $self->align($aligns{$2});
         $self->race($races{$3});
         $self->role($roles{$4});
-        $self->sex($4 =~ /(?:woman|ess)$/ ? "Fem" : "Mal";);
+        $self->sex($4 =~ /(?:woman|ess)$/ ? "Fem" : "Mal");
     }
     else {
         $self->name($1);
@@ -209,6 +223,8 @@ sub handle_new_login
 
 sub handle_returning_login
 {
+    my $self = shift;
+
     return unless $self->topline =~ /^\w+ (?:\w+ )?(\w+), the (\w+) (\w+), welcome back to NetHack!/;
 
     $self->name($1);
@@ -220,6 +236,8 @@ sub handle_returning_login
 
 sub parse_status_line
 {
+    my $self = shift;
+
     my @groups = $self->vt->row_plaintext(23) =~ /^(\w+)?.*?St:(\d+(?:\/(?:\*\*|\d+))?) Dx:(\d+) Co:(\d+) In:(\d+) Wi:(\d+) Ch:(\d+)\s*(\w+)(?:\s*S:(\d+))?/;
     $self->show_sl(@groups);
     return if @groups == 0;
@@ -231,50 +249,55 @@ sub parse_status_line
     $self->wi($groups[5]);
     $self->ch($groups[6]);
     $self->align($aligns{lc $groups[7]});
-    $self->score($groups[8]);
+    $self->score($groups[8]) if $groups[8];
     $self->name($groups[0]) if $groups[0];
 }
 
 sub parse_bottom_line
 {
+    my $self = shift;
+
     my @groups = $self->vt->row_plaintext(24) =~ /^(Dlvl:\d+|Home \d+|Fort Ludios|End Game|Astral Plane)\s+(?:\$|\*):(\d+)\s+HP:(\d+)\((\d+)\)\s+Pw:(\d+)\((\d+)\)\s+AC:([0-9-]+)\s+(?:Exp|Xp|HD):(\d+)(?:\/(\d+))?(?:\s+T:(\d+))?\s+(.*?)\s*$/;
     $self->show_bl(@groups);
     return if @groups == 0;
 
     $self->dlvl($groups[0]);
     $self->au($groups[1]);
-    $self->curhp($groups[2]);
+    $self->hp($groups[2]);
     $self->maxhp($groups[3]);
-    $self->curpw($groups[4]);
+    $self->pw($groups[4]);
     $self->maxpw($groups[5]);
     $self->ac($groups[6]);
     $self->xlvl($groups[7]);
-    $self->xp($groups[8]);
+    $self->xp($groups[8]) if $groups[8];
     $self->turn($groups[9]);
     $self->status($groups[10]);
 }
 
 sub update_botl_hash
 {
-    $botl{char} = sprintf "%s: %s%s%s%s",
-                          $self->name,
-                          $self->role  ? $self->role . " "  : "",
-                          $self->race  ? $self->race . " "  : "",
-                          $self->sex   ? $self->sex  . " "  : "",
-                          $self->align ? $self->align       : "";
-    $botl{stats} = sprintf"St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
-                          $self->st, $self->dx, $self->co,
-                          $self->in, $self->wi, $self->ch;
-    $botl{score} = defined($groups[8]) ? sprintf "S:%d", $self->score : "";
-    $botl{dlvl} = $self->dlvl;
-    $botl{au} = "\$:" . $self->au;
-    $botl{hp} = "HP:" . $self->curhp . "(" . $self->maxhp . ")";
-    $botl{pw} = "Pw:" . $self->curpw . "(" . $self->maxpw . ")";
-    $botl{ac} = "AC:" . $self->ac;
-    $botl{xp} = sprintf "Xp:%s%s",
-                        $self->xlvl, $self->xp ? "/" . $self->xp : "";
-    $botl{turncount} = "T:" . $self->turn;
-    $botl{status} = $self->status;
+    my $self = shift;
+
+    $self->botl->{char} = sprintf "%s: %s%s%s%s",
+                                  $self->name,
+                                  $self->role  ? $self->role . " "  : "",
+                                  $self->race  ? $self->race . " "  : "",
+                                  $self->sex   ? $self->sex  . " "  : "",
+                                  $self->align ? $self->align       : "";
+    $self->botl->{stats} = sprintf "St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
+                                   $self->st, $self->dx, $self->co,
+                                   $self->in, $self->wi, $self->ch;
+    $self->botl->{score} = defined($self->score) ?
+                               sprintf "S:%d", $self->score : "";
+    $self->botl->{dlvl} = $self->dlvl;
+    $self->botl->{au} = "\$:" . $self->au;
+    $self->botl->{hp} = "HP:" . $self->hp . "(" . $self->maxhp . ")";
+    $self->botl->{pw} = "Pw:" . $self->pw . "(" . $self->maxpw . ")";
+    $self->botl->{ac} = "AC:" . $self->ac;
+    $self->botl->{xp} = sprintf "Xp:%s%s",
+                                $self->xlvl, $self->xp ? "/" . $self->xp : "";
+    $self->botl->{turncount} = "T:" . $self->turn;
+    $self->botl->{status} = $self->status;
 }
 # }}}
 # method modifiers {{{
@@ -282,17 +305,17 @@ before 'mangle_output' => sub
 {
     my ($self, $text) = @_;
 
-    handle_new_login;
-    handle_returning_login;
-    parse_status_line;
-    parse_bottom_line;
-    update_botl_hash;
+    handle_new_login($self);
+    handle_returning_login($self);
+    parse_status_line($self);
+    parse_bottom_line($self);
+    update_botl_hash($self);
 };
 
 around 'mangle_output' => sub
 {
-    my $self = shift;
     my $orig = shift;
+    my $self = shift;
     my ($text) = @_;
 
     # strip escape chars here (properly this time...)
@@ -300,7 +323,7 @@ around 'mangle_output' => sub
     # the bottom of the screen that this interferes with
     return unless $self->show_sl or $self->show_bl;
     my $replacement = '';
-    @real_text = split $text =~ /(\e\[[0-9;]*H)/;
+    my @real_text = split $text =~ /(\e\[[0-9;]*H)/;
     while (1) {
         last unless @real_text;
         my $substr = shift @real_text;
@@ -314,8 +337,8 @@ around 'mangle_output' => sub
         $replacement .= $esc_code;
     }
 
-    $orig($self, $replacement);
-}
+    $orig->($self, $replacement);
+};
 # }}}
 
 1;
