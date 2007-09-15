@@ -296,7 +296,7 @@ sub update_botl_hash
     $self->botl->{ac} = "AC:" . $self->ac;
     $self->botl->{xp} = sprintf "Xp:%s%s",
                                 $self->xlvl, $self->xp ? "/" . $self->xp : "";
-    $self->botl->{turncount} = "T:" . $self->turn;
+    $self->botl->{turn} = "T:" . $self->turn;
     $self->botl->{status} = $self->status;
 }
 # }}}
