@@ -53,8 +53,7 @@ sub parse_botl
     my $self = shift;
     my ($text) = @_;
 
-    # XXX: should i be doing this?
-    $text =~ s/{_(\w+)}/defined($self->{$1}) ? $self->{$1}{value} : "{_$1}"/eg;
+    $text =~ s/{_(\w+)}/$self->can($1) ? $self->$1() : "{_$1}"/eg;
     $text =~ s/{(\w+)}/defined($self->botl_stats->{$1}) ? $self->botl_stats->{$1} : "{$1}"/eg;
     return $text;
 }
