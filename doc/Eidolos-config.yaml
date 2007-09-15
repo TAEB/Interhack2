@@ -11,8 +11,7 @@ nhoptions:
 
 plugins:
     exclude:
-        - Telnet
-        - DGameLaunch
+        - DGL_Fortune
 
     MonsterColors:
         chromatic_nemeses: 1
