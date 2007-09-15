@@ -219,7 +219,7 @@ my %roles = (Archeologist => 'Arc',
 );
 # }}}
 # private methods {{{
-sub handle_new_login
+sub handle_new_login # {{{
 {
     my $self = shift;
 
@@ -239,9 +239,8 @@ sub handle_new_login
         $self->role($roles{$5});
         $self->sex($sexes{$3});
     }
-}
-
-sub handle_returning_login
+} # }}}
+sub handle_returning_login # {{{
 {
     my $self = shift;
 
@@ -252,12 +251,11 @@ sub handle_returning_login
     $self->role($roles{$3});
     $self->sex("Fem") if $3 eq "Cavewoman" || $3 eq "Priestess";
     $self->sex("Mal") if $3 eq "Caveman"   || $3 eq "Priest";
-}
-
-# XXX: show_sl and show_bl aren't working properly - look into this
-sub parse_status_line
+} # }}}
+sub parse_status_line # {{{
 {
     my $self = shift;
+    # XXX: show_sl and show_bl aren't working properly - look into this
 
     my @groups = $self->vt->row_plaintext(23) =~ /^(\w+)?.*?St:(\d+(?:\/(?:\*\*|\d+))?) Dx:(\d+) Co:(\d+) In:(\d+) Wi:(\d+) Ch:(\d+)\s*(\w+)(?:\s*S:(\d+))?/;
     $self->show_sl(@groups);
@@ -272,9 +270,8 @@ sub parse_status_line
     $self->align($aligns{lc $groups[7]});
     $self->score($groups[8]) if $groups[8];
     $self->name($groups[0]) if $groups[0];
-}
-
-sub parse_bottom_line
+} # }}}
+sub parse_bottom_line # {{{
 {
     my $self = shift;
 
@@ -293,9 +290,8 @@ sub parse_bottom_line
     $self->xp($groups[8]) if $groups[8];
     $self->turn($groups[9]);
     $self->status(join(' ', split(/\s+/, $groups[10])));
-}
-
-sub update_char
+} # }}}
+sub update_char # {{{
 {
     my $self = shift;
     $self->botl_stats->{char} = sprintf "%s: %s%s%s%s",
@@ -304,71 +300,61 @@ sub update_char
                                         $self->race  ? $self->race . " "  : "",
                                         $self->sex   ? $self->sex  . " "  : "",
                                         $self->align ? $self->align       : "";
-}
-
-sub update_stats
+} # }}}
+sub update_stats # {{{
 {
     my $self = shift;
     $self->botl_stats->{stats} = sprintf "St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
                                          $self->st, $self->dx, $self->co,
                                          $self->in, $self->wi, $self->ch;
-}
-
-sub update_score
+} # }}}
+sub update_score # {{{
 {
     my $self = shift;
     $self->botl_stats->{score} = defined($self->score) ?
                                      sprintf "S:%d", $self->score : "";
-}
-
-sub update_dlvl
+} # }}}
+sub update_dlvl # {{{
 {
     my $self = shift;
     $self->botl_stats->{dlvl} = $self->dlvl;
-}
-
-sub update_au
+} # }}}
+sub update_au # {{{
 {
     my $self = shift;
     $self->botl_stats->{au} = "\$:" . $self->au;
-}
-
-sub update_hp
+} # }}}
+sub update_hp # {{{
 {
     my $self = shift;
     $self->botl_stats->{hp} = "HP:" . $self->hp . "(" . $self->maxhp . ")";
-}
-
-sub update_pw
+} # }}}
+sub update_pw # {{{
 {
     my $self = shift;
     $self->botl_stats->{pw} = "Pw:" . $self->pw . "(" . $self->maxpw . ")";
-}
-
-sub update_ac
+} # }}}
+sub update_ac # {{{
 {
     my $self = shift;
     $self->botl_stats->{ac} = "AC:" . $self->ac;
-}
-
-sub update_xp
+} # }}}
+sub update_xp # {{{
 {
     my $self = shift;
     $self->botl_stats->{xp} = sprintf "Xp:%s%s",
                                 $self->xlvl, $self->xp ? "/" . $self->xp : "";
-}
-
-sub update_turn
+} # }}}
+sub update_turn # {{{
 {
     my $self = shift;
     $self->botl_stats->{turn} = "T:" . $self->turn;
-}
-
-sub update_status
+} # }}}
+sub update_status # {{{
 {
     my $self = shift;
     $self->botl_stats->{status} = $self->status;
-}
+} # }}}
 # }}}
 # method modifiers {{{
 before 'mangle_output' => sub

@@ -21,7 +21,7 @@ has botl => (
 my $blocking = 0;
 # }}}
 # private methods {{{
-sub block_botl
+sub block_botl # {{{
 {
     my $self = shift;
     my ($text) = @_;
@@ -46,9 +46,8 @@ sub block_botl
     }
     
     return $replacement;
-}
-
-sub parse_botl
+} # }}}
+sub parse_botl # {{{
 {
     my $self = shift;
     my ($text) = @_;
@@ -56,9 +55,8 @@ sub parse_botl
     $text =~ s/{_(\w+)}/$self->can($1) ? $self->$1() : "{_$1}"/eg;
     $text =~ s/{(\w+)}/defined($self->botl_stats->{$1}) ? $self->botl_stats->{$1} : "{$1}"/eg;
     return $text;
-}
-
-sub show_botl
+} # }}}
+sub show_botl # {{{
 {
     my $self = shift;
 
@@ -68,7 +66,7 @@ sub show_botl
     $output .= "\e[23;1H\e[K\e[0m$sl" if $self->show_sl;
     $output .= "\e[24;1H\e[K\e[0m$bl" if $self->show_bl;
     $output .= "\e[u";
-}
+} # }}}
 # }}}
 # method modifiers {{{
 around 'mangle_output' => sub
