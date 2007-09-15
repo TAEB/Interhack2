@@ -11,18 +11,10 @@ no_evalcontext: 1
 
 plugins:
     exclude:
-        - ApplyOil
-        - ColorsMonsters
-        - DualSlowDigestion
-        - Elbereth
-        - Eval
-        - GemName
-        - GenoList
-        - Hiveminder
-        - IntrinsicsMatcher
-        - IntrinsicsTracker
-        - MonsterRename
-        - UnnamedScrolls
+        - DGameLaunch
+        - Telnet
+        - DGL_Fortune
+        - DGL_LocalConfig
 
 plugin_options:
     Eidocolors:
