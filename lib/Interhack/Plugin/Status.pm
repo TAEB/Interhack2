@@ -271,7 +271,7 @@ sub parse_bottom_line
     $self->xlvl($groups[7]);
     $self->xp($groups[8]) if $groups[8];
     $self->turn($groups[9]);
-    $self->status($groups[10]);
+    $self->status(join(' ', split(/\s+/, $groups[10])));
 }
 
 sub update_botl_hash
