@@ -194,9 +194,6 @@ my %roles = (Archeologist => 'Arc',
              Valkyrie     => 'Val',
              Wizard       => 'Wiz',
 );
-
-# whether or not we are currently allowing text to pass through to the screen
-my $blocking = 0;
 # }}}
 # private methods {{{
 sub handle_new_login
