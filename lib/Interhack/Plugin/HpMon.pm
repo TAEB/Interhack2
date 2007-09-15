@@ -21,19 +21,14 @@ sub get_color {
     return $color;
 }
 
-sub strip_color {
-    my ($text) = @_;
-
-    # XXX: necessary?
-    #$text =~ s/\e[\d+(?:;\d+)m(.*?)\e[0m/$1/;
-    return $text;
-}
-
 sub update_botl {
     my $self = shift;
     return if @_ == 0;
 
-    $self->botl_stats->{hp} = get_color($self->hp, $self->maxhp) . strip_color($self->botl_stats->{hp}) . "\e[0m";
+    my $color = get_color($self->hp, $self->maxhp);
+
+    $self->botl_stats->{hpcol} = $color;
+    $self->botl_stats->{hp} = $color . $self->botl_stats->{hp} . "\e[0m";
 }
 # }}}
 # method modifiers {{{
