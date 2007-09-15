@@ -9,138 +9,161 @@ has st => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_stats,
 );
 
 has dx => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_stats,
 );
 
 has co => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_stats,
 );
 
 has in => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_stats,
 );
 
 has wi => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_stats,
 );
 
 has ch => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_stats,
 );
 
 has name => (
     isa => 'Str',
     is => 'rw',
     default => '',
+    trigger => \&update_char,
 );
 
 has align => (
     isa => 'Str',
     is => 'rw',
     default => '',
+    trigger => \&update_char,
 );
 
 has sex => (
     isa => 'Str',
     is => 'rw',
     default => '',
+    trigger => \&update_char,
 );
 
 has role => (
     isa => 'Str',
     is => 'rw',
     default => '',
+    trigger => \&update_char,
 );
 
 has race => (
     isa => 'Str',
     is => 'rw',
     default => '',
+    trigger => \&update_char,
 );
 
 has dlvl => (
     isa => 'Str',
     is => 'rw',
     default => 'Dlvl:1',
+    trigger => \&update_dlvl,
 );
 
 has au => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_au,
 );
 
 has hp => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_hp,
 );
 
 has maxhp => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_hp,
 );
 
 has pw => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_pw,
 );
 
 has maxpw => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_pw,
 );
 
 has ac => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_ac,
 );
 
 has xlvl => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_xp,
 );
 
 has xp => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_xp,
 );
 
 has turn => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_turn,
 );
 
 has status => (
     isa => 'Str',
     is => 'rw',
     default => '',
+    trigger => \&update_status,
 );
 
 has score => (
     isa => 'Int',
     is => 'rw',
     default => 0,
+    trigger => \&update_score,
 );
 
 has show_sl => (
@@ -272,29 +295,78 @@ sub parse_bottom_line
     $self->status(join(' ', split(/\s+/, $groups[10])));
 }
 
-sub update_botl_hash
+sub update_char
 {
     my $self = shift;
-
     $self->botl_stats->{char} = sprintf "%s: %s%s%s%s",
                                         $self->name,
                                         $self->role  ? $self->role . " "  : "",
                                         $self->race  ? $self->race . " "  : "",
                                         $self->sex   ? $self->sex  . " "  : "",
                                         $self->align ? $self->align       : "";
+}
+
+sub update_stats
+{
+    my $self = shift;
     $self->botl_stats->{stats} = sprintf "St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
                                          $self->st, $self->dx, $self->co,
                                          $self->in, $self->wi, $self->ch;
+}
+
+sub update_score
+{
+    my $self = shift;
     $self->botl_stats->{score} = defined($self->score) ?
                                      sprintf "S:%d", $self->score : "";
+}
+
+sub update_dlvl
+{
+    my $self = shift;
     $self->botl_stats->{dlvl} = $self->dlvl;
+}
+
+sub update_au
+{
+    my $self = shift;
     $self->botl_stats->{au} = "\$:" . $self->au;
+}
+
+sub update_hp
+{
+    my $self = shift;
     $self->botl_stats->{hp} = "HP:" . $self->hp . "(" . $self->maxhp . ")";
+}
+
+sub update_pw
+{
+    my $self = shift;
     $self->botl_stats->{pw} = "Pw:" . $self->pw . "(" . $self->maxpw . ")";
+}
+
+sub update_ac
+{
+    my $self = shift;
     $self->botl_stats->{ac} = "AC:" . $self->ac;
+}
+
+sub update_xp
+{
+    my $self = shift;
     $self->botl_stats->{xp} = sprintf "Xp:%s%s",
                                 $self->xlvl, $self->xp ? "/" . $self->xp : "";
+}
+
+sub update_turn
+{
+    my $self = shift;
     $self->botl_stats->{turn} = "T:" . $self->turn;
+}
+
+sub update_status
+{
+    my $self = shift;
     $self->botl_stats->{status} = $self->status;
 }
 # }}}
@@ -307,7 +379,6 @@ before 'mangle_output' => sub
     handle_returning_login($self);
     parse_status_line($self);
     parse_bottom_line($self);
-    update_botl_hash($self);
 };
 # }}}
 
