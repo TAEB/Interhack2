@@ -10,6 +10,11 @@ has last_turn_killed => (
     is => 'rw',
     default => sub { {} },
 );
+has kills => (
+    isa => 'Int',
+    is => 'rw',
+    default => 0,
+);
 # }}}
 # method modifiers {{{
 before 'mangle_output' => sub
@@ -18,6 +23,7 @@ before 'mangle_output' => sub
 
     for ($self->topline =~ /You kill the ([^!]+)!/g)
     {
+        $self->kills($self->kills + 1);
         $self->last_turn_killed->{$1} = $self->turn;
     }
 };
