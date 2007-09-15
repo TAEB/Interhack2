@@ -231,6 +231,7 @@ sub handle_returning_login
     $self->sex("Mal") if $3 eq "Caveman"   || $3 eq "Priest";
 }
 
+# XXX: show_sl and show_bl aren't working properly - look into this
 sub parse_status_line
 {
     my $self = shift;
