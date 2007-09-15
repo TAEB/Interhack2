@@ -311,34 +311,6 @@ before 'mangle_output' => sub
     parse_bottom_line($self);
     update_botl_hash($self);
 };
-
-around 'mangle_output' => sub
-{
-    my $orig = shift;
-    my $self = shift;
-    my ($text) = @_;
-
-    # strip escape chars here (properly this time...)
-    # XXX: this is broken - nethack does weird things if your character is near
-    # the bottom of the screen that this interferes with
-    return unless $self->show_sl or $self->show_bl;
-    my $replacement = '';
-    my @real_text = split $text =~ /(\e\[[0-9;]*H)/;
-    while (1) {
-        last unless @real_text;
-        my $substr = shift @real_text;
-        $replacement .= $substr unless $blocking;
-
-        last unless @real_text;
-        my $esc_code = shift;
-        $esc_code =~ /\e\[(?:([0-9]+);)?[0-9;]*H/;
-        my $row = $1 || 1;
-        $blocking = ($row >= 23);
-        $replacement .= $esc_code;
-    }
-
-    $orig->($self, $replacement);
-};
 # }}}
 
 1;
