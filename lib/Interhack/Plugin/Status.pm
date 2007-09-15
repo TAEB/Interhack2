@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::Stats;
+package Interhack::Plugin::Status;
 use Calf::Role;
 
 our $VERSION = '1.99_01';
