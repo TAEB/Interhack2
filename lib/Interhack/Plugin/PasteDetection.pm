@@ -9,7 +9,6 @@ our $VERSION = '1.99_01';
 has paste_queue => (
     per_load => 1,
     isa => 'Str',
-    is => 'rw',
     lazy => 1,
     default => sub { '' },
 );

@@ -19,35 +19,30 @@ sub import_extra
 # attributes {{{
 has keyboard_in => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has socket_in => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has screen_out => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has socket_out => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     default => '',
 );
 
 has test => (
     per_load => 1,
-    is => 'rw',
     isa => 'Test::Builder',
     lazy => 1,
     default => sub { Test::Builder->new() },
@@ -55,14 +50,12 @@ has test => (
 
 has monitor => (
     per_load => 1,
-    is => 'rw',
     isa => 'Term::VT102',
     lazy => 1,
     default => sub { Term::VT102->new(rows => 24, cols => 80) },
 );
 
 has test_attribute => (
-    is => 'rw',
     isa => 'Int',
     lazy => 1,
     default => sub { 0 },
@@ -70,7 +63,6 @@ has test_attribute => (
 
 has unsaved_attribute => (
     per_load => 1,
-    is => 'rw',
     isa => 'Int',
     lazy => 1,
     default => sub { 12321 },

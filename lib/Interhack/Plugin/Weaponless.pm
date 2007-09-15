@@ -7,7 +7,6 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has confirm_wield => (
     isa => 'Bool',
-    is => 'rw',
     lazy => 1,
     default => 1,
 );

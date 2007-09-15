@@ -7,7 +7,6 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has macros => (
     isa => 'HashRef',
-    is => 'rw',
     lazy => 1,
     default => sub { {} },
 );

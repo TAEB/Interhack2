@@ -67,7 +67,6 @@ our %colormap = # {{{
 has recolors => (
     per_load => 1,
     isa => 'ArrayRef',
-    is => 'rw',
     lazy => 1,
     default => sub { [] },
 );

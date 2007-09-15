@@ -8,7 +8,6 @@ our $VERSION = '1.99_01';
 has in_game => (
     per_load => 1,
     isa => 'Bool',
-    is => 'rw',
     lazy => 1,
     default => 0,
 );

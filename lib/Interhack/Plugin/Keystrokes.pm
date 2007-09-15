@@ -7,7 +7,6 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has keystrokes => (
     isa => 'Int',
-    is => 'rw',
     lazy => 1,
     default => 0,
 );

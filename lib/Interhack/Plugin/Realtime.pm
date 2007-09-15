@@ -7,7 +7,6 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has realtime => (
     isa => 'Int',
-    is => 'rw',
     lazy => 1,
     default => 0,
 );
@@ -15,7 +14,6 @@ has realtime => (
 has previous_time => (
     per_load => 1,
     isa => 'Int',
-    is => 'rw',
     lazy => 1,
     default => sub { time },
 );

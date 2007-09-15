@@ -12,33 +12,28 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has 'running' => (
     per_load => 1,
-    is => 'rw',
     isa => 'Bool',
 );
 
 has 'pty' => (
     per_load => 1,
-    is => 'rw',
     isa => 'IO::Pty::Easy',
     default => sub { IO::Pty::Easy->new() },
 );
 
 has 'config' => (
     per_load => 1,
-    is => 'rw',
     isa => 'HashRef',
 );
 
 has 'vt' => (
     per_load => 1,
-    is => 'rw',
     isa => 'Term::VT102',
     default => sub { Term::VT102->new(rows => 24, cols => 80) },
 );
 
 has 'topline' => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     default => '',
     trigger => sub { study $_[0] },
@@ -46,7 +41,6 @@ has 'topline' => (
 
 has 'statefile' => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     required => 1,
     default => 'interhack.yaml',
@@ -55,7 +49,6 @@ has 'statefile' => (
 # XXX: this should go into the Config role once it is written
 has 'config_dir' => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     required => 1,
     default => "$ENV{HOME}/.interhack2",
@@ -63,7 +56,6 @@ has 'config_dir' => (
 
 has 'connection_info' => (
     per_load => 1,
-    is => 'rw',
     isa => 'HashRef',
     required => 1,
     default => sub
@@ -81,7 +73,6 @@ has 'connection_info' => (
 
 has 'connection' => (
     per_load => 1,
-    is => 'rw',
     isa => 'Str',
     required => 1,
     default => `hostname`,

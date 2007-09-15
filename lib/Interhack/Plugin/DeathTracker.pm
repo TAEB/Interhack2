@@ -7,12 +7,10 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has last_turn_killed => (
     isa => 'HashRef',
-    is => 'rw',
     default => sub { {} },
 );
 has kills => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
 );
 # }}}

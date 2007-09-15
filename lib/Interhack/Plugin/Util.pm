@@ -10,7 +10,6 @@ our $SUMMARY = 'Utility functions for other plugins';
 # attributes {{{
 has extended_commands => (
     per_load => 1,
-    is => 'rw',
     isa => 'HashRef',
     lazy => 1,
     default => sub { {} },

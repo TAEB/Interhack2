@@ -7,180 +7,154 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has st => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_stats,
 );
 
 has dx => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_stats,
 );
 
 has co => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_stats,
 );
 
 has in => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_stats,
 );
 
 has wi => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_stats,
 );
 
 has ch => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_stats,
 );
 
 has name => (
     isa => 'Str',
-    is => 'rw',
     default => '',
     trigger => \&update_char,
 );
 
 has align => (
     isa => 'Str',
-    is => 'rw',
     default => '',
     trigger => \&update_char,
 );
 
 has sex => (
     isa => 'Str',
-    is => 'rw',
     default => '',
     trigger => \&update_char,
 );
 
 has role => (
     isa => 'Str',
-    is => 'rw',
     default => '',
     trigger => \&update_char,
 );
 
 has race => (
     isa => 'Str',
-    is => 'rw',
     default => '',
     trigger => \&update_char,
 );
 
 has dlvl => (
     isa => 'Str',
-    is => 'rw',
     default => 'Dlvl:1',
     trigger => \&update_dlvl,
 );
 
 has au => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_au,
 );
 
 has hp => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_hp,
 );
 
 has maxhp => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_hp,
 );
 
 has pw => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_pw,
 );
 
 has maxpw => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_pw,
 );
 
 has ac => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_ac,
 );
 
 has xlvl => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_xp,
 );
 
 has xp => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_xp,
 );
 
 has turn => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_turn,
 );
 
 has status => (
     isa => 'Str',
-    is => 'rw',
     default => '',
     trigger => \&update_status,
 );
 
 has score => (
     isa => 'Int',
-    is => 'rw',
     default => 0,
     trigger => \&update_score,
 );
 
 has show_sl => (
     isa => 'Bool',
-    is => 'rw',
     default => 0,
 );
 
 has show_bl => (
     isa => 'Bool',
-    is => 'rw',
     default => 0,
 );
 
 has botl_stats => (
     isa => 'HashRef',
-    is => 'rw',
     default => sub { {} },
 );
 # }}}

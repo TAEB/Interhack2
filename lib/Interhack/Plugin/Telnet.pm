@@ -8,7 +8,6 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has 'socket' => (
     per_load => 1,
-    is => 'rw',
     isa => 'IO::Socket::INET',
     lazy => 1,
     default => sub { {} },

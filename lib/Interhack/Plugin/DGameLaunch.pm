@@ -12,14 +12,12 @@ my $pass = '';
 # attributes {{{
 has do_autologin => (
     per_load => 1,
-    is => 'rw',
     isa => 'Bool',
     default => 0,
 );
 
 has logged_in => (
     per_load => 1,
-    is => 'rw',
     isa => 'Bool',
     default => 0,
 );
