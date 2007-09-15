@@ -220,7 +220,7 @@ sub BUILD # {{{
     if (!$ece->{enchantment})
     {
         $self->recolor(qr/\s\+0/               => $ec->{plus0} || "brown");
-        $self->recolor(qr/\s\+[1-3]/           => $ec->{plus13} || $ece->{plus} || "green");
+        $self->recolor(qr/\s\+[1-3]/           => $ec->{plus13} || $ec->{plus} || "green");
         $self->recolor(qr/\s\+[4-9]\d*/        => $ec->{plus4} || $ec->{plus} || "bgreen");
         $self->recolor(qr/(?<!AC)\s\-[1-9]\d*/ => $ec->{minus} || "red");
     }
