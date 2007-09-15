@@ -42,7 +42,7 @@ sub block_botl # {{{
         $blocking = ($row >= 23);
         $replacement .= $esc_code;
     }
-    
+
     return $replacement;
 } # }}}
 sub parse_botl # {{{
@@ -50,8 +50,8 @@ sub parse_botl # {{{
     my $self = shift;
     my ($text) = @_;
 
-    $text =~ s/{_(\w+)}/$self->can($1) ? $self->$1() : "{_$1}"/eg;
-    $text =~ s/{(\w+)}/defined($self->botl_stats->{$1}) ? $self->botl_stats->{$1} : "{$1}"/eg;
+    $text =~ s/{([^}]+)}/parse_chunk($self, $1)/ge;
+
     return $text;
 } # }}}
 sub show_botl # {{{
@@ -64,6 +64,29 @@ sub show_botl # {{{
     $output .= "\e[23;1H\e[K\e[0m$sl" if $self->show_sl;
     $output .= "\e[24;1H\e[K\e[0m$bl" if $self->show_bl;
     $output .= "\e[u";
+} # }}}
+sub parse_chunk # {{{
+{
+    my ($self, $chunk) = @_;
+
+    # method call
+    if ($chunk =~ s/^_//)
+    {
+        my @arguments;
+
+        # {foo:bar, baz} resolves to $self->foo('bar', 'baz')
+        $chunk =~ s/:(.+)// and do
+        {
+            @arguments = split /[\s,]+/, $1;
+        };
+
+        $self->can($chunk) or return "{$_[1]}";
+        return $self->$chunk(@arguments);
+    }
+
+    return defined $self->botl_stats->{$chunk}
+                 ? $self->botl_stats->{$chunk}
+                 : "{$_[1]}";
 } # }}}
 # }}}
 # method modifiers {{{
