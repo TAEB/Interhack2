@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 package Interhack;
 use Calf;
-use Term::ReadKey;
 use Term::VT102;
 
 use Interhack::Config;
@@ -171,11 +170,6 @@ sub iterate # {{{
         $self->parse($gameoutput);
     }
 } # }}}
-sub from_user # {{{
-{
-    my $self = shift;
-    ReadKey 0.05;
-} # }}}
 sub parse # {{{
 {
     my ($self, $text) = @_;
@@ -188,13 +182,6 @@ sub mangle_output # {{{
 {
     my ($self, $text) = @_;
     return $text;
-} # }}}
-sub to_user # {{{
-{
-    my $self = shift;
-    my ($text) = @_;
-
-    print $text;
 } # }}}
 sub check_input # {{{
 {
