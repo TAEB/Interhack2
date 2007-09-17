@@ -7,56 +7,48 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has st => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_stats,
 );
 
 has dx => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_stats,
 );
 
 has co => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_stats,
 );
 
 has in => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_stats,
 );
 
 has wi => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_stats,
 );
 
 has ch => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_stats,
 );
 
 has name => (
     isa => 'Str',
-    per_load => 1,
     default => '',
     trigger => \&update_char,
 );
 
 has align => (
     isa => 'Str',
-    per_load => 1,
     default => '',
     trigger => \&update_char,
 );
@@ -69,98 +61,84 @@ has sex => (
 
 has role => (
     isa => 'Str',
-    per_load => 1,
     default => '',
     trigger => \&update_char,
 );
 
 has race => (
     isa => 'Str',
-    per_load => 1,
     default => '',
     trigger => \&update_char,
 );
 
 has dlvl => (
     isa => 'Str',
-    per_load => 1,
     default => 'Dlvl:1',
     trigger => \&update_dlvl,
 );
 
 has au => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_au,
 );
 
 has hp => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_hp,
 );
 
 has maxhp => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_hp,
 );
 
 has pw => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_pw,
 );
 
 has maxpw => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_pw,
 );
 
 has ac => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_ac,
 );
 
 has xlvl => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_xp,
 );
 
 has xp => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_xp,
 );
 
 has turn => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_turn,
 );
 
 has status => (
     isa => 'Str',
-    per_load => 1,
     default => '',
     trigger => \&update_status,
 );
 
 has score => (
     isa => 'Int',
-    per_load => 1,
     default => 0,
     trigger => \&update_score,
 );
