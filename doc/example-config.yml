@@ -40,7 +40,7 @@ plugin_options:
         bohboom: bred
 
     Botl:
-        statusline: "{score} K:{_keystrokes}{-}\e[1;30m{realtime}"
+        statusline: "{score} Keys:{_keystrokes} Kills:{_kills}{-}\e[1;30m{realtime}"
 
     Macros:
         '^B': "ainy?!$\n\e"
