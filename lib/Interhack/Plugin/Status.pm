@@ -236,8 +236,9 @@ sub parse_status_line # {{{
     # XXX: show_sl and show_bl aren't working properly - look into this
 
     my @groups = $self->vt->row_plaintext(23) =~ /^(\w+)?.*?St:(\d+(?:\/(?:\*\*|\d+))?) Dx:(\d+) Co:(\d+) In:(\d+) Wi:(\d+) Ch:(\d+)\s*(\w+)(?:\s*S:(\d+))?/;
-    $self->show_sl(@groups);
-    return if @groups == 0;
+    my $groups = @groups;
+    $self->show_sl($groups);
+    return if $groups == 0;
 
     $self->st($groups[1]);
     $self->dx($groups[2]);
@@ -254,8 +255,9 @@ sub parse_bottom_line # {{{
     my $self = shift;
 
     my @groups = $self->vt->row_plaintext(24) =~ /^(Dlvl:\d+|Home \d+|Fort Ludios|End Game|Astral Plane)\s+(?:\$|\*):(\d+)\s+HP:(\d+)\((\d+)\)\s+Pw:(\d+)\((\d+)\)\s+AC:([0-9-]+)\s+(?:Exp|Xp|HD):(\d+)(?:\/(\d+))?(?:\s+T:(\d+))?\s+(.*?)\s*$/;
-    $self->show_bl(@groups);
-    return if @groups == 0;
+    my $groups = @groups;
+    $self->show_bl($groups);
+    return if $groups == 0;
 
     $self->dlvl($groups[0]);
     $self->au($groups[1]);
