@@ -39,6 +39,17 @@ plugin_options:
         trice: bred
         bohboom: bred
 
+    Botl:
+        statusline: "{score} K:{_keystrokes}{-}\e[1;30m{realtime}"
+
+    Macros:
+        '^B': "ainy?!$\n\e"
+        '^E': "E-  Elbereth\n"
+        '^V': "E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      "
+        '^W': "aqny "
+
+# non-functional, so far
+
     PriceID:
         lc_scrolls: 1
         short_names:
@@ -65,9 +76,6 @@ plugin_options:
         lamp: j
         instrument: q
         trice: '^y'
-
-    Botl:
-        statusline: "{score} K:{_keystrokes}{-}\e[1;30m{realtime}"
 
     WishMenu:
         enchantment: 2
@@ -129,10 +137,3 @@ plugin_options:
             M: remove curse
             N: polymorph
             O: cancellation
-
-    Macros:
-        '^B': "ainy?!$\n\e"
-        '^E': "E-  Elbereth\n"
-        '^V': "E-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\nE-  Elbereth\n>      "
-        '^W': "aqny "
-
