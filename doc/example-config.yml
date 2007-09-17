@@ -66,8 +66,8 @@ plugin_options:
         instrument: q
         trice: '^y'
 
-    Statusline:
-        # this just becomes a local plugin        
+    Botl:
+        statusline: "{score} K:{_keystrokes}{-}\e[1;30m{realtime}"
 
     WishMenu:
         enchantment: 2
