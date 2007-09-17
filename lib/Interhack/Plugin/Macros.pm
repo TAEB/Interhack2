@@ -31,6 +31,7 @@ around 'from_user' => sub
 sub add_macro # {{{
 {
     my ($self, $trigger, $expansion) = @_;
+    $trigger = chr(ord(uc $1)-ord("A")+1) if $trigger =~ /\^(.)/;
     $self->macros->{$trigger} = $expansion;
 } # }}}
 # }}}
