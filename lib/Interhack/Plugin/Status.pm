@@ -180,6 +180,7 @@ has show_bl => (
 has botl_stats => (
     isa => 'HashRef',
     per_load => 1,
+    lazy => 1,
     default => sub { {} },
 );
 # }}}
