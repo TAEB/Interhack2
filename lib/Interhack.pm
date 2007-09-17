@@ -36,7 +36,7 @@ has 'topline' => (
     per_load => 1,
     isa => 'Str',
     default => '',
-    trigger => sub { study $_[0] },
+    trigger => sub { study $_[1] },
 );
 
 has 'statefile' => (
