@@ -21,6 +21,15 @@ has botl => (
 my $blocking = 0;
 # }}}
 # private methods {{{
+sub BUILD # {{{
+{
+    my $self = shift;
+
+    $self->statusline($self->config->{plugin_options}{Botl}{statusline})
+        if $self->config->{plugin_options}{Botl}{statusline};
+    $self->botl($self->config->{plugin_options}{Botl}{botl})
+        if $self->config->{plugin_options}{Botl}{botl};
+} # }}}
 sub block_botl # {{{
 {
     my $self = shift;
