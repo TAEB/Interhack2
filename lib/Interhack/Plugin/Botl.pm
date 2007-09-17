@@ -7,11 +7,13 @@ our $VERSION = '1.99_01';
 # attributes {{{
 has statusline => (
     isa => 'Str',
+    per_load => 1,
     default => '{char} {stats} {score}',
 );
 
 has botl => (
     isa => 'Str',
+    per_load => 1,
     default => '{dlvl} {au} {hp} {pw} {ac} {xp} {turn} {status}',
 );
 # }}}
