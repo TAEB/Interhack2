@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 package Interhack;
 use Calf;
-use IO::Pty::Easy;
 use Term::ReadKey;
 use Term::VT102;
 
@@ -13,12 +12,6 @@ our $VERSION = '1.99_01';
 has 'running' => (
     per_load => 1,
     isa => 'Bool',
-);
-
-has 'pty' => (
-    per_load => 1,
-    isa => 'IO::Pty::Easy',
-    default => sub { IO::Pty::Easy->new() },
 );
 
 has 'config' => (
@@ -159,14 +152,7 @@ sub initialize # {{{
     my $self = shift;
 
     my $conn_info = $self->connection_info->{$self->connection};
-    unless ($conn_info->{type} eq "local") {
-        $self->warn("Unknown connection type $conn_info->{type}");
-        return;
-    }
-    my $cmd = $conn_info->{binary};
-    $cmd .= " $conn_info->{args}" if $conn_info->{args};
-    $self->pty->spawn($cmd);
-    $self->running(1);
+    $self->fatal("Unknown connection type $conn_info->{type}");
 } # }}}
 sub iterate # {{{
 {
@@ -189,18 +175,6 @@ sub from_user # {{{
 {
     my $self = shift;
     ReadKey 0.05;
-} # }}}
-sub from_nethack # {{{
-{
-    my $self = shift;
-
-    my $output = $self->pty->read(0);
-    if (defined($output) && $output eq '') {
-        $self->running(0);
-        return;
-    }
-
-    return $output;
 } # }}}
 sub parse # {{{
 {
@@ -226,17 +200,6 @@ sub check_input # {{{
 {
     my ($self, $text) = @_;
     return $text;
-} # }}}
-sub to_nethack # {{{
-{
-    my $self = shift;
-    my ($text) = @_;
-
-    my $ret = $self->pty->write($text, 0);
-    if (defined($ret) && $ret == 0) {
-        $self->running(0);
-        return;
-    }
 } # }}}
 sub cleanup # {{{
 {
