@@ -81,18 +81,18 @@ sub parse_chunk # {{{
     my ($self, $chunk) = @_;
 
     # method call
-    if ($chunk =~ s/^_//)
+    if ((my $method = $chunk) =~ s/^_//)
     {
         my @arguments;
 
         # {foo:bar, baz} resolves to $self->foo('bar', 'baz')
-        $chunk =~ s/:(.+)// and do
+        $method =~ s/:(.+)// and do
         {
             @arguments = split /[\s,]+/, $1;
         };
 
-        $self->can($chunk) or return "{$_[1]}";
-        return $self->$chunk(@arguments);
+        $self->can($method) or return "{$chunk}";
+        return $self->$method(@arguments);
     }
 
     return defined $self->botl_stats->{$chunk}
