@@ -28,6 +28,15 @@ around 'from_user' => sub
 };
 # }}}
 # methods {{{
+sub BUILD # {{{
+{
+    my $self = shift;
+
+    while (my ($trigger, $expansion) = each %{$self->config->{plugin_options}{Macros}})
+    {
+        $self->add_macro($trigger, $expansion);
+    }
+} # }}}
 sub add_macro # {{{
 {
     my ($self, $trigger, $expansion) = @_;
