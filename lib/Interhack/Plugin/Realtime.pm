@@ -32,6 +32,7 @@ after 'to_nethack' => sub
         if $diff > 10;
 
     $self->realtime($self->realtime + $diff);
+    $self->botl_stats->{realtime} = $self->serialize_time;
 };
 
 before 'cleanup' => sub
