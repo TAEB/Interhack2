@@ -6,8 +6,8 @@ our $VERSION = '1.99_01';
 
 # attributes {{{
 has st => (
-    isa => 'Int',
-    default => 0,
+    isa => 'Str',
+    default => '',
     trigger => \&update_stats,
 );
 
@@ -284,7 +284,7 @@ sub update_char # {{{
 sub update_stats # {{{
 {
     my $self = shift;
-    $self->botl_stats->{stats} = sprintf "St:%d Dx:%d Co:%d In:%d Wi:%d Ch:%d",
+    $self->botl_stats->{stats} = sprintf "St:%s Dx:%d Co:%d In:%d Wi:%d Ch:%d",
                                          $self->st, $self->dx, $self->co,
                                          $self->in, $self->wi, $self->ch;
 } # }}}
