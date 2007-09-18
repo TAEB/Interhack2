@@ -12,6 +12,7 @@ nhoptions:
 plugins:
     exclude:
         - DGL_Fortune
+        - Pty
 
     MonsterColors:
         chromatic_nemeses: 1
