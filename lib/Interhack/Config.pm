@@ -81,6 +81,7 @@ sub apply_config
     }
 
     local @INC = ($interhack->config_dir . "/plugins/", @INC);
+    my %deps;
     for my $plugin (@plugins)
     {
         my $package = $plugin;
@@ -89,15 +90,13 @@ sub apply_config
         require($package) or die "Unable to load plugin '$plugin': $@";
 
         # look at $package::dependencies
+        $deps{$plugin} = eval "${plugin}::depend";
         push @roles, $plugin;
     }
+    my $children = sub { map {"Interhack::Plugin::$_"} @{$deps{$_[0]} || []} };
+    my @sorted = toposort($children, \@roles);
 
-    # sort @roles according to dependencies
-
-    $interhack->apply('Interhack::Plugin::Util');
-    $interhack->apply('Interhack::Plugin::Recolor');
-
-    for my $role (@roles)
+    for my $role (reverse @sorted)
     {
         $interhack->apply($role);
     }
