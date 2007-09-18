@@ -20,6 +20,9 @@ sub apply_config
     my $phase = shift;
 
     my %all_plugins = $interhack->find_plugins($interhack->config_dir . "/plugins/$phase/");
+    for (keys %all_plugins) {
+        delete $all_plugins{$_} unless $all_plugins{$_} =~ /::${phase}::/;
+    }
     my @plugins;
 
     if ($phase eq 'IO')
@@ -29,8 +32,8 @@ sub apply_config
             my $io_plugin = $config->{plugins}{IO}{$_}
                 or die "You must specify a $_ IO plugin in your config";
             die "Invalid IO plugin: $io_plugin"
-                unless exists($all_plugins{$io_plugin});
-            push @plugins, $all_plugins{$_};
+                unless exists($all_plugins{"${phase}::$io_plugin"});
+            push @plugins, $all_plugins{"${phase}::$io_plugin"};
         }
     }
     else
@@ -39,18 +42,19 @@ sub apply_config
         {
             for (@{$config->{plugins}{$phase}{include}})
             {
-                if (!exists $all_plugins{$_})
+                if (!exists $all_plugins{"${phase}::$_"})
                 {
                     warn "No plugin $_ found.";
                     next;
                 }
 
-                push @plugins, $all_plugins{$_};
+                push @plugins, $all_plugins{"${phase}::$_"};
             }
         }
         elsif (exists $config->{plugins}{$phase}{exclude})
         {
-            delete $all_plugins{$_} for @{$config->{plugins}{$phase}{exclude}};
+            delete $all_plugins{"${phase}::$_"}
+                for @{$config->{plugins}{$phase}{exclude}};
             @plugins = values %all_plugins;
         }
     }
@@ -68,7 +72,7 @@ sub apply_config
         $deps{$plugin} = eval "${plugin}::depend";
         push @roles, $plugin;
     }
-    my $children = sub { map {"Interhack::Plugin::$_"} @{$deps{$_[0]} || []} };
+    my $children = sub { map {"Interhack::Plugin::${phase}::$_"} @{$deps{$_[0]} || []} };
     # XXX: does NOT handle circular dependencies well - goes into an infinite
     # loop. we'll want a new module for toposort, but it's good enough for now
     my @sorted = toposort($children, \@roles);
