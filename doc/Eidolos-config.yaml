@@ -10,9 +10,13 @@ nhoptions:
     vikeys: 1
 
 plugins:
-    exclude:
-        - DGL_Fortune
-        - Pty
+    IO:
+        NetHack: Pty
+        User: Terminal
+    InGame:
+        exclude:
+            - DGL_Fortune
+            - DGameLaunch
 
     MonsterColors:
         chromatic_nemeses: 1
