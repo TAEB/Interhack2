@@ -10,11 +10,14 @@ write_interhack_ttyrec: 1
 no_evalcontext: 1
 
 plugins:
-    exclude:
-        - DGameLaunch
-        - Telnet
-        - DGL_Fortune
-        - DGL_LocalConfig
+    IO:
+        NetHack: Pty
+        User: Terminal
+    InGame:
+        exclude:
+            - DGameLaunch
+            - DGL_Fortune
+            - DGL_LocalConfig
 
 plugin_options:
     Eidocolors:
