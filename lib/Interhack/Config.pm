@@ -17,30 +17,45 @@ sub apply_config
 {
     my $interhack = shift;
     my $config = $interhack->config;
+    my $phase = shift;
 
-    my %all_plugins = $interhack->find_plugins($interhack->config_dir . "/plugins/");
+    my %all_plugins = $interhack->find_plugins($interhack->config_dir . "/plugins/$phase/");
     my @plugins;
 
-    if (exists $config->{plugins}{include})
+    if ($phase eq 'IO')
     {
-        for (@{$config->{plugins}{include}})
+        for (qw/NetHack User/)
         {
-            if (!exists $all_plugins{$_})
-            {
-                warn "No plugin $_ found.";
-                next;
-            }
-
+            my $io_plugin = $config->{plugins}{IO}{$_}
+                or die "You must specify a $_ IO plugin in your config";
+            die "Invalid IO plugin: $io_plugin"
+                unless exists($all_plugins{$io_plugin});
             push @plugins, $all_plugins{$_};
         }
     }
-    elsif (exists $config->{plugins}{exclude})
+    else
     {
-        delete $all_plugins{$_} for @{$config->{plugins}{exclude}};
-        @plugins = values %all_plugins;
+        if (exists $config->{plugins}{$phase}{include})
+        {
+            for (@{$config->{plugins}{$phase}{include}})
+            {
+                if (!exists $all_plugins{$_})
+                {
+                    warn "No plugin $_ found.";
+                    next;
+                }
+
+                push @plugins, $all_plugins{$_};
+            }
+        }
+        elsif (exists $config->{plugins}{$phase}{exclude})
+        {
+            delete $all_plugins{$_} for @{$config->{plugins}{$phase}{exclude}};
+            @plugins = values %all_plugins;
+        }
     }
 
-    local @INC = ($interhack->config_dir . "/plugins/", @INC);
+    local @INC = ($interhack->config_dir . "/plugins/$phase/", @INC);
     my %deps;
     for my $plugin (@plugins)
     {

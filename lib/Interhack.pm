@@ -216,7 +216,8 @@ sub load_config # {{{
 sub apply_config # {{{
 {
     my $self = shift;
-    Interhack::Config::apply_config($self);
+    Interhack::Config::apply_config($self, 'IO');
+    Interhack::Config::apply_config($self, 'InGame');
 } # }}}
 # }}}
 
