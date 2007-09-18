@@ -61,6 +61,7 @@ sub apply_config
 
     local @INC = ($interhack->config_dir . "/plugins/$phase/", @INC);
     my %deps;
+    my @roles;
     for my $plugin (@plugins)
     {
         my $package = $plugin;
