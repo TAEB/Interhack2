@@ -4,7 +4,6 @@ use Sort::Topological 'toposort';
 use YAML 'LoadFile';
 
 our $VERSION = '1.99_01';
-our %loaded_plugins;
 
 sub load_all_config
 {
