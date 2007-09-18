@@ -5,6 +5,13 @@ use Calf::Role;
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Disallows any invalid direction at a "In what direction?" prompt';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/Util/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 # }}}
 # method modifiers {{{

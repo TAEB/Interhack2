@@ -4,6 +4,16 @@ use Calf::Role;
 
 our $VERSION = '1.99_01';
 
+# deps {{{
+sub depend
+{
+    # Realtime, PwMon, and HpMon here because we don't have bidirectional
+    # dependencies... ideally we'd have 'before Botl' in each of these plugins
+    # instead of forcing Botl to list these here
+    my @deps = qw/Status Realtime PwMon HpMon/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 has statusline => (
     isa => 'Str',

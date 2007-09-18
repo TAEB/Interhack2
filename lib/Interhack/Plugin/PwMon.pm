@@ -4,6 +4,13 @@ use Calf::Role;
 
 our $VERSION = '1.99_01';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/Status/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 # }}}
 # private methods {{{

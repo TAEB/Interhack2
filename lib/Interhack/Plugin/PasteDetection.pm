@@ -5,6 +5,13 @@ use Term::ReadKey;
 
 our $VERSION = '1.99_01';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/Util/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 has paste_queue => (
     per_load => 1,

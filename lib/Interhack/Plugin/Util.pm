@@ -7,6 +7,13 @@ use Term::ReadKey;
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/NewGame/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 has extended_commands => (
     per_load => 1,

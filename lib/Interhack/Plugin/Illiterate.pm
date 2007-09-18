@@ -4,6 +4,13 @@ use Calf::Role;
 
 our $VERSION = '1.99_01';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/Debug Util/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 has confirm_literacy => (
     isa => 'Bool',

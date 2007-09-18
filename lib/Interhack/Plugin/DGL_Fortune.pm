@@ -4,6 +4,13 @@ use Calf::Role;
 
 our $VERSION = '1.99_01';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/DGameLaunch/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 has fortune => (
     per_load => 1,

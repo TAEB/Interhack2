@@ -4,6 +4,13 @@ use Calf::Role;
 
 our $VERSION = '1.99_01';
 
+# deps {{{
+sub depend
+{
+    my @deps = qw/Debug/;
+    return \@deps;
+}
+# }}}
 # attributes {{{
 has in_game => (
     per_load => 1,
