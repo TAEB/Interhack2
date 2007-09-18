@@ -70,7 +70,7 @@ sub apply_config
         require($package) or die "Unable to load plugin '$plugin': $@";
 
         # look at $package::dependencies
-        $deps{$plugin} = eval "${plugin}::depend";
+        $deps{$plugin} = $plugin->depend;
         push @roles, $plugin;
     }
     my $children = sub { map {"Interhack::Plugin::${phase}::$_"} @{$deps{$_[0]} || []} };
