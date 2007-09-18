@@ -8,7 +8,7 @@ our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
 
 # deps {{{
-sub depend { [qw/NewGame/] }
+sub depend { 'NewGame' }
 # }}}
 # attributes {{{
 has extended_commands => (

@@ -6,7 +6,7 @@ use Term::ReadKey;
 our $VERSION = '1.99_01';
 
 # deps {{{
-sub depend { [qw/Util/] }
+sub depend { 'Util' }
 # }}}
 # attributes {{{
 # }}}

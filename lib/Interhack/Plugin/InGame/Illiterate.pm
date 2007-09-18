@@ -5,7 +5,7 @@ use Calf::Role;
 our $VERSION = '1.99_01';
 
 # deps {{{
-sub depend { [qw/Debug Util/] }
+sub depend { qw/Debug Util/ }
 # }}}
 # attributes {{{
 has confirm_literacy => (

@@ -6,7 +6,7 @@ our $VERSION = '1.99_01';
 our $SUMMARY = 'Disallows any invalid direction at a "In what direction?" prompt';
 
 # deps {{{
-sub depend { [qw/Util/] }
+sub depend { 'Util' }
 # }}}
 # attributes {{{
 # }}}

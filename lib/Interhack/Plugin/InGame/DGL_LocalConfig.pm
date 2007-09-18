@@ -8,7 +8,7 @@ use File::Temp qw/tempfile/;
 our $VERSION = '1.99_01';
 
 # deps {{{
-sub depend { [qw/Debug DGameLaunch/] }
+sub depend { qw/Debug DGameLaunch/ }
 # }}}
 # method modifiers {{{
 # XXX: is it safe to be calling orig() more than once? strikes me as no in

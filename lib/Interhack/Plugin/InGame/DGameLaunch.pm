@@ -7,7 +7,7 @@ use Term::ReadKey;
 our $VERSION = '1.99_01';
 
 # deps {{{
-sub depend { [qw/Debug/] }
+sub depend { 'Debug' }
 # }}}
 # private variables {{{
 my $pass = '';

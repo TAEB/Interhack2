@@ -8,7 +8,7 @@ our $VERSION = '1.99_01';
 # Realtime, PwMon, and HpMon here because we don't have bidirectional
 # dependencies... ideally we'd have 'before Botl' in each of these plugins
 # instead of forcing Botl to list these here
-sub depend { [qw/Status Realtime PwMon HpMon/] }
+sub depend { qw/Status Realtime PwMon HpMon/ }
 # }}}
 # attributes {{{
 has statusline => (
