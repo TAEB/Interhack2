@@ -102,6 +102,10 @@ sub apply_config
                 for @{$config->{plugins}{$phase}{exclude}};
             @plugins = values %all_plugins;
         }
+        elsif ($phase eq 'Util')
+        {
+            @plugins = values %all_plugins;
+        }
     }
 
     local @INC = ($interhack->config_dir . "/plugins/$phase/", @INC);
