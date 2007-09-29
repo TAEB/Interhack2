@@ -59,6 +59,13 @@ has 'connection' => (
     required => 1,
     default => '',
 );
+
+has 'phase' => (
+    per_load => 1,
+    isa => 'Str',
+    required => 1,
+    default => '',
+);
 # }}}
 # methods {{{
 sub BUILD # {{{
@@ -71,7 +78,6 @@ sub BUILD # {{{
     $self->apply("Calf::Refresh");
 
     $self->load_config();
-    $self->apply_config();
 } # }}}
 sub SETUP # {{{
 {
@@ -80,12 +86,23 @@ sub SETUP # {{{
 sub run # {{{
 {
     my $self = shift;
+
+    $self->apply_config('Util');
+    $self->apply_config('IO');
     $self->initialize();
     $SIG{INT} = sub {};
 
-    while ($self->running)
-    {
-        $self->iterate();
+    $self->phase($self->connection_info->{$self->connection}->{phase});
+    while ($self->running) {
+        my $phase = $self->phase;
+        $self->debug("Starting phase $phase");
+        $self->apply_config($phase);
+        $self->apply_config("Display") if $phase =~ /InGame|Watching/;
+        while ($self->phase eq $phase)
+        {
+            $self->iterate();
+        }
+        $self->clear_config();
     }
 
     $self->cleanup();
@@ -167,8 +184,12 @@ sub load_config # {{{
 sub apply_config # {{{
 {
     my $self = shift;
-    Interhack::Config::apply_config($self, 'IO');
-    Interhack::Config::apply_config($self, 'InGame');
+    my ($phase) = @_;
+    Interhack::Config::apply_config($self, $phase);
+} # }}}
+sub clear_config # {{{
+{
+    Class::Method::Modifiers::_wipeout("Interhack");
 } # }}}
 # }}}
 
