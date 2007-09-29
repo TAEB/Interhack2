@@ -9,7 +9,6 @@ sub depend { 'Debug' }
 # }}}
 # private variables {{{
 my $pass = '';
-my $do_autologin = 0;
 # }}}
 # attributes {{{
 has logged_in => (
@@ -22,12 +21,14 @@ has logged_in => (
 after 'initialize' => sub {
     my ($self) = @_;
 
-    get_nick($self);
-    if ($do_autologin) {
+    if (get_nick($self)) {
         get_pass($self);
         autologin($self);
+        clear_buffers($self, 2);
     }
-    clear_buffers($self);
+    else {
+        clear_buffers($self, 1);
+    }
 };
 
 after 'to_user' => sub {
@@ -76,7 +77,8 @@ sub get_nick {
         }
         $conn_info->{nick} = $found_nick if $found_nick;
     }
-    $do_autologin = 1 if $conn_info->{nick};
+    return 1 if $conn_info->{nick};
+    return 0;
 } # }}}
 # get_pass {{{
 sub get_pass {
@@ -113,10 +115,11 @@ sub autologin {
 # clear_buffers {{{
 sub clear_buffers {
     my $self = shift;
+    my ($main_screens) = @_;
 
     my $conn_info = $self->connection_info->{$self->connection};
     my $found = 0;
-    while ($found < ($do_autologin ? 2 : 1))
+    while ($found < $main_screens)
     {
         next unless defined($_ = $self->from_nethack);
         $self->debug("Clearing out socket buffer...");
