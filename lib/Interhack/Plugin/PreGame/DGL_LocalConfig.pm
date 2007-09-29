@@ -11,19 +11,17 @@ our $VERSION = '1.99_01';
 sub depend { qw/Debug DGameLaunch/ }
 # }}}
 # method modifiers {{{
-# XXX: is it safe to be calling orig() more than once? strikes me as no in
-# general... it's not harmful here, since all it's doing is writing to the
-# socket, but probably better to fix this.
-around 'to_dgl' => sub
+around 'to_nethack' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;
 
     if ($text eq "\t" && $self->logged_in)
     {
+        my $conn_info = $self->connection_info->{$self->connection};
         $self->debug("Downloading rc file");
-        $self->dgl_to_user("\e[1;30mPlease wait while I download the existing rcfile.\e[0m");
-        my $nethackrc = get($self->rc_dir . "/" . $self->nick . ".nethackrc");
+        $self->to_user("\e[1;30mPlease wait while I download the existing rcfile.\e[0m");
+        my $nethackrc = get($conn_info->{rc_dir} . "/" . $conn_info->{nick} . ".nethackrc");
         my ($fh, $name) = tempfile();
         print {$fh} $nethackrc;
         close $fh;
@@ -35,7 +33,7 @@ around 'to_dgl' => sub
         if ($t == (stat $name)[9])
         {
             $self->warn("Ignoring unmodified rc file");
-            $orig->($self, ' ');
+            $self->to_nethack(' ');
             return;
         }
 
@@ -43,16 +41,16 @@ around 'to_dgl' => sub
         if ($nethackrc eq '')
         {
             $self->warn("Ignoring empty rc file");
-            $self->dgl_to_user("\e[24H\e[1;30mYour nethackrc came out empty, so I'm bailing.--More--\e[0m");
+            $self->to_user("\e[24H\e[1;30mYour nethackrc came out empty, so I'm bailing.--More--\e[0m");
             ReadKey 0;
         }
         else
         {
             $self->debug("Updating rc file");
-            $self->dgl_to_user("\e[24H\e[1;30mPlease wait while I update the serverside rcfile.\e[0m");
+            $self->to_user("\e[24H\e[1;30mPlease wait while I update the serverside rcfile.\e[0m");
             chomp $nethackrc;
-            $orig->($self, "o:0,\$d\ni");
-            $orig->($self, "$nethackrc\eg");
+            $self->to_nethack("o:0,\$d\ni");
+            $self->to_nethack("$nethackrc\eg");
             my $last_buf = '';
             my $buf = '';
             while (1) {
@@ -61,7 +59,7 @@ around 'to_dgl' => sub
                 last if /\e\[.*?'g' is not implemented/;
                 $last_buf = $buf;
             }
-            $orig->($self, ":wq\n");
+            $self->to_nethack(":wq\n");
         }
     }
     else
@@ -70,7 +68,7 @@ around 'to_dgl' => sub
     }
 };
 
-around 'dgl_to_user' => sub
+around 'to_user' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;
