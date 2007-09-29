@@ -124,21 +124,22 @@ sub clear_buffers {
 
     my $conn_info = $self->connection_info->{$self->connection};
     my $found = 0;
+    my $text;
     while ($found < $main_screens)
     {
-        next unless defined($_ = $self->from_nethack);
+        next unless defined($text = $self->from_nethack);
         $self->debug("Clearing out socket buffer...");
-        last if /There was a problem with your last entry\./;
+        last if $text =~ /There was a problem with your last entry\./;
         my $line1 = $conn_info->{line1};
         my $line2 = $conn_info->{line2};
-        if (s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
+        if ($text =~ s/^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/$1/s)
         {
             $found++;
             $found++ if $2;
         }
     }
     $self->debug("Done clearing out socket buffer");
-    $self->to_user($_);
+    $self->to_user($text);
 } # }}}
 # }}}
 
