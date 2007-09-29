@@ -112,9 +112,9 @@ sub autologin {
     $self->debug("Doing autologin");
     # meh, i thought to keep these as prints for security reasons, but
     # really, any of the helper function here can be wrapped, not just
-    # to_dgl, so it's really not worth it.
-    $self->to_dgl("l" . $conn_info->{nick} . "\n");
-    $self->to_dgl($pass . "\n") if $pass;
+    # to_nethack, so it's really not worth it.
+    $self->to_nethack("l" . $conn_info->{nick} . "\n");
+    $self->to_nethack($pass . "\n") if $pass;
     $pass = '';
 } # }}}
 # clear_buffers {{{
