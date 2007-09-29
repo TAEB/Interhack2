@@ -60,37 +60,6 @@ sub to_nethack {
 }
 # }}}
 # method modifiers {{{
-sub BUILD
-{
-    my $self = shift;
-
-    # XXX: how do we want to separate out the telnet stuff from the dgl stuff?
-    # is this sufficient?
-    my %servers = (
-        nao       => { type   => 'telnet',
-                       server => 'nethack.alt.org',
-                       port   => 23,
-                       name   => 'nao',
-                       rc_dir => 'http://alt.org/nethack/rcfiles',
-                       line1  => ' dgamelaunch - network console game launcher',
-                       line2  => ' version 1.4.6',
-                     },
-        sporkhack => { type   => 'telnet',
-                       server => 'sporkhack.nineball.org',
-                       port   => 23,
-                       name   => 'sporkhack',
-                       rc_dir => 'http://nethack.nineball.org/rcfiles',
-                       line1  => ' ** Games on this server are recorded for in-progress viewing and playback!',
-                       line2  => '',
-                     },
-    );
-
-    for (values %servers) {
-        $self->set_connection($_);
-    }
-    $self->connection("nao");
-}
-
 around 'initialize' => sub {
     my $orig = shift;
     my $self = shift;

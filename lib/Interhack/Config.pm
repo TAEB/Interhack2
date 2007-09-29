@@ -5,12 +5,57 @@ use YAML 'LoadFile';
 
 our $VERSION = '1.99_01';
 
+my $hostname = `hostname`;
+chomp $hostname;
+my %servers = (
+    $hostname  => { type   => 'pty',
+                    phase  => 'InGame',
+                    binary => "nethack",
+                    args   => '',
+                    rcfile => '~/.nethackrc',
+                  },
+    nao        => { type   => 'telnet',
+                    phase  => 'PreGame',
+                    server => 'nethack.alt.org',
+                    port   => 23,
+                    rc_dir => 'http://alt.org/nethack/rcfiles',
+                    line1  => ' dgamelaunch - network console game launcher',
+                    line2  => ' version 1.4.6',
+                  },
+    sporkhack  => { type   => 'telnet',
+                    phase  => 'PreGame',
+                    server => 'sporkhack.nineball.org',
+                    port   => 23,
+                    rc_dir => 'http://nethack.nineball.org/rcfiles',
+                    line1  => ' ** Games on this server are recorded for in-progress viewing and playback!',
+                    line2  => '',
+                  },
+);
+
 sub load_all_config
 {
     my $interhack = shift;
 
+    # XXX: once we start thinking about the plugin pack idea, move %servers
+    # into config files in the plugin packs that we load here too
+    while (($k, $v) = each %servers) {
+        $interhack->add_connection($k, $v);
+    }
+
     my $config = LoadFile($interhack->config_dir . "/config.yaml");
     $interhack->config($config);
+    if (defined $interhack->config->{servers}) {
+        while (($k, $v) = each %{$interhack->config->{servers}}) {
+            $interhack->add_connection($k, $v);
+        }
+    }
+
+    if (defined $interhack->config->{servername}) {
+        $interhack->set_connection($interhack->config->{servername})
+    }
+    else {
+        die "You must specify a servername option in your config file.";
+    }
 }
 
 sub apply_config
