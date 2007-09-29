@@ -9,6 +9,7 @@ sub depend { 'Debug' }
 # }}}
 # private variables {{{
 my $pass = '';
+my $initialized = 0;
 # }}}
 # attributes {{{
 has logged_in => (
@@ -18,8 +19,10 @@ has logged_in => (
 );
 # }}}
 # method modifiers {{{
-after 'initialize' => sub {
+before 'iterate' => sub {
     my ($self) = @_;
+
+    return if $initialized;
 
     if (get_nick($self)) {
         get_pass($self);
@@ -29,6 +32,8 @@ after 'initialize' => sub {
     else {
         clear_buffers($self, 1);
     }
+
+    $initialized = 1;
 };
 
 after 'to_user' => sub {
