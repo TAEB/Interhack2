@@ -45,7 +45,7 @@ sub get_nick {
     my $self = shift;
 
     my $conn_info = $self->connection_info->{$self->connection};
-    my $pass_dir = $self->config_dir . "/servers/" . $conn_info->{name} . "/passwords";
+    my $pass_dir = $self->config_dir . "/servers/" . $self->connection . "/passwords";
     if (@ARGV)
     {
         my $found_nick = '';
@@ -74,7 +74,7 @@ sub get_pass {
     my $self = shift;
 
     my $conn_info = $self->connection_info->{$self->connection};
-    my $pass_dir = $self->config_dir . "/servers/" . $conn_info->{name} . "/passwords";
+    my $pass_dir = $self->config_dir . "/servers/" . $self->connection . "/passwords";
     if ($pass eq '')
     {
         $self->debug("Getting password from the password file");

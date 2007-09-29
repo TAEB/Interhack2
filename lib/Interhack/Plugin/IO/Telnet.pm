@@ -43,7 +43,7 @@ sub initialize {
     my $STATUS = chr(5);
     my $LFLOW = chr(33);
 
-    if ($conn_info->{name} =~ /termcast/)
+    if ($self->connection =~ /termcast/)
     {
         $self->to_nethack("$IAC$DO$ECHO"
                          ."$IAC$DO$GOAHEAD")
