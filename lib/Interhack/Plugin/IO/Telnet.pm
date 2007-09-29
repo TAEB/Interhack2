@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 package Interhack::Plugin::IO::Telnet;
-use Calf::Role qw/to_nethack from_nethack/;
+use Calf::Role qw/initialize to_nethack from_nethack/;
 use IO::Socket::INET;
 
 our $VERSION = '1.99_01';
@@ -14,58 +14,10 @@ has 'socket' => (
 );
 # }}}
 # method overrides {{{
-sub from_nethack {
-    my $self = shift;
-
-    # the reason this is so complicated is because packets can be broken up
-    # we can't detect this perfectly, but it's only an issue if an escape code
-    # is broken into two parts, and we can check for that
-
-    my $from_server;
-
-    for (1..100)
-    {
-        # would block
-        my $bytes = recv($self->socket, $_, 4096, 0);
-        last unless defined($from_server) ||  defined($bytes);
-        next if     defined($from_server) && !defined($bytes);
-
-        # 0 = error
-        if (length == 0)
-        {
-            $self->running(0);
-            return;
-        }
-
-        # need to store what we read
-        $from_server .= $_;
-
-        # check for broken escape code or DEC string
-        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
-        {
-            next;
-        }
-
-        # cut it and release
-        last;
-    }
-
-    return $from_server;
-}
-
-sub to_nethack {
-    my ($self, $text) = @_;
-
-    print {$self->socket} $text;
-}
-# }}}
-# method modifiers {{{
-around 'initialize' => sub {
-    my $orig = shift;
+sub initialize {
     my $self = shift;
 
     my $conn_info = $self->connection_info->{$self->connection};
-    return $orig->($self, @_) unless ($conn_info->{type} eq "telnet");
 
     $self->socket(new IO::Socket::INET(PeerAddr => $conn_info->{server},
                                        PeerPort => $conn_info->{port},
@@ -119,6 +71,51 @@ around 'initialize' => sub {
 
     $self->running(1);
 };
+
+sub from_nethack {
+    my $self = shift;
+
+    # the reason this is so complicated is because packets can be broken up
+    # we can't detect this perfectly, but it's only an issue if an escape code
+    # is broken into two parts, and we can check for that
+
+    my $from_server;
+
+    for (1..100)
+    {
+        # would block
+        my $bytes = recv($self->socket, $_, 4096, 0);
+        last unless defined($from_server) ||  defined($bytes);
+        next if     defined($from_server) && !defined($bytes);
+
+        # 0 = error
+        if (length == 0)
+        {
+            $self->running(0);
+            return;
+        }
+
+        # need to store what we read
+        $from_server .= $_;
+
+        # check for broken escape code or DEC string
+        if (/ \e \[? [0-9;]* \z /x || m/ \x0e [^\x0f]* \z /x)
+        {
+            next;
+        }
+
+        # cut it and release
+        last;
+    }
+
+    return $from_server;
+}
+
+sub to_nethack {
+    my ($self, $text) = @_;
+
+    print {$self->socket} $text;
+}
 # }}}
 
 1;

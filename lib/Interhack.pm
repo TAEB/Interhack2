@@ -97,13 +97,6 @@ sub add_connection # {{{
 
     $self->connection_info->{$conn_name} = $new_conn;
 } # }}}
-sub initialize # {{{
-{
-    my $self = shift;
-
-    my $conn_info = $self->connection_info->{$self->connection};
-    $self->fatal("Unknown connection type $conn_info->{type}");
-} # }}}
 sub set_connection # {{{
 {
     my $self = shift;

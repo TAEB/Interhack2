@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 package Interhack::Plugin::IO::Pty;
-use Calf::Role qw/to_nethack from_nethack/;
+use Calf::Role qw/initialize to_nethack from_nethack/;
 use IO::Pty::Easy;
 
 our $VERSION = '1.99_01';
@@ -13,6 +13,17 @@ has 'pty' => (
 );
 # }}}
 # methods {{{
+sub initialize # {{{
+{
+    my $self = shift;
+
+    my $conn_info = $self->connection_info->{$self->connection};
+    my $cmd = $conn_info->{binary};
+    $cmd .= " $conn_info->{args}" if $conn_info->{args};
+    $self->debug("Spawning command '$cmd'");
+    $self->pty->spawn($cmd);
+    $self->running(1);
+} # }}}
 sub to_nethack # {{{
 {
     my $self = shift;
@@ -36,22 +47,6 @@ sub from_nethack # {{{
 
     return $output;
 } # }}}
-# }}}
-# method modifiers {{{
-around 'initialize' => sub
-{
-    my $orig = shift;
-    my $self = shift;
-
-    my $conn_info = $self->connection_info->{$self->connection};
-    unless ($conn_info->{type} eq "local") {
-        return $orig->($self);
-    }
-    my $cmd = $conn_info->{binary};
-    $cmd .= " $conn_info->{args}" if $conn_info->{args};
-    $self->pty->spawn($cmd);
-    $self->running(1);
-};
 # }}}
 
 1;
