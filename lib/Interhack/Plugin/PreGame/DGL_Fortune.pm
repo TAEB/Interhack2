@@ -16,7 +16,7 @@ has fortune => (
 );
 # }}}
 # method modifiers {{{
-around 'dgl_to_user' => sub
+around 'to_user' => sub
 {
     my $orig = shift;
     my ($self, $text) = @_;
