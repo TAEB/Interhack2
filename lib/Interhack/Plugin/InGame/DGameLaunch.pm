@@ -11,14 +11,9 @@ sub depend { 'Debug' }
 # }}}
 # private variables {{{
 my $pass = '';
+my $do_autologin = 0;
 # }}}
 # attributes {{{
-has do_autologin => (
-    per_load => 1,
-    isa => 'Bool',
-    default => 0,
-);
-
 has logged_in => (
     per_load => 1,
     isa => 'Bool',
@@ -29,12 +24,12 @@ has logged_in => (
 after 'initialize' => sub {
     my ($self) = @_;
 
-    $self->get_nick;
-    if ($self->do_autologin) {
-        $self->get_pass;
-        $self->autologin;
+    get_nick($self);
+    if ($do_autologin) {
+        get_pass($self);
+        autologin($self);
     }
-    $self->clear_buffers;
+    clear_buffers($self);
     1 while $self->dgl_iterate;
     $self->debug("Leaving DGL, starting the game");
 };
@@ -67,7 +62,7 @@ sub get_nick {
         }
         $conn_info->{nick} = $found_nick if $found_nick;
     }
-    $self->do_autologin(1) if $conn_info->{nick};
+    $do_autologin = 1 if $conn_info->{nick};
 } # }}}
 # get_pass {{{
 sub get_pass {
@@ -107,7 +102,7 @@ sub clear_buffers {
 
     my $conn_info = $self->connection_info->{$self->connection};
     my $found = 0;
-    while ($found < ($self->do_autologin ? 2 : 1))
+    while ($found < ($do_autologin ? 2 : 1))
     {
         next unless defined($_ = $self->from_nethack);
         $self->debug("Clearing out socket buffer...");
