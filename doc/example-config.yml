@@ -1,6 +1,7 @@
 ---
 nick: doy
-server: local    # default is NAO
+#servername: magus
+servername: nao
 nhoptions:
     vikeys: 1
 
@@ -11,13 +12,17 @@ no_evalcontext: 1
 
 plugins:
     IO:
-        NetHack: Pty
+        #Nethack: Pty
+        NetHack: Telnet
         User: Terminal
+    PreGame:
+        exclude:
     InGame:
         exclude:
-            - DGameLaunch
-            - DGL_Fortune
-            - DGL_LocalConfig
+    Watching:
+        exclude:
+    Display:
+        exclude:
 
 plugin_options:
     Eidocolors:
