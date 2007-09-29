@@ -1,8 +1,6 @@
 #!/usr/bin/env perl
 package Interhack::Plugin::InGame::DGameLaunch;
-use Calf::Role qw/server get_nick get_pass autologin clear_buffers
-                  dgl_iterate from_dgl dgl_from_user to_dgl dgl_to_user/;
-use Term::ReadKey;
+use Calf::Role;
 
 our $VERSION = '1.99_01';
 
@@ -30,8 +28,24 @@ after 'initialize' => sub {
         autologin($self);
     }
     clear_buffers($self);
-    1 while $self->dgl_iterate;
-    $self->debug("Leaving DGL, starting the game");
+};
+
+after 'to_user' => sub {
+    my ($self, $text) = @_;
+
+    if ($text =~ /Logged in as: /) {
+        $self->debug("Login detected");
+        $self->logged_in(1);
+    }
+};
+
+after 'to_nethack' => sub {
+    my ($self, $text) = @_;
+
+    if ($text eq 'p' && $self->logged_in) {
+        $self->debug("Starting the game");
+        $self->phase('InGame');
+    }
 };
 # }}}
 # methods {{{
@@ -116,56 +130,7 @@ sub clear_buffers {
         }
     }
     $self->debug("Done clearing out socket buffer");
-    $self->dgl_to_user($_);
-} # }}}
-# dgl_iterate {{{
-sub dgl_iterate
-{
-    my $self = shift;
-
-    my $userinput = $self->dgl_from_user();
-    if (defined($userinput))
-    {
-        $self->to_dgl($userinput);
-        return 0 if $self->logged_in && $userinput eq 'p';
-    }
-
-    my $serveroutput = $self->from_dgl();
-    if (defined($serveroutput))
-    {
-        $self->dgl_to_user($serveroutput);
-    }
-    return $self->running;
-} # }}}
-# from_dgl {{{
-sub from_dgl
-{
-    my $self = shift;
-
-    return $self->from_nethack;
-} # }}}
-# dgl_from_user {{{
-sub dgl_from_user
-{
-    my $self = shift;
-    return $self->from_user;
-} # }}}
-# to_dgl {{{
-sub to_dgl {
-    my ($self, $text) = @_;
-
-    $self->to_nethack($text);
-} # }}}
-# dgl_to_user {{{
-sub dgl_to_user {
-    my ($self, $text) = @_;
-
-    if ($text =~ /Logged in as: /) {
-        $self->debug("Login detected");
-        $self->logged_in(1);
-    }
-
-    $self->to_user($text);
+    $self->to_user($_);
 } # }}}
 # }}}
 
