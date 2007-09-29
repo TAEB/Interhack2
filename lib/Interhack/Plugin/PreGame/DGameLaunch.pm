@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::DGameLaunch;
+package Interhack::Plugin::PreGame::DGameLaunch;
 use Calf::Role;
 
 our $VERSION = '1.99_01';

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::Realtime;
+package Interhack::Plugin::Display::Realtime;
 use Calf::Role 'serialize_time';
 
 our $VERSION = '1.99_01';

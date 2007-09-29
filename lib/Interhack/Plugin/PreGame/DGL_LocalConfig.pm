@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::DGL_LocalConfig;
+package Interhack::Plugin::PreGame::DGL_LocalConfig;
 use Calf::Role;
 use Term::ReadKey;
 use LWP::Simple;

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::Botl;
+package Interhack::Plugin::Display::Botl;
 use Calf::Role;
 
 our $VERSION = '1.99_01';

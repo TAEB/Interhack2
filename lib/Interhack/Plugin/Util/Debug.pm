@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::Debug;
+package Interhack::Plugin::Util::Debug;
 use Calf::Role qw/debug info warn error fatal/;
 use Log::Log4perl;
 

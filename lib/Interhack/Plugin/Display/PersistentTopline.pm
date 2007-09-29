@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::PersistentTopline;
+package Interhack::Plugin::Display::PersistentTopline;
 use Calf::Role;
 
 our $VERSION = '1.99_01';

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::StripMenucolors;
+package Interhack::Plugin::Watching::StripMenucolors;
 use Calf::Role;
 
 our $VERSION = '1.99_01';

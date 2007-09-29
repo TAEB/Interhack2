@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::HpMon;
+package Interhack::Plugin::Display::HpMon;
 use Calf::Role;
 
 our $VERSION = '1.99_01';

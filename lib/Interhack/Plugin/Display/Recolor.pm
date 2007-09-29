@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::Recolor;
+package Interhack::Plugin::Display::Recolor;
 use Calf::Role 'recolor', 'color_to_escape';
 
 our $VERSION = '1.99_01';

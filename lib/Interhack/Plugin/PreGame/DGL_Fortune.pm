@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::DGL_Fortune;
+package Interhack::Plugin::PreGame::DGL_Fortune;
 use Calf::Role;
 
 our $VERSION = '1.99_01';

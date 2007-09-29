@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::Util;
+package Interhack::Plugin::Util::Util;
 use Calf::Role qw/goto vt_like print_row restore_row force_tab_yn force_tab_ynq 
                   expecting_command extended_command attr_to_ansi/;
 use Term::ReadKey;

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package Interhack::Plugin::InGame::DeathTracker;
+package Interhack::Plugin::Display::DeathTracker;
 use Calf::Role;
 
 our $VERSION = '1.99_01';
