@@ -15,16 +15,30 @@ has fortune => (
     default => '',
 );
 # }}}
+# private variables {{{
+my $prev_screen = '';
+# }}}
 # method modifiers {{{
 around 'to_user' => sub
 {
     my $orig = shift;
-    my ($self, $text) = @_;
+    my $self = shift;
+    my ($text) = @_;
 
-    my $fortune_db = $self->fortune;
-    $text .= "\e[s\e[20H\e[1;30m"
-           . `fortune -n200 -s $fortune_db`
-           . "\e[0m\e[u";
+    # XXX: hack... avoiding infinite recursion
+    return $orig->($self, $text) if $text eq "\e[2J";
+
+    if ($self->current_screen =~ /login|logged_in/) {
+        my $fortune_db = $self->fortune;
+        $text .= "\e[s\e[20H\e[1;30m"
+               . `fortune -n200 -s $fortune_db`
+               . "\e[0m\e[u";
+    }
+    elsif ($prev_screen =~ /login|logged_in/) {
+        $self->to_user("\e[2J");
+    }
+
+    $prev_screen = $self->current_screen;
 
     return $orig->($self, $text);
 };
