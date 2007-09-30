@@ -12,10 +12,10 @@ my $pass = '';
 my $initialized = 0;
 # }}}
 # attributes {{{
-has logged_in => (
+has current_screen => (
     per_load => 1,
-    isa => 'Bool',
-    default => 0,
+    isa => 'Str',
+    default => '',
 );
 # }}}
 # method modifiers {{{
@@ -36,21 +36,37 @@ before 'iterate' => sub {
     $initialized = 1;
 };
 
-after 'to_user' => sub {
-    my ($self, $text) = @_;
+around 'from_nethack' => sub {
+    my $orig = shift;
+    my $self = shift;
+    my $text = $orig->($self);
+    return unless defined $text;
 
+    my $conn_info = $self->connection_info->{$self->connection};
+    my $line1 = $conn_info->{line1};
+    my $line2 = $conn_info->{line2};
+    if ($text =~ /^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/s) {
+        $self->debug("At login screen");
+        $self->current_screen('login');
+    }
     if ($text =~ /Logged in as: /) {
         $self->debug("Login detected");
-        $self->logged_in(1);
+        $self->current_screen('logged_in');
     }
+
+    return $text;
 };
 
-after 'to_nethack' => sub {
+before 'to_nethack' => sub {
     my ($self, $text) = @_;
 
-    if ($text eq 'p' && $self->logged_in) {
-        $self->debug("Starting the game");
-        $self->phase('InGame');
+    for ($self->current_screen) {
+        /login/     && do { $self->current_screen(login($self, $text));
+                            last; };
+        /logged_in/ && do { $self->current_screen(logged_in($self, $text));
+                            last; };
+        /watch/     && do { $self->current_screen(watch($self, $text));
+                            last; };
     }
 };
 # }}}
@@ -140,6 +156,52 @@ sub clear_buffers {
     }
     $self->debug("Done clearing out socket buffer");
     $self->to_user($text);
+} # }}}
+# logged_in {{{
+sub logged_in
+{
+    my $self = shift;
+    my ($text) = @_;
+
+    for ($text) {
+        /[ceo]/ && do { return 'unknown'                   };
+        /w/     && do { return 'watch'                     };
+        /p/     && do { $self->debug("Starting the game");
+                        $self->phase('InGame');
+                        return 'in_game'                   };
+        /q/     && do { return 'quit'                      };
+    }
+
+    'logged_in'
+} # }}}
+# login {{{
+sub login
+{
+    my $self = shift;
+    my ($text) = @_;
+
+    for ($text) {
+        /[lr]/ && do { return 'unknown' };
+        /w/    && do { return 'watch'   };
+        /q/    && do { return 'quit'    };
+    }
+
+    'login'
+} # }}}
+# watch {{{
+sub watch
+{
+    my $self = shift;
+    my ($text) = @_;
+
+    for ($text) {
+        /[a-nA-N]/ && do { $self->debug("Starting to watch");
+                           $self->phase('Watching');
+                           return 'in_game_watching';         };
+        /q/        && do { return 'login'                     };
+    }
+
+    'watch'
 } # }}}
 # }}}
 
