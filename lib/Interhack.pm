@@ -101,6 +101,7 @@ sub run # {{{
         while ($self->phase eq $phase)
         {
             $self->iterate();
+            last unless $self->running;
         }
         $self->clear_config();
     }
