@@ -16,7 +16,7 @@ around 'to_nethack' => sub
     my $orig = shift;
     my ($self, $text) = @_;
 
-    if ($text eq "\t" && $self->logged_in)
+    if ($text eq "\t" && $self->current_screen eq 'logged_in')
     {
         my $conn_info = $self->connection_info->{$self->connection};
         $self->debug("Downloading rc file");
@@ -73,7 +73,7 @@ around 'to_user' => sub
     my $orig = shift;
     my ($self, $text) = @_;
 
-    if ($self->logged_in)
+    if ($self->current_screen eq 'logged_in')
     {
         $text =~ s/(o\) Edit option file)/$1  \e[1;30mTab) edit options locally\e[0m/g;
     }
