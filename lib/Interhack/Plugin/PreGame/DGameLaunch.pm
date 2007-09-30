@@ -45,7 +45,7 @@ around 'from_nethack' => sub {
     my $conn_info = $self->connection_info->{$self->connection};
     my $line1 = $conn_info->{line1};
     my $line2 = $conn_info->{line2};
-    if ($text =~ /^.*?(\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)(.*\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E)?/s) {
+    if ($text =~ /^.*?\e\[H\e\[2J\e\[1B ##\Q$line1\E..\e\[1B ##\Q$line2\E/s) {
         $self->debug("At login screen");
         $self->current_screen('login');
     }
