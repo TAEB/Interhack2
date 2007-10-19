@@ -3,6 +3,7 @@ package Interhack::Plugin::Util::Util;
 use Calf::Role qw/goto vt_like print_row restore_row force_tab_yn force_tab_ynq 
                   expecting_command extended_command attr_to_ansi/;
 use Term::ReadKey;
+use Time::HiRes 'time';
 
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
@@ -130,6 +131,44 @@ sub restore_row
 
     # not so good yet! but at least now we have only one place to fix it
     $self->print_row($row, "\e[K" . join '', @chars);
+} # }}}
+# force_tab {{{
+=head2 force_tab STRING, [NUMBER]
+
+Forces the user to press tab to recognize some horrible thing that just took
+place. Such as "You are slowing down."
+
+The second argument specifies a timeout. If the user doesn't press tab in
+time, then just get rid of the force tab (for slightly less scary things)
+
+=cut
+
+sub force_tab
+{
+    my $self = shift;
+    my $input = shift;
+    my $timeout = shift;
+
+    # ok, so we lied. but only a little.
+    $timeout = 60*60*24*365 if !defined $timeout;
+
+    $self->print_row(2, "\e[1;31m$input\e[m");
+    my $start = time;
+
+    while (1)
+    {
+        # have we expired the timeout?
+        my $so_far = time - $start;
+        last if $so_far >= $timeout;
+
+        # wait for however long we have left in the timeout, OR a keypress
+        my $c = ReadKey($timeout - $so_far);
+
+        # pressing tab ends this dance
+        last if $c eq "\t";
+    }
+
+    $self->restore_row(2);
 } # }}}
 # force_tab_yn {{{
 =head2 force_tab_yn STRING -> BOOLEAN
