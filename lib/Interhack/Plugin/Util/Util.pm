@@ -3,7 +3,7 @@ package Interhack::Plugin::Util::Util;
 use Calf::Role qw/goto vt_like print_row restore_row force_tab_yn force_tab_ynq 
                   expecting_command extended_command attr_to_ansi/;
 use Term::ReadKey;
-use Time::HiRes 'time';
+use Time::HiRes 'ualarm';
 
 our $VERSION = '1.99_01';
 our $SUMMARY = 'Utility functions for other plugins';
@@ -149,24 +149,14 @@ sub force_tab
     my $input = shift;
     my $timeout = shift;
 
-    # ok, so we lied. but only a little.
-    $timeout = 60*60*24*365 if !defined $timeout;
-
     $self->print_row(2, "\e[1;31m$input\e[m");
-    my $start = time;
 
-    while (1)
-    {
-        # have we expired the timeout?
-        my $so_far = time - $start;
-        last if $so_far >= $timeout;
-
-        # wait for however long we have left in the timeout, OR a keypress
-        my $c = ReadKey($timeout - $so_far);
-
-        # pressing tab ends this dance
-        last if $c eq "\t";
-    }
+    eval {
+        ualarm $timeout * 1_000_000 if defined $timeout;
+        1 until ReadKey(0) eq "\t";
+        alarm 0;
+    };
+    alarm 0;
 
     $self->restore_row(2);
 } # }}}
