@@ -37,7 +37,7 @@ sub BUILD # {{{
 {
     my $self = shift;
 
-    while (my ($trigger, $expansion) = each %{$self->config->{plugin_options}{COmmandRemap}})
+    while (my ($trigger, $expansion) = each %{$self->config->{plugin_options}{CommandRemap}})
     {
         $self->add_remap($trigger, $expansion);
     }
