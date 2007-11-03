@@ -5,6 +5,16 @@ use Term::ReadKey;
 
 our $VERSION = '1.99_01';
 
+# Sun May 06 2007
+# [20:55:13] <doy> Eidolos: maybe somehow detect accidental pastes into the nh window?
+# [20:55:21] <toft> good idea
+# [20:55:23] <toft> irssi does it
+# [20:55:24] <doy> would probably be hard to do that though
+# [21:00:08] <Eidolos> can anyone think of anything else for this helper?
+# [21:00:37] <doy> Eidolos: scroll up
+# [21:00:47] <Eidolos> oh, the paste detection? meh
+# [21:00:52] <Eidolos> no way I could code that! :)
+
 # deps {{{
 sub depend { 'Util' }
 # }}}
