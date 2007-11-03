@@ -4,6 +4,16 @@ use Calf::Role;
 
 our $VERSION = '1.99_01';
 
+# Sun May 06 2007
+# [00:28:56] <toft> hey I have a good idea for interhack.. might be unreasonably hard though: corpse age tracking
+# [00:29:03] <toft> no more friggin accidental FoodPois XD
+# [00:29:05] <Eidolos> heh
+# [00:29:24] <Eidolos> yeah that's too hard
+# [00:29:28] <toft> nod
+# [00:29:52] <toft> I'm probably the only one who ever gets foidpois anyway so
+# [00:29:55] <Eidolos> haha
+# [00:29:57] <Eidolos> yeahh
+
 # deps {{{
 sub depend { 'Util' }
 # }}}
